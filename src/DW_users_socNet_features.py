@@ -2,7 +2,6 @@ import collections
 
 import time
 
-from jupyter_client._version import protocol_version
 from numpy.distutils.system_info import numarray_info
 import requests
 #from DB_connection import *

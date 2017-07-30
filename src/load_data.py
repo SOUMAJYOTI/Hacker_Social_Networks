@@ -72,9 +72,10 @@ if __name__ == "__main__":
             item_df = pd.DataFrame(clusterList)
             hp_df = hp_df.append(item_df)
         except:
-            print(hp[hp_idx])
+            # print(hp[hp_idx])
             continue
-    hp_df.to_csv(fileName+'.csv')
+
+    # hp_df.to_csv(fileName+'.csv')
 
     # # Major Forum Statistics
     # fileName = 'HackingPostsStatistics_MajorForum'
