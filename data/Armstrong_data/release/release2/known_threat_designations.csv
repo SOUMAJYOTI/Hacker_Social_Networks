@@ -1,0 +1,54 @@
+target_organization,detector,detector_classification,threat_designation_family,threat_designation_type
+armstrong,bro,TeamCymruMalwareHashRegistry::Match,unknown,malware
+armstrong,fireeye_email_mps,Malware.archive,unknown,malware
+armstrong,fireeye_hx,Exploit Kit Redirect,unknown,exploit_kit
+armstrong,fireeye_hx,Malware,unknown,malware
+armstrong,fireeye_hx,Malware.Binary.doc,unknown,malware
+armstrong,fireeye_hx,PUA.Win.Trojan.Casino,casino,trojan
+armstrong,fireeye_hx,PUP Amonetize,other,pup
+armstrong,fireeye_web_mps,,,
+armstrong,fireeye_web_mps,Neutrino Exploit Kit,neutrino,exploit_kit
+armstrong,fireeye_web_mps,Trojan.Downloader.Diple,diple,trojan
+armstrong,fireeye_web_mps,Trojan.Dridex,dridex,trojan
+armstrong,fireeye_web_mps,Trojan.EK.Dropper,unknown,trojan
+armstrong,fireeye_web_mps,Trojan.Pirpi,pirpi,trojan
+armstrong,fireeye_web_mps,Trojan.Powessere,powessere,trojan
+armstrong,fireeye_web_mps,malware-callback,unknown,malware
+armstrong,manual,malware,unknown,malware
+armstrong,mbam,ADware/Junkware,other,pup
+armstrong,mbam,InstallCore,other,pup
+armstrong,mcafee_vse,Artemis!01C37C1EF3E5,artemis,trojan
+armstrong,mcafee_vse,Artemis!A8B13116CC78,artemis,trojan
+armstrong,mcafee_vse,Exploit-SWF.bd,unknown,trojan
+armstrong,mcafee_vse,Exploit-SWF.bd;HTML/Neutrino.b,unknown;neutrino,trojan;trojan
+armstrong,mcafee_vse,Generic!atr,unknown,malware
+armstrong,mcafee_vse,HTML/Iframe.gen.x,other,other
+armstrong,mcafee_vse,HTML/Neutrino.b,neutrino,trojan
+armstrong,mcafee_vse,HTML/Neutrino.b;HTML/Neutrino.c,neutrino;neutrino,trojan;trojan
+armstrong,mcafee_vse,HTML/Neutrino.b;HTML/Neutrino.c;JS/Exploit,neutrino;neutrino;js/exploit,trojan;trojan;other
+armstrong,mcafee_vse,HTML/Neutrino.e,neutrino,trojan
+armstrong,mcafee_vse,HTML/Neutrino.e;Exploit-SWF.bd,neutrino;unknown,trojan;trojan
+armstrong,mcafee_vse,JS/Darkleech.a,darkleech,ransomware
+armstrong,mcafee_vse,JS/DecKryptik,deckryptik,trojan
+armstrong,mcafee_vse,JS/Faceliker.a,faceliker,trojan
+armstrong,mcafee_vse,JS/Nemucod.eq,nemucod,trojan
+armstrong,mcafee_vse,JS/Redirector.bz,js/redirect,other
+armstrong,mcafee_vse,JS/Redirector.cy,js/redirect,other
+armstrong,mcafee_vse,JS/Redirector.db,js/redirect,other
+armstrong,mcafee_vse,JS/Redirector.dg,js/redirect,other
+armstrong,mcafee_vse,JS/Redirector.di,js/redirect,other
+armstrong,mcafee_vse,JS/Redirector.dq,js/redirect,other
+armstrong,mcafee_vse,PUP-XAC-V,other,pup
+armstrong,mcafee_vse,RDN/Generic PUP.x,other,pup
+armstrong,mcafee_vse,RDN/Generic PUP.z,other,pup
+armstrong,mcafee_vse,RDN/Generic.com,unknown,malware
+armstrong,mcafee_vse,RDN/Generic.dx,unknown,malware
+armstrong,mcafee_vse,RDN/Generic.hbg,unknown,malware
+armstrong,mcafee_vse,Ransom!remnant,remnant,ransomware
+armstrong,mcafee_vse,TinyInstaller,unknown,other
+armstrong,mcafee_vse,Trojan-CoinMiner,coinminer,trojan
+armstrong,mcafee_vse,VBS/Johop,johop,trojan
+armstrong,mcafee_vse,VINALAND_inv_tracker_596.rtf,unknown,other
+armstrong,mcafee_vse,W32/Conficker.worm!inf,conficker,virus
+armstrong,mcafee_vse,W32/USBAgent!inf,unknown,virus
+armstrong,mcafee_vse,W97M/Dropper.ck,unknown,virus

@@ -1,0 +1,2618 @@
+{
+    "events": [
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "crypted122med.exe", 
+                    "path": "C:\\Users\\golovink\\AppData\\Local\\Temp\\1\\tfjhjdsfsd.com\\"
+                }
+            ], 
+            "occurred": "2016-04-06T11:31:49.000000Z", 
+            "target_entity": "golovink", 
+            "reported": "2016-04-06T11:31:49.000000Z", 
+            "detector_classification": [
+                "Trojan.Dridex"
+            ], 
+            "detector": "fireeye_web_mps", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "dridex"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0249550"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 1
+        }, 
+        {
+            "event_type": "malicious-destination", 
+            "version": 2, 
+            "protocol": 6, 
+            "other_files": [
+                {
+                    "filename": "crypted122med.exe"
+                }
+            ], 
+            "port": 80, 
+            "occurred": "2016-04-06T11:36:50.000000Z", 
+            "target_entity": "golovink ", 
+            "reported": "2016-04-06T11:36:50.000000Z", 
+            "detector_classification": [
+                "Trojan.Dridex"
+            ], 
+            "detector": "fireeye_web_mps", 
+            "addresses": [
+                {
+                    "ip": "31.148.99.90", 
+                    "url": "shop.bleutree.co/tablets/galaxytab3.php"
+                }
+            ], 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "dridex"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0249555"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 2
+        }, 
+        {
+            "event_type": "malicious-destination", 
+            "version": 2, 
+            "protocol": 6, 
+            "other_files": [
+                {
+                    "filename": "crypted122med.exe"
+                }
+            ], 
+            "port": 80, 
+            "occurred": "2016-04-06T13:15:56.000000Z", 
+            "target_entity": "lesperance", 
+            "reported": "2016-04-06T13:15:56.000000Z", 
+            "detector_classification": [
+                "Trojan.Dridex"
+            ], 
+            "detector": "fireeye_web_mps", 
+            "addresses": [
+                {
+                    "ip": "85.143.209.13", 
+                    "url": "shop.bleutree.biz/tablets/galaxytab3.php"
+                }
+            ], 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "dridex"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0249588"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 3
+        }, 
+        {
+            "event_type": "malicious-destination", 
+            "version": 2, 
+            "protocol": 6, 
+            "port": 80, 
+            "occurred": "2016-04-10T17:53:25.000000Z", 
+            "reported": "2016-04-10T17:53:25.000000Z", 
+            "detector_classification": [
+                "Trojan.Downloader.Diple"
+            ], 
+            "detector": "fireeye_web_mps", 
+            "addresses": [
+                {
+                    "ip": "185.17.184.11", 
+                    "url": "listcool.net,ough.info"
+                }
+            ], 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "diple"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0249992"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 4
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "WebcamScreenVideoCaptureFree.exe", 
+                    "hash": "acc89d48ec3be5f90cdcc07b57bbdf2c"
+                }
+            ], 
+            "occurred": "2016-04-14T15:50:24.000000Z", 
+            "target_entity": "thomasba", 
+            "reported": "2016-04-14T15:50:24.000000Z", 
+            "detector_classification": [
+                "malware"
+            ], 
+            "detector": "manual", 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0250562"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 5
+        }, 
+        {
+            "event_type": "malicious-destination", 
+            "version": 2, 
+            "protocol": 6, 
+            "port": 80, 
+            "occurred": "2016-04-21T08:43:26.000000Z", 
+            "reported": "2016-04-21T08:43:26.000000Z", 
+            "detector_classification": [
+                "malware-callback"
+            ], 
+            "detector": "fireeye_web_mps", 
+            "addresses": [
+                {
+                    "ip": "182.50.142.229", 
+                    "url": "malungtreks.com"
+                }
+            ], 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0251593"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 6
+        }, 
+        {
+            "event_type": "malicious-destination", 
+            "version": 2, 
+            "protocol": 6, 
+            "port": 80, 
+            "occurred": "2016-05-04T10:24:21.000000Z", 
+            "reported": "2016-05-04T10:24:21.000000Z", 
+            "detector_classification": [
+                "Exploit Kit Redirect"
+            ], 
+            "detector": "fireeye_hx", 
+            "addresses": [
+                {
+                    "ip": "213.186.33.87"
+                }
+            ], 
+            "threat_designation_type": [
+                "exploit_kit"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0253218"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 7
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "90453581_67580815.js", 
+                    "path": "C:\\Users\\jezekb\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Content.Outlook\\OZFONTLS\\jezekb@battelle org_43650165_06736995.zip\\"
+                }
+            ], 
+            "occurred": "2016-05-06T16:53:40.000000Z", 
+            "target_entity": "jezekb", 
+            "reported": "2016-05-06T16:58:39.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Nemucod.eq"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "nemucod"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0253555"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 8
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "setup.exe", 
+                    "path": "c:\\Documents and Settings\\GoreeR\\AppData\\Local\\Temp\\tmp9146892\\"
+                }
+            ], 
+            "occurred": "2016-05-10T04:11:24.000000Z", 
+            "target_entity": "goreer", 
+            "reported": "2016-05-10T04:12:49.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "RDN/Generic PUP.z"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "pup"
+            ], 
+            "threat_designation_family": [
+                "other"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0253802"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 9
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "uninstall.exe", 
+                    "path": "c:\\Documents and Settings\\GoreeR\\AppData\\Local\\{E126D77A-C58E-BBC2-A816-9E2A8C7E62B2}\\"
+                }
+            ], 
+            "occurred": "2016-05-10T04:13:10.000000Z", 
+            "target_entity": "goreer", 
+            "reported": "2016-05-10T04:17:53.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "RDN/Generic.hbg"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0253803"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 10
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "VPDAgent_x64.exe", 
+                    "hash": "abf8675cf70af6eb7d7d37cdd73f5b3ccf8c453d"
+                }
+            ], 
+            "occurred": "2016-05-10T08:20:00.000000Z", 
+            "target_entity": "goreer", 
+            "reported": "2016-05-10T08:20:00.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "ADware/Junkware"
+            ], 
+            "detector": "mbam", 
+            "threat_designation_type": [
+                "pup"
+            ], 
+            "threat_designation_family": [
+                "other"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0253618"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 11
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "BiTool.dll", 
+                    "hash": "e844b835dac8af1070fd1134e5a9bae614cbcd14"
+                }
+            ], 
+            "occurred": "2016-05-20T11:44:51.000000Z", 
+            "target_entity": "JONEIKISDDP", 
+            "reported": "2016-05-20T11:44:51.000000Z", 
+            "detector_classification": [
+                "TeamCymruMalwareHashRegistry::Match"
+            ], 
+            "detector": "bro", 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0255280"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 12
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "FileZilla_3.8.0_win32-setup.exe", 
+                    "path": "c:\\Documents and Settings\\keleherc\\Downloads\\"
+                }
+            ], 
+            "occurred": "2016-05-31T04:26:29.000000Z", 
+            "target_entity": "keleherc", 
+            "reported": "2016-05-31T12:24:16.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "RDN/Generic.dx"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0256314"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 13
+        }, 
+        {
+            "event_type": "malicious-destination", 
+            "version": 2, 
+            "protocol": 17, 
+            "port": 53, 
+            "occurred": "2016-05-31T09:01:23.000000Z", 
+            "reported": "2016-05-31T09:01:23.000000Z", 
+            "detector": "fireeye_web_mps", 
+            "addresses": [
+                {
+                    "url": "crt.comodoca.com"
+                }
+            ], 
+            "provider_info": {
+                "inc_id": "INC0256332"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 14
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "uninstall.exe", 
+                    "path": "c:\\Documents and Settings\\karimir\\AppData\\Local\\{52F064AC-7658-0814-1BC0-2DFC3FA8D164}\\"
+                }
+            ], 
+            "occurred": "2016-05-31T13:09:35.000000Z", 
+            "target_entity": "karimir", 
+            "reported": "2016-05-31T13:12:45.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "RDN/Generic PUP.z"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "pup"
+            ], 
+            "threat_designation_family": [
+                "other"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0256338"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 15
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "VINALAND_inv_tracker_596.rtf", 
+                    "path": "C:\\Users\\manuelx\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Content.Outlook\\MZME5A0U\\"
+                }
+            ], 
+            "occurred": "2016-05-31T13:21:27.000000Z", 
+            "target_entity": "manuelx", 
+            "reported": "2016-05-31T13:25:31.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "VINALAND_inv_tracker_596.rtf"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0256346"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 16
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00002500.js", 
+                    "path": "C:\\Users\\Woods\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\4Z40DEXA\\the-case-for-trading-for-jimmy-butler[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-06-03T12:39:40.000000Z", 
+            "target_entity": "woods", 
+            "reported": "2016-06-03T12:42:46.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.db"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0256913"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 17
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "000025f4.js", 
+                    "path": "c:\\Documents and Settings\\mccauley\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\3NWFML8Q\\event-registration[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-06-06T13:33:32.000000Z", 
+            "target_entity": "mccauley", 
+            "reported": "2016-06-06T13:34:52.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.cy"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0257107"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 18
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00001e51.js", 
+                    "path": "C:\\Users\\payned\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\L22YJ9K8\\bar[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-06-08T00:11:45.000000Z", 
+            "target_entity": "payned", 
+            "reported": "2016-06-08T00:13:35.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.db"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0257434"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 19
+        }, 
+        {
+            "event_type": "malicious-destination", 
+            "version": 2, 
+            "protocol": 6, 
+            "port": 80, 
+            "occurred": "2016-06-08T10:48:20.000000Z", 
+            "reported": "2016-06-08T10:48:20.000000Z", 
+            "detector_classification": [
+                "Neutrino Exploit Kit"
+            ], 
+            "http_referer": "http://ibgglxnm.refusewhite.top/bellow/1257378/possible-signal-performance-snake-further-tick-blast-damage-magical", 
+            "detector": "fireeye_web_mps", 
+            "addresses": [
+                {
+                    "ip": "104.238.173.205", 
+                    "url": "ibgglxnm.refusewhite.top"
+                }
+            ], 
+            "threat_designation_type": [
+                "exploit_kit"
+            ], 
+            "threat_designation_family": [
+                "neutrino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0257518"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 20
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "DriverGuide_Driver_Download_377479.exe", 
+                    "path": "c:\\users\\hommemak\\DESKTOP\\"
+                }
+            ], 
+            "occurred": "2016-06-08T11:15:40.000000Z", 
+            "target_entity": "hommemak", 
+            "reported": "2016-06-08T11:15:40.000000Z", 
+            "detector_classification": [
+                "InstallCore"
+            ], 
+            "detector": "mbam", 
+            "threat_designation_type": [
+                "pup"
+            ], 
+            "threat_designation_family": [
+                "other"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0257527"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 21
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "b58u46ac37h.dotm", 
+                    "hash": "97a35139834fb92feaf294c7b32f4704"
+                }
+            ], 
+            "occurred": "2016-06-09T12:43:53.000000Z", 
+            "reported": "2016-06-09T12:43:53.000000Z", 
+            "detector_classification": [
+                "Malware"
+            ], 
+            "detector": "fireeye_hx", 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0257699"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 22
+        }, 
+        {
+            "event_type": "malicious-destination", 
+            "version": 2, 
+            "protocol": 6, 
+            "port": 80, 
+            "occurred": "2016-06-09T12:54:59.000000Z", 
+            "reported": "2016-06-09T12:54:59.000000Z", 
+            "detector_classification": [
+                "PUP Amonetize"
+            ], 
+            "detector": "fireeye_hx", 
+            "addresses": [
+                {
+                    "ip": "50.63.112.1"
+                }
+            ], 
+            "threat_designation_type": [
+                "pup"
+            ], 
+            "threat_designation_family": [
+                "other"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0257705"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 23
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00001294.js", 
+                    "path": "C:\\Users\\blackd\\AppData\\Local\\MICROSOFT\\Windows\\TEMPORARY INTERNET FILES\\Low\\Content.IE5\\IDH3DNX6\\fort-lauderdale-named-one-americas-best-cities-staycations[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-06-09T18:27:33.000000Z", 
+            "target_entity": "blackd", 
+            "reported": "2016-06-09T18:29:53.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.cy"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0257721"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 24
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "000042d8.js", 
+                    "path": "C:\\Users\\ricks\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\RT74JWOY\\RRTTN4NA.htm\\"
+                }
+            ], 
+            "occurred": "2016-06-09T18:52:02.000000Z", 
+            "target_entity": "ricks", 
+            "reported": "2016-06-09T18:52:05.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.cy"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0257726"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 25
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "0000103b.js", 
+                    "path": "C:\\Users\\tolbertb\\AppData\\Local\\MICROSOFT\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\XNOJ79JG\\index[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-06-10T13:13:48.000000Z", 
+            "target_entity": "tolbertb", 
+            "reported": "2016-06-10T13:14:50.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.cy"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0257794"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 26
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "sqrdbgp.exe", 
+                    "path": "c:\\Documents and Settings\\benner\\Desktop\\Desktop 05-04-16\\Desktop 4-13-15\\SPDebugger.zip\\"
+                }, 
+                {
+                    "filename": "sqrdbgp.exe", 
+                    "path": "c:\\Documents and Settings\\benner\\Desktop\\Desktop 05-04-16\\PNL_BCOHRTERM\\SPDebugger\\"
+                }
+            ], 
+            "occurred": "2016-06-14T08:56:42.000000Z", 
+            "target_entity": "benner", 
+            "reported": "2016-06-14T08:57:12.000000Z", 
+            "detector_classification": [
+                "RDN/Generic.com"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0258269"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 27
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00007026.js", 
+                    "path": "C:\\Users\\nicholson\\AppData\\Local\\microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\BN3TV3Q1\\ZZ82S1TY.htm\\"
+                }
+            ], 
+            "occurred": "2016-06-14T13:54:08.000000Z", 
+            "target_entity": "nicholson", 
+            "reported": "2016-06-14T13:56:40.000000Z", 
+            "detector_classification": [
+                "JS/Darkleech.a"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "ransomware"
+            ], 
+            "threat_designation_family": [
+                "darkleech"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0258273"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 28
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "000045b5.js", 
+                    "path": "C:\\Users\\millerbd\\AppData\\Local\\MICROSOFT\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\VX5KD1DX\\heather-locklears-daughter-ava-sambora-displays-fabulous-figure-thong-bikini-sizzling-photo-shoot[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-06-15T15:04:05.000000Z", 
+            "target_entity": "millerbd", 
+            "reported": "2016-06-15T15:04:25.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Faceliker.a"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "faceliker"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0258345"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 29
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "SetupImgBurn_2.5.8.0.exe", 
+                    "hash": "5ca96a0c243390c378dee1a629684ea261e2cfc4"
+                }
+            ], 
+            "occurred": "2016-06-16T13:12:28.000000Z", 
+            "reported": "2016-06-16T13:12:28.000000Z", 
+            "detector_classification": [
+                "TeamCymruMalwareHashRegistry::Match"
+            ], 
+            "detector": "bro", 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0258509"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 30
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00001cb9.js", 
+                    "path": "C:\\Users\\ANGELINIA\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Cache\\f_000719\\"
+                }
+            ], 
+            "occurred": "2016-06-16T16:27:52.000000Z", 
+            "target_entity": "angelinia", 
+            "reported": "2016-06-16T16:31:31.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.db"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0258505"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 31
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00003a9f.js", 
+                    "path": "C:\\Users\\mitchells\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\QP2167RG\\life-at-the-beach-3[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-06-16T19:12:53.000000Z", 
+            "target_entity": "mitchells", 
+            "reported": "2016-06-16T19:16:32.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.cy"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0258541"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 32
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00002a4f.js", 
+                    "path": "C:\\Users\\MCCOYA\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\A26Q5RQN\\8HUP39CG.htm\\"
+                }
+            ], 
+            "occurred": "2016-06-24T17:06:41.000000Z", 
+            "target_entity": "mccoya", 
+            "reported": "2016-06-24T17:06:42.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.cy"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0259537"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 33
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00001cb9.js", 
+                    "path": "C:\\Users\\ANGELINIA\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Cache\\f_000bf2\\"
+                }
+            ], 
+            "occurred": "2016-06-28T18:50:41.000000Z", 
+            "target_entity": "angelinia", 
+            "reported": "2016-06-28T18:54:41.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.db"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0260062"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 34
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "000023b9.js", 
+                    "path": "C:\\Users\\Bunnella\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\9R5Y2RZ0\\single-tenant-vs-multi-tenant-from-a-business-perspective[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-07-05T17:00:42.000000Z", 
+            "target_entity": "bunnella", 
+            "reported": "2016-07-05T17:04:04.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.db"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0261008"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 35
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "0000162a.js", 
+                    "path": "C:\\Users\\parsonsp\\AppData\\Local\\microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\MM8PFTR5\\horse-training-in-reverse[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-07-06T13:27:00.000000Z", 
+            "target_entity": "parsonsp", 
+            "reported": "2016-07-06T13:27:28.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.db"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0261185"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 36
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "helmet-hideous-knee-bearer.html[1].swf", 
+                    "path": "C:\\Users\\masseytr\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\VQQNMZ0M\\helmet-hideous-knee-bearer.html[1].swf\\"
+                }
+            ], 
+            "occurred": "2016-07-06T17:42:07.000000Z", 
+            "target_entity": "masseytr", 
+            "reported": "2016-07-06T17:43:45.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "Exploit-SWF.bd"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0261289"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 37
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "cheer-smash-curve-troop-vain-carter-decision-roof.html[1].swf", 
+                    "path": "C:\\Users\\thurstonr\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\8MC9MUVU\\cheer-smash-curve-troop-vain-carter-decision-roof.html[1].swf\\"
+                }
+            ], 
+            "occurred": "2016-07-11T13:50:39.000000Z", 
+            "target_entity": "thurstonr", 
+            "reported": "2016-07-11T13:50:45.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "Exploit-SWF.bd"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0262017"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 38
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "b3NlemJrZ2N6ag[1].swf", 
+                    "path": "C:\\Users\\zambanini.MILKY-WAY\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\TQ048Z3E\\b3NlemJrZ2N6ag[1].swf\\"
+                }
+            ], 
+            "occurred": "2016-07-11T20:08:09.000000Z", 
+            "target_entity": "zambanini", 
+            "reported": "2016-07-11T20:08:25.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "Exploit-SWF.bd"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0262240"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 39
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00000dc8.js", 
+                    "path": "C:\\Users\\wilsonmw\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\HYPJ1MS9\\XSZQ16T2.htm\\"
+                }
+            ], 
+            "occurred": "2016-07-12T17:05:22.000000Z", 
+            "target_entity": "wilsonmw", 
+            "reported": "2016-07-12T17:07:31.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.bz"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0262438"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 40
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "elmerfem-mpi-8.2_Windows-AMD64.exe", 
+                    "path": "C:\\Users\\scribbene\\Downloads\\"
+                }, 
+                {
+                    "filename": "InstallOptions.dll", 
+                    "path": "C:\\Users\\lp-scribbene\\AppData\\Local\\Temp\\nskA017.tmp\\", 
+                    "hash": "325b008aec81e5aaa57096f05d4212b5"
+                }, 
+                {
+                    "filename": "modern-header.bmp", 
+                    "path": "C:\\Users\\lp-scribbene\\AppData\\Local\\Temp\\nskA017.tmp\\", 
+                    "hash": "940c56737bf9bb69ce7a31c623d4e87a"
+                }
+            ], 
+            "occurred": "2016-07-13T11:43:30.000000Z", 
+            "target_entity": "lp-scribbene", 
+            "reported": "2016-07-13T11:43:30.000000Z", 
+            "detector_classification": [
+                "PUA.Win.Trojan.Casino"
+            ], 
+            "detector": "fireeye_hx", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "casino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0262628"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 41
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "Clover_Setup.exe", 
+                    "path": "C:\\Users\\Blackwell\\Downloads\\Clover_Setup_3.0.406\\"
+                }, 
+                {
+                    "filename": "InstallOptions.dll", 
+                    "path": "C:\\Users\\lp-blackwell\\AppData\\Local\\Temp\\nsv162E.tmp\\", 
+                    "hash": "325b008aec81e5aaa57096f05d4212b5"
+                }
+            ], 
+            "occurred": "2016-07-14T12:10:22.000000Z", 
+            "target_entity": "lp-blackwell", 
+            "reported": "2016-07-14T12:10:22.000000Z", 
+            "detector_classification": [
+                "PUA.Win.Trojan.Casino"
+            ], 
+            "detector": "fireeye_hx", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "casino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0262770"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 42
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "autorun.inf", 
+                    "path": "\\??\\Volume{3e64cef0-5ce3-11e3-bdb6-1c3e84fca763}\\"
+                }
+            ], 
+            "occurred": "2016-07-15T13:14:28.000000Z", 
+            "target_entity": "fichetolar", 
+            "reported": "2016-07-15T13:17:00.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "Generic!atr"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0262962"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 43
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "Player-Chrome (15).exe", 
+                    "path": "c:\\Documents and Settings\\laceyp\\Downloads\\"
+                }, 
+                {
+                    "filename": "Player-Chrome (14).exe", 
+                    "path": "c:\\Documents and Settings\\laceyp\\Downloads\\", 
+                    "hash": "4213b3d40975119a17cd0bd15b3fd3ce3f421dfc159448bebb601bebb80eba42"
+                }
+            ], 
+            "occurred": "2016-07-19T09:04:01.000000Z", 
+            "target_entity": "laceyp", 
+            "reported": "2016-07-19T09:08:48.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "PUP-XAC-V"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "pup"
+            ], 
+            "threat_designation_family": [
+                "other"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0263365"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 44
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "0000074b.js", 
+                    "path": "C:\\Users\\kliser\\AppData\\Local\\microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\8LM3S10B\\truth-window-hardware[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-07-20T16:39:59.000000Z", 
+            "target_entity": "kliser", 
+            "reported": "2016-07-20T16:44:03.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.bz"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0263583"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 45
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "start.exe", 
+                    "path": "d:\\Projects\\AMS Demo CD-ROM 2010\\Source\\bin-release\\"
+                }, 
+                {
+                    "filename": "start.exe", 
+                    "path": "d:\\Projects\\AMS Demo CD-ROM 2010\\Source\\bin-release\\"
+                }
+            ], 
+            "occurred": "2016-07-26T12:50:34.000000Z", 
+            "target_entity": "vanderstouws", 
+            "reported": "2016-07-26T12:55:11.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "Artemis!01C37C1EF3E5"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "artemis"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0264283"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 46
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "gu5setup.exe", 
+                    "path": "C:\\Users\\gusbar\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Content.IE5\\LQW5LMDJ"
+                }, 
+                {
+                    "filename": "InstallOptions.dll", 
+                    "path": "C:\\Users\\lp-gusbar\\AppData\\Local\\Temp\\nsa5B69.tmp\\", 
+                    "hash": "325b008aec81e5aaa57096f05d4212b5"
+                }
+            ], 
+            "occurred": "2016-07-28T12:56:06.000000Z", 
+            "reported": "2016-07-28T12:56:06.000000Z", 
+            "detector_classification": [
+                "PUA.Win.Trojan.Casino"
+            ], 
+            "detector": "fireeye_hx", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "casino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0264758"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 47
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "keyymqjxvr[1].htm", 
+                    "path": "C:\\Users\\Wolfed\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\17TABD6T\\"
+                }
+            ], 
+            "occurred": "2016-07-29T16:20:19.000000Z", 
+            "target_entity": "wolfed", 
+            "reported": "2016-07-29T16:23:51.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "HTML/Neutrino.b"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "neutrino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0264885"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 48
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "script[1].js", 
+                    "path": "C:\\Users\\lule\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\2MPC301X\\"
+                }
+            ], 
+            "occurred": "2016-08-01T16:12:42.000000Z", 
+            "target_entity": "lule", 
+            "reported": "2016-08-01T16:13:31.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.di"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0265096"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 49
+        }, 
+        {
+            "event_type": "malicious-destination", 
+            "version": 2, 
+            "protocol": 6, 
+            "port": 80, 
+            "occurred": "2016-08-02T13:50:01.000000Z", 
+            "reported": "2016-08-02T13:50:01.000000Z", 
+            "detector_classification": [
+                "Trojan.Pirpi"
+            ], 
+            "detector": "fireeye_web_mps", 
+            "addresses": [
+                {
+                    "ip": "76.3.239.6"
+                }
+            ], 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "pirpi"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0265343"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 50
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00002887.js", 
+                    "path": "C:\\Users\\YATESL-C\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\V12GX2F5\\latest-day-21-fix-results[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-08-03T18:50:47.000000Z", 
+            "target_entity": "yatesl-c", 
+            "reported": "2016-08-03T18:51:55.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.db"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0265587"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 51
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "b2ppdHZw[1].swf", 
+                    "path": "C:\\Users\\lavenderk\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\RQ5TJAPR\\b2ppdHZw[1].swf\\"
+                }
+            ], 
+            "occurred": "2016-08-03T23:02:01.000000Z", 
+            "target_entity": "lavenderk", 
+            "reported": "2016-08-03T23:03:04.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "Exploit-SWF.bd"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0265603"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 52
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "setupimgburn_2.5.8.0.exe", 
+                    "path": "c:\\users\\gonzalezbonzo\\downloads\\", 
+                    "hash": "9685e1b00b7d1b31ede436bd9b12be39"
+                }, 
+                {
+                    "filename": "setupimgburn_2.5.8.0.exe", 
+                    "path": "d:\\myfiles\\downloads\\", 
+                    "hash": "9685e1b00b7d1b31ede436bd9b12be39"
+                }
+            ], 
+            "occurred": "2016-08-09T11:00:55.000000Z", 
+            "target_entity": "gonzalezbonzo", 
+            "reported": "2016-08-09T11:00:55.000000Z", 
+            "detector_classification": [
+                "PUA.Win.Trojan.Casino"
+            ], 
+            "detector": "fireeye_hx", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "casino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0266137"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 53
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "0000173c.js", 
+                    "path": "C:\\Users\\Zelmaa\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\J11PCLB0\\yellow-springs-ohio-vacation-rentals[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-08-09T13:33:40.000000Z", 
+            "target_entity": "zelmaa", 
+            "reported": "2016-08-09T13:35:02.000000Z", 
+            "detector_classification": [
+                "JS/Redirector.db"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0266211"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 54
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "tyb[1].htm", 
+                    "path": "C:\\Users\\villaresj\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\LSCARBEZ\\"
+                }
+            ], 
+            "occurred": "2016-08-10T19:26:05.000000Z", 
+            "target_entity": "villaresj", 
+            "reported": "2016-08-10T19:27:48.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "HTML/Neutrino.b"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "neutrino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0266365"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 55
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "dHJ1Ym52ZXRleQ[1].swf", 
+                    "path": "C:\\Users\\CAPETANOPOULOSD\\AppData\\Local\\MICROSOFT\\Windows\\TEMPORARY INTERNET FILES\\Low\\Content.IE5\\MAP9ERQ5\\dHJ1Ym52ZXRleQ[1].swf\\"
+                }, 
+                {
+                    "filename": "jyzk[1].htm", 
+                    "path": "C:\\Users\\CAPETANOPOULOSD\\AppData\\Local\\MICROSOFT\\Windows\\TEMPORARY INTERNET FILES\\Low\\Content.IE5\\T1J3BVFN\\"
+                }
+            ], 
+            "occurred": "2016-08-11T11:59:05.000000Z", 
+            "target_entity": "capetanopoulosd", 
+            "reported": "2016-08-11T12:03:47.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "Exploit-SWF.bd", 
+                "HTML/Neutrino.b"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan", 
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "unknown", 
+                "neutrino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0266385"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 56
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "cousin-damage-bell-speech-arrangement-splash-consideration[1].swf", 
+                    "path": "C:\\Users\\CHANG\\AppData\\Local\\MICROSOFT\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\RWY2V3YW\\cousin-damage-bell-speech-arrangement-splash-consideration[1].swf\\"
+                }
+            ], 
+            "occurred": "2016-08-11T13:45:18.000000Z", 
+            "target_entity": "chang", 
+            "reported": "2016-08-11T13:48:18.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "Exploit-SWF.bd"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0266410"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 57
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "defend-audience-everywhere-plot-useless[1].swf", 
+                    "path": "C:\\Users\\abramson\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\XPIO6DX9\\defend-audience-everywhere-plot-useless[1].swf\\"
+                }
+            ], 
+            "occurred": "2016-08-11T20:12:25.000000Z", 
+            "target_entity": "abramson", 
+            "reported": "2016-08-11T20:13:39.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "Exploit-SWF.bd"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0266503"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 58
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "pgw[1].htm", 
+                    "path": "C:\\Users\\aleshirek\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\45RLJNTC\\"
+                }, 
+                {
+                    "filename": "tarks-grill[1]", 
+                    "path": "C:\\Users\\aleshirek\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\45RLJNTC\\"
+                }, 
+                {
+                    "filename": "0URJ8IFJ.htm", 
+                    "path": "C:\\Users\\aleshirek\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\VGWTS4DV\\"
+                }
+            ], 
+            "occurred": "2016-08-15T16:05:53.000000Z", 
+            "target_entity": "aleshirek", 
+            "reported": "2016-08-15T16:07:15.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "HTML/Neutrino.b", 
+                "HTML/Neutrino.c", 
+                "JS/Exploit"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan", 
+                "trojan", 
+                "other"
+            ], 
+            "threat_designation_family": [
+                "neutrino", 
+                "neutrino", 
+                "js/exploit"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0266788"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 59
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "autorun.inf", 
+                    "path": "D:\\autorun.inf\\"
+                }
+            ], 
+            "occurred": "2016-08-15T21:46:06.000000Z", 
+            "target_entity": "wrightjd", 
+            "reported": "2016-08-15T21:46:54.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "W32/Conficker.worm!inf"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "virus"
+            ], 
+            "threat_designation_family": [
+                "conficker"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0266852"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 60
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "README.txt", 
+                    "path": "c:\\Documents and Settings\\lp-capetanopoulosd\\"
+                }
+            ], 
+            "occurred": "2016-08-16T04:13:06.000000Z", 
+            "target_entity": "lp-capetanopoulosd", 
+            "reported": "2016-08-16T04:18:05.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "Ransom!remnant"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "ransomware"
+            ], 
+            "threat_designation_family": [
+                "remnant"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0266858"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 61
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "kindle-stiff-right[1].htm", 
+                    "path": "C:\\Users\\HUTSON\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\RLB0BTMH\\"
+                }, 
+                {
+                    "filename": "madness-grace-root-excitement-license-wail-bush-older-local-sixty.html[1].swf", 
+                    "path": "C:\\Users\\HUTSON\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\B78D9G44\\madness-grace-root-excitement-license-wail-bush-older-local-sixty.html[1].swf\\"
+                }
+            ], 
+            "occurred": "2016-08-16T21:06:28.000000Z", 
+            "target_entity": "HUTSON", 
+            "reported": "2016-08-16T21:06:34.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "HTML/Neutrino.e", 
+                "Exploit-SWF.bd"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan", 
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "neutrino", 
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0267007"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 62
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "trick-assume-22539039[1].htm", 
+                    "path": "C:\\Users\\BERRYJ\\AppData\\Local\\Microsoft\\Windows\\TEMPORARY INTERNET FILES\\Low\\Content.IE5\\3FC58RWS\\"
+                }
+            ], 
+            "occurred": "2016-08-17T18:15:52.000000Z", 
+            "target_entity": "berryj", 
+            "reported": "2016-08-17T18:20:04.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "HTML/Neutrino.e"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "neutrino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0267135"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 63
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "drqpkgzx[1].htm", 
+                    "path": "C:\\Users\\peven\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\4012QCEN\\"
+                }
+            ], 
+            "occurred": "2016-08-22T11:26:27.000000Z", 
+            "target_entity": "peven", 
+            "reported": "2016-08-22T11:31:27.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "HTML/Neutrino.b"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "neutrino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0267550"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 64
+        }, 
+        {
+            "event_type": "malicious-destination", 
+            "version": 2, 
+            "protocol": 6, 
+            "port": 80, 
+            "occurred": "2016-08-22T15:26:33.000000Z", 
+            "target_entity": "peven", 
+            "reported": "2016-08-22T11:27:35.000000Z", 
+            "detector_classification": [
+                "Trojan.EK.Dropper"
+            ], 
+            "http_referer": "http://r4fj8j.askduji2j3.top/?xXqAdLSVLhnIAoY=l3SKfPrfJxzFGMSUb-nJDa9GP0XCRQLPh4SGhKrXCJ-ofSih17OIFxzsqAycFUKCqrF4Qu4Fah2h1QWScEZrmYRPFgVIove8hQLfyhSWkp_R-xLZZw1Mq5vBE7U8jVSkmeIdcpkkxELR6mQGmb4YQFFd", 
+            "detector": "fireeye_web_mps", 
+            "addresses": [
+                {
+                    "ip": "178.32.173.180", 
+                    "url": "r4fj8j.askduji2j3.top"
+                }
+            ], 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0267546"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 65
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "ICReinstall_adobe_flash_setup.exe", 
+                    "path": "c:\\Documents and Settings\\mulliganm\\AppData\\Local\\Temp\\"
+                }
+            ], 
+            "occurred": "2016-08-23T10:05:50.000000Z", 
+            "target_entity": "mulliganm", 
+            "reported": "2016-08-23T10:16:34.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "RDN/Generic PUP.z"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "pup"
+            ], 
+            "threat_designation_family": [
+                "other"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0267654"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 66
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "dref=http%253A%252F%252Feow.alc.co[2].htm", 
+                    "path": "c:\\Documents and Settings\\kashiday\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\Z9PWNN2N\\"
+                }
+            ], 
+            "occurred": "2016-08-26T14:49:08.000000Z", 
+            "target_entity": "kashiday", 
+            "reported": "2016-08-26T14:49:43.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.dq"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0268134"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 67
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00015893.vbs", 
+                    "path": "D:\\NB_Backups\\data\\94\\96675.bin\\"
+                }
+            ], 
+            "occurred": "2016-08-27T16:37:38.000000Z", 
+            "target_entity": "NT AUTHORITY\\SYSTEM", 
+            "reported": "2016-08-27T16:39:16.000000Z", 
+            "system_type": "Windows 2008 R2 Service Pack 1", 
+            "detector_classification": [
+                "VBS/Johop"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "johop"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0268213"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 68
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "autorun.inf", 
+                    "path": "E:\\"
+                }
+            ], 
+            "occurred": "2016-08-29T13:57:25.000000Z", 
+            "target_entity": "sgambato", 
+            "reported": "2016-08-29T14:01:28.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "W32/USBAgent!inf"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "virus"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0268292"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 69
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00004eff.js", 
+                    "path": "C:\\Users\\crokerm\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\WKD8HY3R\\ohio-thrift-entertainment-books-used[1].htm\\"
+                }
+            ], 
+            "occurred": "2016-09-01T13:04:21.000000Z", 
+            "target_entity": "crokerm", 
+            "reported": "2016-09-01T13:06:36.000000Z", 
+            "detector_classification": [
+                "JS/DecKryptik"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "deckryptik"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0268904"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 70
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "autorun.inf", 
+                    "path": "E:\\"
+                }
+            ], 
+            "occurred": "2016-09-01T13:14:28.000000Z", 
+            "target_entity": "yangx", 
+            "reported": "2016-09-02T08:59:25.000000Z", 
+            "detector_classification": [
+                "Generic!atr"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0268977"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 71
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "neksstx[1].htm", 
+                    "path": "C:\\Users\\shifflettm\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\G1R3YUUW\\"
+                }
+            ], 
+            "occurred": "2016-09-01T15:39:07.000000Z", 
+            "target_entity": "shifflettm", 
+            "reported": "2016-09-01T15:39:57.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "HTML/Neutrino.b"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "neutrino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0268878"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 72
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "ektmp[1].htm", 
+                    "path": "C:\\Users\\minardsmitha\\AppData\\Local\\microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\B714VB4Q\\"
+                }
+            ], 
+            "occurred": "2016-09-02T09:36:00.000000Z", 
+            "target_entity": "minardsmitha", 
+            "reported": "2016-09-02T09:38:27.000000Z", 
+            "detector_classification": [
+                "HTML/Neutrino.b", 
+                "HTML/Neutrino.c"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan", 
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "neutrino", 
+                "neutrino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0269030"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 73
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "setup.exe", 
+                    "path": "c:\\Documents and Settings\\lp-mountsd\\AppData\\Local\\Temp\\tmp6306515\\"
+                }
+            ], 
+            "occurred": "2016-09-06T13:10:58.000000Z", 
+            "target_entity": "lp-mountsd", 
+            "reported": "2016-09-06T13:11:12.000000Z", 
+            "detector_classification": [
+                "RDN/Generic PUP.x"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "pup"
+            ], 
+            "threat_designation_family": [
+                "other"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0269301"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 74
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "00020b25.js", 
+                    "path": "c:\\Documents and Settings\\sokolowskic\\AppData\\Local\\Microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\FANA1111\\YUWMN290.htm\\"
+                }
+            ], 
+            "occurred": "2016-09-13T12:05:17.000000Z", 
+            "target_entity": "sokolowskic", 
+            "reported": "2016-09-13T12:05:55.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "JS/Redirector.dg"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "js/redirect"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0270124"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 75
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "Express_Installer.exe", 
+                    "path": "d:\\Downloads Archive\\"
+                }
+            ], 
+            "occurred": "2016-09-13T12:08:00.000000Z", 
+            "target_entity": "zivichg", 
+            "reported": "2016-09-13T12:12:14.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "TinyInstaller"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0270125"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 76
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "SiteWise_Input Sheet.xls", 
+                    "path": "c:\\Documents and Settings\\SIRABIANR\\Documents\\"
+                }
+            ], 
+            "occurred": "2016-09-13T12:16:21.000000Z", 
+            "target_entity": "SIRABIANR", 
+            "reported": "2016-09-13T12:20:27.000000Z", 
+            "system_type": "Windows 7 Service Pack 1", 
+            "detector_classification": [
+                "W97M/Dropper.ck"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "virus"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0270205"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 77
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "index[1].htm", 
+                    "path": "C:\\Users\\schnipkeg\\AppData\\Local\\microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\EPTLKU68\\"
+                }
+            ], 
+            "occurred": "2016-09-14T03:20:37.000000Z", 
+            "target_entity": "schnipkeg", 
+            "reported": "2016-09-14T03:25:03.000000Z", 
+            "detector_classification": [
+                "HTML/Neutrino.b"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "neutrino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0270501"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 78
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "index[1].htm", 
+                    "path": "C:\\Users\\moorehallt\\AppData\\Local\\microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\X8PUQHZ9\\"
+                }
+            ], 
+            "occurred": "2016-09-14T11:20:54.000000Z", 
+            "target_entity": "moorehallt", 
+            "reported": "2016-09-14T11:29:34.000000Z", 
+            "detector_classification": [
+                "HTML/Neutrino.b"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "neutrino"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0270443"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 79
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "0UBSYO98.htm", 
+                    "path": "C:\\Users\\smithva\\AppData\\Local\\microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\UF41OCUF\\"
+                }
+            ], 
+            "occurred": "2016-09-14T11:38:48.000000Z", 
+            "target_entity": "smithva", 
+            "reported": "2016-09-14T11:43:46.000000Z", 
+            "detector_classification": [
+                "HTML/Iframe.gen.x"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "other"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0270616"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 80
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "msiexec.exe"
+                }, 
+                {
+                    "filename": "dutphon.env", 
+                    "path": "C:\\Program Files (x86)\\Adobe\\Acrobat 10.0\\Designer 9.0\\Linguistics\\Providers\\Proximity\\11.00\\", 
+                    "hash": "d3fd7121b844308f5e0d98218b25f7a1"
+                }, 
+                {
+                    "filename": "grm.fca", 
+                    "path": "C:\\Program Files (x86)\\Adobe\\Acrobat 10.0\\Designer 9.0\\Linguistics\\Providers\\Proximity\\11.00\\", 
+                    "hash": "62c51a00ae229d82596a01f4cc4f7290"
+                }, 
+                {
+                    "filename": "4ac6ac8.rbf", 
+                    "path": "C:\\Config.Msi\\", 
+                    "hash": "62c51a00ae229d82596a01f4cc4f7290"
+                }, 
+                {
+                    "filename": "4ac6a78.rbf", 
+                    "path": "C:\\Config.Msi\\", 
+                    "hash": "d3fd7121b844308f5e0d98218b25f7a1"
+                }
+            ], 
+            "occurred": "2016-09-14T13:34:30.000000Z", 
+            "reported": "2016-09-14T13:34:30.000000Z", 
+            "detector_classification": [
+                "Malware.Binary.doc"
+            ], 
+            "detector": "fireeye_hx", 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0270468"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 81
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "Kinetis_Protocol_Analyzer_Adapter.exe"
+                }, 
+                {
+                    "filename": "System.dll", 
+                    "path": "C:\\Users\\lp-bennettc\\AppData\\Local\\Temp\\nsw78CA.tmp\\", 
+                    "hash": "883eff06ac96966270731e4e22817e11"
+                }
+            ], 
+            "occurred": "2016-09-14T14:02:52.000000Z", 
+            "target_entity": "lp-bennettc", 
+            "reported": "2016-09-14T14:02:52.000000Z", 
+            "detector_classification": [
+                "Malware.Binary.doc"
+            ], 
+            "detector": "fireeye_hx", 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0270479"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 82
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "JY808N8O.htm", 
+                    "path": "C:\\Users\\smithva\\AppData\\Local\\microsoft\\Windows\\Temporary Internet Files\\Low\\Content.IE5\\YMDGCD9O\\"
+                }
+            ], 
+            "occurred": "2016-09-16T11:05:58.000000Z", 
+            "target_entity": "smithva", 
+            "reported": "2016-09-16T11:10:18.000000Z", 
+            "detector_classification": [
+                "HTML/Iframe.gen.x"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "other"
+            ], 
+            "threat_designation_family": [
+                "other"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0270856"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 83
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "Key.exe"
+                }
+            ], 
+            "occurred": "2016-09-20T04:13:00.000000Z", 
+            "target_entity": "zelle", 
+            "reported": "2016-09-26T11:14:01.000000Z", 
+            "detector_classification": [
+                "Trojan-CoinMiner"
+            ], 
+            "detector": "mcafee_vse", 
+            "threat_designation_type": [
+                "trojan"
+            ], 
+            "threat_designation_family": [
+                "coinminer"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0271951"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 84
+        }, 
+        {
+            "event_type": "endpoint-malware", 
+            "version": 2, 
+            "files": [
+                {
+                    "filename": "DriverDoc_2016_Setup.exe", 
+                    "hash": "d5605eebeb421d85027cb523ad4955742ed13a6b"
+                }
+            ], 
+            "occurred": "2016-09-27T13:06:42.000000Z", 
+            "reported": "2016-09-27T13:06:42.000000Z", 
+            "detector_classification": [
+                "TeamCymruMalwareHashRegistry::Match"
+            ], 
+            "detector": "bro", 
+            "threat_designation_type": [
+                "malware"
+            ], 
+            "threat_designation_family": [
+                "unknown"
+            ], 
+            "provider_info": {
+                "inc_id": "INC0272218"
+            }, 
+            "target_organization": "armstrong", 
+            "target_industry": "defense-industrial-base", 
+            "id": 85
+        }
+    ]
+}
