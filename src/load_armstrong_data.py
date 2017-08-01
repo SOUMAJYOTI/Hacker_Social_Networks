@@ -32,9 +32,20 @@ def plot_bars(x, y, x_label, y_label, col, xTitles=[]):
     plt.show()
 
 
+def plot_am_data(df_plot):
+    df_plot.groupby([df_plot["date"].dt.year, df_plot["date"].dt.month]).count().plot(kind="bar")
+    plt.grid(True)
+    plt.xticks(rotation=45, size=20)
+    plt.yticks(size=20)
+    plt.xlabel("Date Timeframe", size=25)
+    plt.ylabel("# of events", size=25)
+    plt.show()
+
+
 def load_am_data(filePaths):
     """ filePath - path and file of the json/txt/csv file """
     dates_occurred = []
+    attacker_filenames = []
     for fp in filePaths:
         ext = os.path.splitext(fp)[-1].lower()
         if ext == ".json":
@@ -43,34 +54,24 @@ def load_am_data(filePaths):
 
             for e in data["events"]:
                 dates_occurred.append(e["occurred"][:10])
+                if "files" in e:
+                    if e["files"][0]["filename"] not in attacker_filenames:
+                        attacker_filenames.append(e["files"][0]["filename"])
+                elif "other_files" in e:
+                    if e["other_files"][0]["filename"] not in attacker_filenames:
+                        attacker_filenames.append(e["other_files"][0]["filename"])
 
     df = pd.DataFrame()
-    df["date"] = dates_occurred
-    df["date"] = df['date'].astype('datetime64')
+    # df["date"] = dates_occurred
+    # df["date"] = df['date'].astype('datetime64')
+    df["attack_file"] = attacker_filenames
 
-    df.groupby([df["date"].dt.year, df["date"].dt.month]).count().plot(kind="bar")
-    plt.grid(True)
-    plt.xticks(rotation=45, size=20)
-    plt.yticks(size=20)
-    plt.xlabel("Date Timeframe", size=25)
-    plt.ylabel("# of events", size=25)
-    plt.show()
+    #plot_am_data(df)
+    return df
 
-def load_data_sdk():
-    # url = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=" + str(limNum) + \
-    #       "&from=" + dateToString(fromDate) + "&to=" + dateToString(toDate) + "&forumsId=" + str(fId)
-    # headers = {"userId": "labuser", "apiKey": "a9a2370f-4959-4511-b263-5477d31329cf"}
-    # response = requests.get(url, headers=headers)
-    # return response.json()['results']
 
-    api = pycyr3con.Api(userId='labuser', apiKey='a9a2370f-4959-4511-b263-5477d31329cf')
-    result = api.getHackingPosts(postContent='lesperance')
-
-    df = pd.DataFrame(result)
-    print(df)
-
-if __name__ == "__main__":
-    fPaths = ['../data/Armstrong_data/release/release/data.json',
-              '../data/Armstrong_data/release/release2/data.json']
-    # load_am_data(fPaths)
-    load_data_sdk()
+# if __name__ == "__main__":
+#     fPaths = ['../data/Armstrong_data/release/release/data.json',
+#               '../data/Armstrong_data/release/release2/data.json']
+#     # load_am_data(fPaths)
+#     load_data_sdk()

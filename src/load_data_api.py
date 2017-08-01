@@ -25,6 +25,17 @@ def getHackingPosts(fromDate=dt.date.today(), toDate=dt.date.today(), limNum=0, 
     response = requests.get(url, headers=headers)
     return response.json()['results']
 
+def getHackingPosts_Content(searchContent, limNum=10000):
+    url = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit="+str(limNum)+\
+          "&postContent="+str(searchContent)
+    headers = {"userId" : "labuser", "apiKey" : "a9a2370f-4959-4511-b263-5477d31329cf"}
+    response = requests.get(url, headers=headers)
+    if 'results' not in response.json():
+        return {}
+    else:
+        return response.json()['results']
+
+
 def getHackingItems(fromDate=dt.date.today(), toDate=dt.date.today(), limNum=0):
     url = "https://apigargoyle.com/GargoyleApi/getHackingItems?limit="+str(limNum)+"&from="+dateToString(fromDate)+"&to="+dateToString(toDate)
     headers = {"userId" : "labuser", "apiKey" : "a9a2370f-4959-4511-b263-5477d31329cf"}
