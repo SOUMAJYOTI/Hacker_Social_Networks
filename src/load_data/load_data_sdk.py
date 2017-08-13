@@ -16,15 +16,15 @@ def getUserPosts(uId, limit=10000):
     return result
 
 
-def getHackingPosts_Date(frDate, toDate, limit=10000):
+def getHackingPosts_Date(frDate, toDate, content='', limit=10000):
     api = pycyr3con.Api(userId='labuser', apiKey='a9a2370f-4959-4511-b263-5477d31329cf')
     start_ptr = 0
     result = []
     while start_ptr < limit:
         if limit < 10000:
-            result.append(api.getHackingPosts(fromDate=frDate, toDate=toDate, imit=limit))
+            result.append(api.getHackingPosts(fromDate=frDate, toDate=toDate, postContent=content, limit=limit))
         else:
-            result.append(api.getHackingPosts(fromDate=frDate, toDate=toDate, imit=limit))
+            result.append(api.getHackingPosts(fromDate=frDate, toDate=toDate, limit=limit))
             start_ptr += 10000
 
     return result

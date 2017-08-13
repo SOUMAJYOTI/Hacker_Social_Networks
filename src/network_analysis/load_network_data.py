@@ -147,14 +147,14 @@ def computeNwDistance(Users, userNbrList, global_edge_list):
                         if u_j not in userGraph.nodes():
                             countUser += 1
                             userGraph.add_node(u_j)
-                        userGraph.add_edge(*(u_i, u_j))
-                        shortest_path_length[countUser].append(nx.average_shortest_path_length(userGraph))
-                    else:
-                        countUser += 1
-                        if u_j not in userGraph.nodes():
-                            userGraph.add_node(u_j)
-                        userGraph.add_edge(*(u_i, u_j))
-                        shortest_path_length[countUser].append(nx.average_shortest_path_length(userGraph))
+                            userGraph.add_edge(*(u_i, u_j))
+                            shortest_path_length[countUser].append(nx.average_shortest_path_length(userGraph))
+                        else:
+                            countUser += 1
+                            if u_j not in userGraph.nodes():
+                                userGraph.add_node(u_j)
+                            userGraph.add_edge(*(u_i, u_j))
+                            shortest_path_length[countUser].append(nx.average_shortest_path_length(userGraph))
 
                 if binarySearch(global_edge_list, (u_j, u_i)):
                     if u_i not in userGraph.nodes():
@@ -222,6 +222,6 @@ if __name__ == "__main__":
     # plot_histLine(ego_edgesCount, xLabel='# nodes', yLabel='# links in ego network', titleName='Top 10% users by out-degree')
 
     # Stats 5: Average shortest distance with user addition
-    shortest_distances = computeDistance(list(network_userNbrs.keys()), network_edges)
-    for idx in range(len(shortest_distances)):
-        print(np.mean(np.array(shortest_distances[idx])))
+    # shortest_distances = computeDistance(list(network_userNbrs.keys()), network_edges)
+    # for idx in range(len(shortest_distances)):
+    #     print(np.mean(np.array(shortest_distances[idx])))
