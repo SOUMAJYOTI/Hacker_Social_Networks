@@ -46,6 +46,7 @@ def load_am_data(filePaths):
     """ filePath - path and file of the json/txt/csv file """
     dates_occurred = []
     attacker_filenames = []
+    url_addresses = []
     for fp in filePaths:
         ext = os.path.splitext(fp)[-1].lower()
         if ext == ".json":
@@ -53,18 +54,33 @@ def load_am_data(filePaths):
                 data = json.load(data_file)
 
             for e in data["events"]:
+                # Field 1: Dates
                 dates_occurred.append(e["occurred"][:10])
+
+                # Field 2: Event subtypes
                 if "files" in e:
-                    if e["files"][0]["filename"] not in attacker_filenames:
-                        attacker_filenames.append(e["files"][0]["filename"])
+                    attacker_filenames.append(e["files"][0]["filename"])
                 elif "other_files" in e:
-                    if e["other_files"][0]["filename"] not in attacker_filenames:
-                        attacker_filenames.append(e["other_files"][0]["filename"])
+                    attacker_filenames.append(e["other_files"][0]["filename"])
+                else:
+                    attacker_filenames.append('')
+
+                # Field 3: Url addresses - if present
+                if "addresses" in e:
+                    if "url" in e["addresses"][0]:
+                        url_addresses.append(e["addresses"][0]["url"])
+                    else:
+                        url_addresses.append('')
+                else:
+                    url_addresses.append('')
+
+
 
     df = pd.DataFrame()
-    # df["date"] = dates_occurred
-    # df["date"] = df['date'].astype('datetime64')
-    df["attack_file"] = attacker_filenames
+    df["date"] = dates_occurred
+    df["date"] = df['date'].astype('datetime64')
+    df["filename"] = attacker_filenames
+    df['url'] = url_addresses
 
     #plot_am_data(df)
     return df
