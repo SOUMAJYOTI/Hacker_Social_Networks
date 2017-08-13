@@ -15,6 +15,7 @@ if __name__ == "__main__":
     amEvenets = ['port 80',	'endpoint-malware', 'exploit_kit', 'fireeye_web_mps', 'fireeye_Hx', 'malicious-destination',
                  'malicious-email',	'malware', 'mcafee_vse', 'pup', 'ransomware', 'trojan', 'virus', 'windows 7']
 
+    df_path = '../../data/Armstrong_data/eventsDF_v1.0-demo.csv'
     start_date = dt.datetime.strptime('2010-01-01', '%Y-%m-%d')
     end_date = dt.datetime.strptime('2017-07-31', '%Y-%m-%d')
     for e in subevents:
