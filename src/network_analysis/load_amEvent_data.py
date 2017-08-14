@@ -16,8 +16,19 @@ if __name__ == "__main__":
                  'malicious-email',	'malware', 'mcafee_vse', 'pup', 'ransomware', 'trojan', 'virus', 'windows 7']
 
     df_path = '../../data/Armstrong_data/eventsDF_v1.0-demo.csv'
+    amEvents_df = pd.read_csv(df_path)
+    amEvents_df['date'] = pd.to_datetime(amEvents_df['date'])
+
+    df_date_filtered = amEvents_df[amEvents_df['date'] < pd.to_datetime('2017-10-30')]
+
     start_date = dt.datetime.strptime('2010-01-01', '%Y-%m-%d')
     end_date = dt.datetime.strptime('2017-07-31', '%Y-%m-%d')
-    for e in subevents:
+
+    event_types = list(set(df_date_filtered['event_type']))
+
+    print(event_types)
+
+    exit()
+    for e in df_date_filtered['']:
         posts = ldap.getHackingPosts_Content()
         print(e, posts)

@@ -45,6 +45,7 @@ if __name__ == "__main__":
             # clusterList = hp[hp_idx]
             # item_df = pd.DataFrame(clusterList, )
             # hp_df = hp_df.append(item_df)
+
         except:
             print(hp[hp_idx])
             exit()

@@ -47,6 +47,9 @@ def load_am_data(filePaths):
     dates_occurred = []
     attacker_filenames = []
     url_addresses = []
+    event_type = []
+    detector = []
+
     for fp in filePaths:
         ext = os.path.splitext(fp)[-1].lower()
         if ext == ".json":
@@ -74,13 +77,25 @@ def load_am_data(filePaths):
                 else:
                     url_addresses.append('')
 
+                # Field 4: Event type
+                if "event_type" in e:
+                    event_type.append(e["event_type"])
+                else:
+                    event_type.append('')
 
+                # Field 5: Detector
+                if "detector" in e:
+                    detector.append(e["detector"])
+                else:
+                    detector.append('')
 
     df = pd.DataFrame()
     df["date"] = dates_occurred
     df["date"] = df['date'].astype('datetime64')
     df["filename"] = attacker_filenames
     df['url'] = url_addresses
+    df['event_type'] = event_type
+    df['detector'] = detector
 
     #plot_am_data(df)
     return df
