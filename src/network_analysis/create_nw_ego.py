@@ -175,15 +175,15 @@ def computeNwDistance(Users, userNbrList, global_edge_list):
 
 if __name__ == "__main__":
     # Load stored and preprocessed data
-    # network_edges = pickle.load(open('../../data/Network_stats/user_edges_Jan16_Mar16_forums_top5_CVE.pickle', 'rb'))
-    # network_userNbrs = pickle.load(open('../../data/Network_stats/user_nbrs_Jan16_Mar16_forums_top5_CVE.pickle', 'rb'))
+    network_edges = pickle.load(open('../../data/Network_stats/user_edges_Jan16_Mar16_forums_top5_CVE.pickle', 'rb'))
+    network_userNbrs = pickle.load(open('../../data/Network_stats/user_nbrs_Jan16_Mar16_forums_top5_CVE.pickle', 'rb'))
     network_data = pickle.load(open('../../data/Mohammed/DW_user_edges_DataFrame_June15-June16.pickle', 'rb'))
 
     network_data['date'] = pd.to_datetime(network_data['date'])
-    nw_data_time_slice = network_data[network_data['date'] > pd.to_datetime('2016-03-01')]
+    nw_data_time_slice = network_data[network_data['date'] > pd.to_datetime('2016-01-01')]
     nw_data_time_slice = nw_data_time_slice[nw_data_time_slice['date'] < pd.to_datetime('2016-03-31')]
 
-    forums_cve_mentions = [38, 113, 134, 205, 84, 159, 259, 211, 226, 150]
+    forums_cve_mentions = [259, 229, 88, 176, 159, 38]
 
     nw_forums_filtered = pd.DataFrame()
     for f in forums_cve_mentions:
@@ -201,13 +201,13 @@ if __name__ == "__main__":
 
     # Stats 2: Store the edges of the network for faster computation
     # network_edges = store_edges(nw_forums_filtered)
-    # pickle.dump(network_edges, open('../../data/Network_stats/user_edges_Mar16_forums_top10_CPE-demo.pickle', 'wb'))
+    # pickle.dump(network_edges, open('../../data/Network_stats/user_edges_Jan16_Mar16_forums_top5_CVE.pickle', 'wb'))
     # print('Done')
 
     # Stats 3: Store the out-neighbors of the network users for faster computation
-    network_userNbrs = store_neighbors(nw_forums_filtered)
-    pickle.dump(network_userNbrs, open('../../data/Network_stats/user_nbrs_Mar16_forums_top10_CPE_demo.pickle', 'wb'))
-    print('Done')
+    # network_userNbrs = store_neighbors(nw_forums_filtered)
+    # pickle.dump(network_userNbrs, open('../../data/Network_stats/user_nbrs_Jan16_Mar16_forums_top5_CVE.pickle', 'wb'))
+    # print('Done')
 
     # Stats 4: Number of links in ego network
     # ego_edgesCount = []
