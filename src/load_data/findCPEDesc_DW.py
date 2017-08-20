@@ -91,7 +91,7 @@ if __name__ == "__main__":
     # forums_cve_mentions = [38, 113, 134, 205, 84, 159, 259, 211, 226, 150]
 
     # 0. Different event descriptions
-    # eventDesc = ['windows 7', 'internet explorer', 'windows vista', 'windows server', 'windows 8']
+    eventDesc = ['windows 7', 'internet explorer', 'windows vista', 'windows server', 'windows 8']
     # eventDesc = ['linux', 'linux kernel', 'canonical', 'ubuntu', 'ubuntu os']
     # eventDesc = ['apple', 'mac', 'mackintosh', 'mac_os', 'mac operating system']
     # eventDesc = ['google', 'google chrome', 'chrome', 'chrome OS']
@@ -101,10 +101,10 @@ if __name__ == "__main__":
 
 
     # 1. Get the data with CPE desc in Dark Web within a time period
-    # start_date = dt.datetime.strptime('2016-03-01', '%Y-%m-%d')
-    # end_date = dt.datetime.strptime('2016-03-30', '%Y-%m-%d')
-    # results_df = getCPEDesc_MentionsInDW(eventDesc, start_date, end_date)
-    # results_df.to_csv('../../data/Armstrong_data/Windows_IE_DW_Mar2016 -sample.csv')
+    start_date = dt.datetime.strptime('2015-03-01', '%Y-%m-%d')
+    end_date = dt.datetime.strptime('2016-03-30', '%Y-%m-%d')
+    results_df = getCPEDesc_MentionsInDW(eventDesc, start_date, end_date)
+    results_df.to_csv('../../data/Armstrong_data/Windows_IE_DW_Jan15-Mar16.csv')
 
     # 2. Get the top k forums in Mar 16 that has these keywords
     # results_df = pd.read_csv('../../data/Armstrong_data/Windows_IE_DW_Mar2016-sample.csv', encoding='ISO-8859-1')
@@ -117,15 +117,15 @@ if __name__ == "__main__":
     # amEvents_df = amEvents_df.fillna(value='')
     #
     # results_final = pd.DataFrame()
-    # filenames_seen = []
-    start_date = dt.datetime.strptime('2016-04-01', '%Y-%m-%d')
-    end_date = dt.datetime.strptime('2016-05-01', '%Y-%m-%d')
+    # # filenames_seen = []
+    # start_date = dt.datetime.strptime('2016-04-01', '%Y-%m-%d')
+    # end_date = dt.datetime.strptime('2016-05-01', '%Y-%m-%d')
     # amEvents_df_slice = amEvents_df[amEvents_df['date'] < end_date]
 
-    fNames_selected = ['trojan']
+    # fNames_selected = ['trojan']
     # fNames_selected = ['trojan', 'mcafee_vse', 'fireeye_web_mps', 'ransomware']
-    results_final = getArmstrongEvent_MentionsInDW(fNames_selected, start_date, end_date, [])
-    results_final.to_csv('../../data/Armstrong_data/Armstrong_selectedNames_Apr-May2016-sample.csv')
+    # results_final = getArmstrongEvent_MentionsInDW(fNames_selected, start_date, end_date, [])
+    # results_final.to_csv('../../data/Armstrong_data/Armstrong_selectedNames_Apr-May2016-sample.csv')
 
     # for filename in fNames_selected:
 

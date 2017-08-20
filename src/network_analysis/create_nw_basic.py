@@ -4,8 +4,7 @@ import operator
 import matplotlib.pyplot as plt
 import numpy as np
 import networkx as nx
-
-# TODO: Temporal evaluation of the ego network formation
+from sqlalchemy import create_engine
 
 
 def binarySearch(alist, item):
@@ -54,31 +53,6 @@ def store_edges(network_df):
     return network_edgeList
 
 
-def mostReplyUsers(network_df, percentUsers):
-    users_replyCount = {}
-
-    for idx, row in network_df.iterrows():
-        src = row['source']
-        # tgt = row['target']
-
-        if src not in users_replyCount:
-            users_replyCount[src] = 0
-
-        users_replyCount[src] += 1
-
-    # Sort the users based on the count of the replies
-    usersCount = len(users_replyCount)
-    topUsers = sorted(users_replyCount.items(), key=operator.itemgetter(1), reverse=True)[int((percentUsers-0.1)*usersCount):int(usersCount*percentUsers)]
-
-    countValList = []
-    usersList = []
-    for item, val in topUsers:
-        usersList.append(item)
-        countValList.append(val)
-
-    return countValList, usersList
-
-
 def plot_hist(data, numBins, xLabel='', yLabel='', titleName=''):
     plt.figure()
     n, bins, patches = plt.hist(data, bins=numBins, facecolor='g')
@@ -108,120 +82,22 @@ def plot_histLine(data, xLabel='', yLabel='', titleName=''):
     plt.show()
 
 
-def createEgoNetwork(user, userNbrList, global_edge_list):
-    # Consider the ego network
-    alters = userNbrList[user]
-    egoNw_Edges = []
-
-    # Consider all pairs of edges possible among the alters
-    for i in range(len(alters)-1):
-        u_i = alters[i]
-        for j in range(i+1, len(alters)):
-            u_j = alters[j]
-            if binarySearch(global_edge_list, (u_i, u_j)):
-                egoNw_Edges.append((u_i, u_j))
-
-            if binarySearch(global_edge_list, (u_j, u_i)):
-                egoNw_Edges.append((u_j, u_i))
-
-    return egoNw_Edges
-
-
-def computeNwDistance(Users, userNbrList, global_edge_list):
-    shortest_path_length = [[] for _ in range(1000)]
-    for u in Users:
-        # Consider the ego network
-        alters = userNbrList[u]
-        egoNw_Edges = []
-
-        countUser = 0
-        nbrs = userNbrList[u]
-        userGraph = nx.DiGraph()
-
-        for i in range(len(alters) - 1):
-            u_i = alters[i]
-            for j in range(i + 1, len(alters)):
-                u_j = alters[j]
-                if binarySearch(global_edge_list, (u_i, u_j)):
-                        userGraph.add_node(u_i)
-                        if u_j not in userGraph.nodes():
-                            countUser += 1
-                            userGraph.add_node(u_j)
-                            userGraph.add_edge(*(u_i, u_j))
-                            shortest_path_length[countUser].append(nx.average_shortest_path_length(userGraph))
-                        else:
-                            countUser += 1
-                            if u_j not in userGraph.nodes():
-                                userGraph.add_node(u_j)
-                            userGraph.add_edge(*(u_i, u_j))
-                            shortest_path_length[countUser].append(nx.average_shortest_path_length(userGraph))
-
-                if binarySearch(global_edge_list, (u_j, u_i)):
-                    if u_i not in userGraph.nodes():
-                        userGraph.add_node(u_i)
-                        if u_j not in userGraph.nodes():
-                            userGraph.add_node(u_j)
-                        userGraph.add_edge(*(u_j, u_i))
-                        shortest_path_length[countUser].append(nx.average_shortest_path_length(userGraph))
-                    else:
-                        if u_j not in userGraph.nodes():
-                            userGraph.add_node(u_j)
-                        userGraph.add_edge(*(u_j, u_i))
-                        shortest_path_length[countUser].append(nx.average_shortest_path_length(userGraph))
-        countUser += 1
-
-    return shortest_path_length
-
-
 if __name__ == "__main__":
-    # Load stored and preprocessed data
-    # network_edges = pickle.load(open('../../data/Network_stats/user_edges_Jan16_Mar16_forums_top5_CVE.pickle', 'rb'))
-    # network_userNbrs = pickle.load(open('../../data/Network_stats/user_nbrs_Jan16_Mar16_forums_top5_CVE.pickle', 'rb'))
-    network_data = pickle.load(open('../../data/Mohammed/DW_user_edges_DataFrame_June15-June16.pickle', 'rb'))
+    startDate = "2015-01-01"
+    endDate = "2016-04-01"
 
-    network_data['date'] = pd.to_datetime(network_data['date'])
-    nw_data_time_slice = network_data[network_data['date'] > pd.to_datetime('2016-03-01')]
-    nw_data_time_slice = nw_data_time_slice[nw_data_time_slice['date'] < pd.to_datetime('2016-03-31')]
+    results_df = pd.DataFrame()
+    forumsList = [250, 220, 219, 179, 265, 98, 150, 121, 35, 214, 266, 89, 71, 197,
+                  146, 147, 107, 64, 218, 135, 257, 84, 213, 243, 211, 161, 236, 38,
+                  159, 176, 88, 229, 259]
+    engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cve')
+    for f in forumsList:
+        query = "select forumsid, topicid, posteddate::date, postsid, uid from dw_posts where posteddate::date > '" \
+                + startDate + "' and posteddate::date < '" + endDate + "' and forumsid= " + str(f)
+        print("ForumId: ", f)
 
-    forums_cve_mentions = [38, 113, 134, 205, 84, 159, 259, 211, 226, 150]
+        df = pd.read_sql_query(query, con=engine)
+        print(df)
+        results_df = results_df.append(df)
 
-    nw_forums_filtered = pd.DataFrame()
-    for f in forums_cve_mentions:
-        df_forum = nw_data_time_slice[nw_data_time_slice['forumid'] == f]
-        nw_forums_filtered = pd.concat([nw_forums_filtered, df_forum], axis=0)
-
-    # Stats 1: User out-degree distribution
-    topUserPercent = [0.1]
-
-
-    # for tup in topUserPercent:
-    #     data, usersList = mostReplyUsers(nw_forums_filtered, tup)
-    #     plot_hist(data, 20, xLabel='# Out-neighbors', yLabel='# Users', titleName='Top ' + str((tup-0.1)*100) + '%  to ' +
-    #                                                 str(tup*100) + ' % Users by out-degree')
-
-    # Stats 2: Store the edges of the network for faster computation
-    # network_edges = store_edges(nw_forums_filtered)
-    # pickle.dump(network_edges, open('../../data/Network_stats/user_edges_Mar16_forums_top10_CPE-demo.pickle', 'wb'))
-    # print('Done')
-
-    # Stats 3: Store the out-neighbors of the network users for faster computation
-    network_userNbrs = store_neighbors(nw_forums_filtered)
-    pickle.dump(network_userNbrs, open('../../data/Network_stats/user_nbrs_Mar16_forums_top10_CPE_demo.pickle', 'wb'))
-    print('Done')
-
-    # Stats 4: Number of links in ego network
-    # ego_edgesCount = []
-    # countUser = 0
-    # print('Total users: ', len(network_userNbrs))
-    # for ego in network_userNbrs:
-    #     print('Ego number: ', countUser)
-    #     ego_edges = createEgoNetwork(ego, network_userNbrs, network_edges)
-    #     ego_edgesCount.append(len(ego_edges))
-    #     countUser += 1
-    #
-    # plot_histLine(ego_edgesCount, xLabel='# nodes', yLabel='# links in ego network', titleName='Top 10% users by out-degree')
-
-    # Stats 5: Average shortest distance with user addition
-    # shortest_distances = computeDistance(list(network_userNbrs.keys()), network_edges)
-    # for idx in range(len(shortest_distances)):
-    #     print(np.mean(np.array(shortest_distances[idx])))
+    print(results_df)
