@@ -53,14 +53,14 @@ def getDW_Data(forums_list, start_date, end_date):
 
 
 if __name__ == "__main__":
-    forums_cve_mentions = [38, 113, 134, 205, 84, 159, 259, 211, 226, 150]
-    # forums_cve_mentions = [38, 113, 134]
+    # forums_cve_mentions = [46, 12, 150, 113, 261, 40, 117, 38, 35, 84, 105, 41]
+    forums_cve_mentions = [113]
 
-    start_date = dt.datetime.strptime('2010-01-01', '%Y-%m-%d')
-    end_date = dt.datetime.strptime('2016-12-31', '%Y-%m-%d')
+    start_date = dt.datetime.strptime('2016-04-01', '%Y-%m-%d')
+    end_date = dt.datetime.strptime('2016-05-01', '%Y-%m-%d')
 
     results_final = getDW_Data(forums_cve_mentions, start_date, end_date)
-    # results_final.to_csv('DW_data_f_38_113_134_205_84_159_259_211_226_150.csv')
+    results_final.to_csv('../../data/DW_data/08_20/DW_data_selected_forums_Apr16.csv')
 
-    engine = create_engine('postgresql://postgres:Impossible2@localhost:5432/DarkWeb_Soum')
-    results_final.to_sql('DW_forums_topCVE_mention', engine, if_exists='append')
+    # engine = create_engine('postgresql://postgres:Impossible2@localhost:5432/DarkWeb_Soum')
+    # results_final.to_sql('DW_forums_topCVE_mention', engine, if_exists='append')

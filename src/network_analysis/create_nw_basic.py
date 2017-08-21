@@ -82,22 +82,47 @@ def plot_histLine(data, xLabel='', yLabel='', titleName=''):
     plt.show()
 
 
+def computeCentrality(network, arg):
+    if arg == "InDegree":
+        cent = nx.in_degree_centrality(network)
+
+    if arg == "OutDegree":
+        cent = nx.out_degree_centrality(network)
+
+    if arg == "Pagerank":
+        cent = nx.pagerank(network)
+
+    # if arg == "OutDegree":
+    #     cent = nx.out_degree_centrality(network)
+
+    return cent
+
+
 if __name__ == "__main__":
-    startDate = "2015-01-01"
-    endDate = "2016-04-01"
+    startDate = "2010-07-01"
+    endDate = "2016-08-01"
 
     results_df = pd.DataFrame()
-    forumsList = [250, 220, 219, 179, 265, 98, 150, 121, 35, 214, 266, 89, 71, 197,
-                  146, 147, 107, 64, 218, 135, 257, 84, 213, 243, 211, 161, 236, 38,
-                  159, 176, 88, 229, 259]
-    engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cve')
-    for f in forumsList:
-        query = "select forumsid, topicid, posteddate::date, postsid, uid from dw_posts where posteddate::date > '" \
-                + startDate + "' and posteddate::date < '" + endDate + "' and forumsid= " + str(f)
-        print("ForumId: ", f)
+    # forumsList = [259]
+    # forumsList = [113]
 
-        df = pd.read_sql_query(query, con=engine)
-        print(df)
-        results_df = results_df.append(df)
+    # engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cve')
+    # for f in forumsList:
+    #     query = "select forumsid, topicid, posteddate::date, postsid, uid from dw_posts where posteddate::date > '" \
+    #             + startDate + "' and posteddate::date < '" + endDate + "' and forumsid=" + str(f)
+    #     print("ForumId: ", f)
+    #     print(query)
+    #
+    #     df = pd.read_sql_query(query, con=engine)
+    #     print(df)
+    #     results_df = results_df.append(df)
 
-    print(results_df)
+    # results_df.to_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jul16.csv')
+
+    dw_user_edges = pickle.load(open('../../data/Mohammed/DW_user_edges_DataFrame_June15-June16.pickle', 'rb'))
+    posts_df = pd.read_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jan-Mar16.csv')
+
+    topicsId_list = list(set(posts_df['topicid'].tolist()))
+    dw_user_edges = dw_user_edges[dw_user_edges['topicid'].isin(topicsId_list)]
+
+

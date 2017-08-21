@@ -9,7 +9,7 @@ import operator
 import pickle
 
 
-def getTopicIds(keyword_List, start_date, end_date):
+def getPostsList(keyword_List, start_date, end_date):
     count_data = 0
     topicIds_list = []
     forum_topicIds = {}
@@ -22,7 +22,58 @@ def getTopicIds(keyword_List, start_date, end_date):
             try:
                 # results = ldap.getHackingPosts(start=start, limNum=5000, fId=f, fromDate=start_date, toDate=end_date)
                 results = ldap.getHackingPosts_Content(searchContent=kw,
-                                                              start=start, limNum=5000, fromDate=start_date, toDate=end_date)
+                                                       start=start, limNum=5000, fromDate=start_date, toDate=end_date)
+
+            except:
+                break
+
+            if len(results) == 0:
+                break
+
+            # if count_data > 10000:
+            #     break
+
+            for r_idx in range(len(results)):
+                item = results[r_idx]
+
+                if item['postsId'] in postsId_seen:
+                    continue
+                postsId_seen.append(item['postsId'])
+                if 'postedDate' not in item:
+                    item['postedDate'] = ''
+                if 'language' not in item:
+                    item['language'] = ''
+                item_dict = {'postsId': item['postsId'], "forumsId": item['forumsId'], 'postedDate': item['postedDate'],
+                             'topicsId': item['topicId'], 'topicsName': item['topicsName'], 'language': item['language'],
+                             'uid': item['uid']}
+
+                item_df = pd.DataFrame(item_dict, index=[count])
+                results_df = results_df.append(item_df)
+                count += 1
+
+
+
+            count_data += 5000
+            start += 5000
+
+    return forum_topicIds, topicIds_list
+
+
+def getTopicIds(forumList, keyword_List, start_date, end_date):
+    count_data = 0
+    topicIds_list = []
+    forum_topicIds = {}
+
+    for kw in keyword_List:
+    # for f in forumList:
+        # print("Keyword: ", kw)
+        start = 0
+        while True:
+            print("Data count: ", count_data, " start: ", start)
+            try:
+                results = ldap.getHackingPosts_Content_Forums(searchContent=kw, start=start, limNum=5000, fId=200, fromDate=start_date, toDate=end_date)
+                # results = ldap.getHackingPosts_Content(searchContent=kw,
+                #                                               start=start, limNum=5000, fromDate=start_date, toDate=end_date)
 
             except:
                 break
@@ -40,6 +91,7 @@ def getTopicIds(keyword_List, start_date, end_date):
                     topicIds_list.append(item['topicId'])
 
                 f = item['forumsId']
+                print(f, item['postedDate'])
                 if f not in forum_topicIds:
                     forum_topicIds[f] = [item['topicId']]
                 else:
@@ -62,10 +114,19 @@ def topicCorrelation(topicsId_1, topicsId_2):
     print("% of forums relevant to Windows: ", count_forums_present/totalCountForums*100)
 
 
+def getTopForumsByTopicsCount(forumTopicsList):
+    forums_threadCount = {}
+    for f in forumTopicsList:
+        forums_threadCount[f] = len(forumTopicsList[f])
+    sorted_forums = sorted(forums_threadCount.items(), key=operator.itemgetter(1), reverse=True)[:10]
+    for k, v in sorted_forums:
+        print(k, v)
+
 if __name__ == "__main__":
-    event_df = pd.read_csv('../../data/Armstrong_data/Windows_IE_DW_Jan15-Mar16.csv', encoding='ISO-8859-1')
+    # event_df = pd.read_csv('../../data/Armstrong_data/Windows_IE_DW_Jan15-Mar16.csv', encoding='ISO-8859-1')
 
     # 1. Find the forums and topics relevant to these keywords in the time frame
+    forumList = [200]
     kw_List = ['windows', 'microsoft', 'vista', 'windows xp', 'win', 'windows 8', 'windows 8.1', 'windows 7']
     # kw_List = ['windows', 'microsoft', 'vista', 'windows xp', 'win', 'windows 8', 'windows 8.1', 'windows 7',
     #            'operating system',  'linux', 'linux kernel', 'canonical', 'ubuntu', 'ubuntu os', 'apple', 'mac',
@@ -73,9 +134,15 @@ if __name__ == "__main__":
     # eventDesc = ['linux', 'linux kernel', 'canonical', 'ubuntu', 'ubuntu os']
     start_date = dt.datetime.strptime('2016-01-01', '%Y-%m-%d')
     end_date = dt.datetime.strptime('2016-03-30', '%Y-%m-%d')
-    forum_topics, topics_List = getTopicIds(kw_List, start_date, end_date)
-
-    pickle.dump((forum_topics, topics_List), open('../../data/DW_data/windows_topicIDs_Jan-Mar2016.pickle', 'wb'))
+    forum_topics, topics_List = getTopicIds(forumList, kw_List, start_date, end_date)
+    #
+    # pickle.dump((forum_topics, topics_List), open('../../data/DW_data/windows_topicIDs_Jan-Mar2016.pickle', 'wb'))
 
     # 2. Find the forums relevant to one set of events out of all the events
-    
+    # forum_topics_1, topicsList_1 = pickle.load(open('../../data/DW_data/all_topicIDs_Jan-Mar2016.pickle', 'rb'))
+    # forum_topics_2, topicsList_2 = pickle.load(open('../../data/DW_data/windows_topicIDs_Jan-Mar2016.pickle', 'rb'))
+    #
+    # topicCorrelation(forum_topics_1, forum_topics_2)
+
+    # 3. Get the Top forums bu count of topic threads posted
+    # getTopForumsByTopicsCount(forum_topics_1)

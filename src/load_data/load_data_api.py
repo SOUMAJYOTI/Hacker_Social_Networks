@@ -37,7 +37,7 @@ def getHackingPosts_Content(searchContent='', start=0, fromDate=dt.date.today(),
         return response.json()['results']
 
 def getHackingPosts_Content_Forums(fId, searchContent='', fromDate=dt.date.today(),  toDate=dt.date.today(),
-                                   start = 0, limNum=5000):
+                                   start=0, limNum=5000):
     url = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit="+str(limNum)+\
           "&from="+dateToString(fromDate)+"&to="+dateToString(toDate)+ "&postContent="+str(searchContent)\
           + "&forumsId="+ str(fId) + "&start=" + str(start)
