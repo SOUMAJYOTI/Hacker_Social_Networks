@@ -7,36 +7,42 @@ import networkx as nx
 import datetime as dt
 import operator
 
-
+# TODO: CHECK THAT THIS RETURNS ALL THE ROWS IN DW, NOT A SAMPLE !!!!
 def getCPEDesc_MentionsInDW(eventDesc, start_date, end_date):
     results_df = pd.DataFrame()
 
     postsId_seen = []
     count = 0
+    count_data = 0
     for ed in eventDesc:
         print(ed)
-        results = ldap.getHackingPosts_Content(searchContent=ed, fromDate=start_date, toDate=end_date)
-        count_wrong = 0
-        for r_idx in range(len(results)):
-            # try:
-            item = results[r_idx]
-            if item['postsId'] in postsId_seen:
-                continue
-            postsId_seen.append(item['postsId'])
-            if 'postedDate' not in item:
-                item['postedDate'] = ''
-            if 'language' not in item:
-                item['language'] = ''
-            item_dict = {'postsId': item['postsId'], "forumsId": item['forumsId'], 'postedDate': item['postedDate'],
-                         'topicsId': item['topicId'], 'topicsName': item['topicsName'], 'language': item['language'],
-                         'uid': item['uid']}
+        start = 0
+        while True:
+            print("Data count: ", count_data, " start: ", start)
+            try:
+                results = ldap.getHackingPosts_Content(searchContent=ed, start=start, fromDate=start_date, toDate=end_date, limNum=5000)
+            except:
+                break
 
-            item_df = pd.DataFrame(item_dict, index=[count])
-            results_df = results_df.append(item_df)
-            count += 1
-            # except:
-            #     count_wrong += 1
-            #     print(count_wrong)
+            for r_idx in range(len(results)):
+                item = results[r_idx]
+                if item['postsId'] in postsId_seen:
+                    continue
+                postsId_seen.append(item['postsId'])
+                if 'postedDate' not in item:
+                    item['postedDate'] = ''
+                if 'language' not in item:
+                    item['language'] = ''
+                item_dict = {'postsId': item['postsId'], "forumsId": item['forumsId'], 'postedDate': item['postedDate'],
+                             'topicsId': item['topicId'], 'topicsName': item['topicsName'], 'language': item['language'],
+                             'uid': item['uid']}
+
+                item_df = pd.DataFrame(item_dict, index=[count])
+                results_df = results_df.append(item_df)
+                count += 1
+
+            count_data += 5000
+            start += 5000
 
     return results_df
 
@@ -91,7 +97,9 @@ if __name__ == "__main__":
     # forums_cve_mentions = [38, 113, 134, 205, 84, 159, 259, 211, 226, 150]
 
     # 0. Different event descriptions
-    eventDesc = ['windows 7', 'internet explorer', 'windows vista', 'windows server', 'windows 8']
+    eventDesc = ['windows 7', 'internet explorer', 'windows vista', 'windows server', 'windows 8', 'operating system',
+                 'linux', 'linux kernel', 'canonical', 'ubuntu', 'ubuntu os', 'apple', 'mac',
+                 'mackintosh', 'mac_os', 'mac operating system', 'google', 'google chrome', 'chrome', 'chrome OS']
     # eventDesc = ['linux', 'linux kernel', 'canonical', 'ubuntu', 'ubuntu os']
     # eventDesc = ['apple', 'mac', 'mackintosh', 'mac_os', 'mac operating system']
     # eventDesc = ['google', 'google chrome', 'chrome', 'chrome OS']

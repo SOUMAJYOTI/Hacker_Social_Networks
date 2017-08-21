@@ -18,17 +18,17 @@ def getUsersForums(userId, limNum=0):
     response = requests.get(url, headers=headers)
     return response.json()['results']
 
-def getHackingPosts(fromDate=dt.date.today(), toDate=dt.date.today(), limNum=0, fId=40):
+def getHackingPosts(start=0, fromDate=dt.date.today(), toDate=dt.date.today(), limNum=0, fId=40):
     url = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit="+str(limNum)+\
-          "&from="+dateToString(fromDate)+"&to="+dateToString(toDate)+"&forumsId="+str(fId)
+          "&from="+dateToString(fromDate)+"&to="+dateToString(toDate)+"&forumsId="+str(fId) + "&start="+str(start)
     headers = {"userId" : "labuser", "apiKey" : "a9a2370f-4959-4511-b263-5477d31329cf"}
     response = requests.get(url, headers=headers)
     return response.json()['results']
 
 
-def getHackingPosts_Content(searchContent='', fromDate=dt.date.today(),  toDate=dt.date.today(),limNum=5000):
+def getHackingPosts_Content(searchContent='', start=0, fromDate=dt.date.today(),  toDate=dt.date.today(),limNum=5000):
     url = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit="+str(limNum)+\
-          "&from="+dateToString(fromDate)+"&to="+dateToString(toDate)+ "&postContent="+str(searchContent)
+          "&from="+dateToString(fromDate)+"&to="+dateToString(toDate)+ "&postContent="+str(searchContent) + "&start="+str(start)
     headers = {"userId" : "labuser", "apiKey" : "a9a2370f-4959-4511-b263-5477d31329cf"}
     response = requests.get(url, headers=headers)
     if 'results' not in response.json():
@@ -36,9 +36,11 @@ def getHackingPosts_Content(searchContent='', fromDate=dt.date.today(),  toDate=
     else:
         return response.json()['results']
 
-def getHackingPosts_Content_Forums(fId, searchContent='', fromDate=dt.date.today(),  toDate=dt.date.today(), limNum=5000):
+def getHackingPosts_Content_Forums(fId, searchContent='', fromDate=dt.date.today(),  toDate=dt.date.today(),
+                                   start = 0, limNum=5000):
     url = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit="+str(limNum)+\
-          "&from="+dateToString(fromDate)+"&to="+dateToString(toDate)+ "&postContent="+str(searchContent) + "&forumsId="+ str(fId)
+          "&from="+dateToString(fromDate)+"&to="+dateToString(toDate)+ "&postContent="+str(searchContent)\
+          + "&forumsId="+ str(fId) + "&start=" + str(start)
     headers = {"userId" : "labuser", "apiKey" : "a9a2370f-4959-4511-b263-5477d31329cf"}
     response = requests.get(url, headers=headers)
     if 'results' not in response.json():
