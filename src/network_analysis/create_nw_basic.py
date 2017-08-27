@@ -47,7 +47,7 @@ def store_edges(network_df):
         src = row['source']
         tgt = row['target']
 
-        if (src, tgt) not in network_edgeList:
+        if not binarySearch(network_edgeList, (src, tgt)):
             network_edgeList.append((src, tgt))
 
     return network_edgeList
@@ -82,6 +82,24 @@ def plot_histLine(data, xLabel='', yLabel='', titleName=''):
     plt.show()
 
 
+def relevantInfUsers(centDict, newUsers):
+    countRel = 0
+    for uid in newUsers:
+        if uid in centDict.keys():
+            countRel += 1
+
+    return countRel
+
+
+def topKUsers(centDict, K):
+    sortedDict = sorted(centDict.items(), key=operator.itemgetter(1), reverse=True)[:K]
+    newCentDict = {}
+    for key, v in sortedDict:
+        newCentDict[key] = v
+
+    return newCentDict
+
+
 def computeCentrality(network, arg):
     if arg == "InDegree":
         cent = nx.in_degree_centrality(network)
@@ -92,11 +110,31 @@ def computeCentrality(network, arg):
     if arg == "Pagerank":
         cent = nx.pagerank(network)
 
-    # if arg == "OutDegree":
-    #     cent = nx.out_degree_centrality(network)
+    if arg == "core":
+        cent = nx.core_number(network)
 
     return cent
 
+
+def topThreadsUsers(data_df, topicIdsList, limit):
+    '''
+    :param data_df:
+    :param topicIdsList:
+    :param limit: percent of topics
+    :return:
+    '''
+    topTopicsByCount = {}
+    for tl in topicIdsList:
+        topTopicsByCount[tl] = len(data_df[data_df['topicid'] == tl])
+
+    sortedTopics = sorted(topTopicsByCount.items(), key=operator.itemgetter(1), reverse=True)
+
+    topUsers = []
+    for k, v in sortedTopics:
+        users = data_df[data_df['topicid'] == k]['uid']
+        topUsers.extend(users)
+
+    return list(set(topUsers))
 
 if __name__ == "__main__":
     startDate = "2010-07-01"
@@ -122,7 +160,29 @@ if __name__ == "__main__":
     dw_user_edges = pickle.load(open('../../data/Mohammed/DW_user_edges_DataFrame_June15-June16.pickle', 'rb'))
     posts_df = pd.read_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jan-Mar16.csv')
 
-    topicsId_list = list(set(posts_df['topicid'].tolist()))
-    dw_user_edges = dw_user_edges[dw_user_edges['topicid'].isin(topicsId_list)]
+    # topicsId_list = list(set(posts_df['topicid'].tolist()))
+    # dw_user_edges = dw_user_edges[dw_user_edges['topicid'].isin(topicsId_list)]
+    #
+    # print('Creating network....')
+    # nw_edges = store_edges(dw_user_edges)
+    # network = nx.DiGraph()
+    # network.add_edges_from(nw_edges)
+    #
+    # print("Computing centralities....")
+    # cent = computeCentrality(network, 'core')
+    # pickle.dump(cent, open('../../data/DW_data/core_Jan-Mar2016.pickle', 'wb'))
 
+    # print(len(list(set(posts_df['uid']))))
+    pr = pickle.load(open('../../data/Network_stats/core_Jan-Mar2016.pickle', 'rb'))
+    # print(pr)
 
+    # 2. Find the relevant popular users to the history
+    posts_df_new = pd.read_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jul16.csv')
+    for p in [0.1, 0.2, 0.3, 0.4]:
+        k = int(p* len(pr))
+
+        topKUid = list(topKUsers(pr, k).keys())
+        newThreadUsers = list(set(posts_df_new['uid'].tolist()))
+
+        commonUsers = list(set(topKUid).intersection(set(newThreadUsers)))
+        print(p, len(commonUsers)/len(newThreadUsers))
