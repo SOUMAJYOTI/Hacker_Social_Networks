@@ -121,20 +121,38 @@ def getTopForumsByTopicsCount(forumTopicsList):
     sorted_forums = sorted(forums_threadCount.items(), key=operator.itemgetter(1), reverse=True)[:10]
     for k, v in sorted_forums:
         print(k, v)
+        
+
+def getCVEForums(kwList, cveData):
+    for i, r in cveData.iterrows():
+        swTags = r['softwareTags']
+        if swTags == 'NA':
+            continue
+        for st in swTags:
+            print(st)
+
 
 if __name__ == "__main__":
     # event_df = pd.read_csv('../../data/Armstrong_data/Windows_IE_DW_Jan15-Mar16.csv', encoding='ISO-8859-1')
 
+    #0. Get the forums in which the CVEs are listed
+    cveData = pickle.load(open("../../data/DW_data/08_29/Vulnerabilities-sample_v1+.pickle", 'rb'))
+    cveData = cveData[cveData['indicator'] == 'Post']
+    # cveData = cveData[cveData['itemName'] == '']
+    kw_List = ['windows', 'microsoft', 'vista', 'windows xp', 'windows 8', 'windows 7',
+               'internet xxplorer']
+
+    getCVEForums(kw_List, cveData)
+    exit()
     # 1. Find the forums and topics relevant to these keywords in the time frame
-    forumList = [200]
-    kw_List = ['windows', 'microsoft', 'vista', 'windows xp', 'win', 'windows 8', 'windows 8.1', 'windows 7']
+    # forumList = [200]
     # kw_List = ['windows', 'microsoft', 'vista', 'windows xp', 'win', 'windows 8', 'windows 8.1', 'windows 7',
     #            'operating system',  'linux', 'linux kernel', 'canonical', 'ubuntu', 'ubuntu os', 'apple', 'mac',
     #              'mackintosh', 'mac_os', 'mac operating system', 'google', 'google chrome', 'chrome', 'chrome OS']
     # eventDesc = ['linux', 'linux kernel', 'canonical', 'ubuntu', 'ubuntu os']
-    start_date = dt.datetime.strptime('2016-01-01', '%Y-%m-%d')
-    end_date = dt.datetime.strptime('2016-03-30', '%Y-%m-%d')
-    forum_topics, topics_List = getTopicIds(forumList, kw_List, start_date, end_date)
+    # start_date = dt.datetime.strptime('2016-01-01', '%Y-%m-%d')
+    # end_date = dt.datetime.strptime('2016-03-30', '%Y-%m-%d')
+    # forum_topics, topics_List = getTopicIds(forumList, kw_List, start_date, end_date)
     #
     # pickle.dump((forum_topics, topics_List), open('../../data/DW_data/windows_topicIDs_Jan-Mar2016.pickle', 'wb'))
 
