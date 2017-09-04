@@ -8,10 +8,15 @@ import datetime as dt
 import operator
 import matplotlib.pyplot as plt
 import numpy as np
+from sqlalchemy import create_engine
+import pickle
 
+def threadsTimeDist(data_df):
+    threadids = list(set(data_df['topicid']))
 
-def threadsTimeDist(data_df, topicsList):
-    return 0
+    # for tid in threadids:
+    #     dataThread = data_df[data_df['topicid'] == tid]
+
 
 
 def threadsLenDist(data_df, topicsList):
@@ -99,20 +104,43 @@ def plot_bar(data, xLabels):
     plt.close()
 
 
-if __name__ == "__main__":
-    posts_df = pd.read_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jan-Mar16.csv')
+def getthreads(forumList, startDate, endDate):
+    engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cve')
+    results_df = pd.DataFrame()
+    for f in forumList:
+        print(f)
+        query = "select forumsid, language,  postcontent, posteddate, topicid, topicsname, uid from " \
+                " dw_posts where posteddate::date > '" \
+                    + startDate + "' and posteddate::date < '" + endDate + "' and forumsid=" + str(f)
 
-    topicsId_list = list(set(posts_df['topicid'].tolist()))
-    threadLength_list = threadsLenDist(posts_df, topicsId_list)
+        df = pd.read_sql_query(query, con=engine)
+        results_df = results_df.append(df)
+
+    return results_df
+
+if __name__ == "__main__":
+    forums = [88, 248, 133, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197]
+
+    startDate = "2016-01-01"
+    endDate = "2016-04-01"
+
+    #0. Get the DW data
+    dwData = getthreads(forumList=forums, startDate=startDate, endDate=endDate)
+    pickle.dump(dwData, open('../../data/DW_data/08_29/DW_data_selected_forums_Jan-Mar16.pickle', 'wb'))
+
+    threadsTimeDist(dwData)
+
+    # topicsId_list = list(set(posts_df['topicid'].tolist()))
+    # threadLength_list = threadsLenDist(posts_df, topicsId_list)
 
     # print(threadLength_list)
     # plot_hist(threadLength_list, 20)
-    data_to_plot = []
-    threadLength_list = sorted(threadLength_list.items(), key=operator.itemgetter(0))
-    for k, v in threadLength_list:
-        data_to_plot.append(v)
-        xLabels = ['< 10', '10 and 20', '20 and 50', '50 and 100', '100 and 1000', '> 1000']
-    plot_bar(data_to_plot, xLabels)
+    # data_to_plot = []
+    # threadLength_list = sorted(threadLength_list.items(), key=operator.itemgetter(0))
+    # for k, v in threadLength_list:
+    #     data_to_plot.append(v)
+    #     xLabels = ['< 10', '10 and 20', '20 and 50', '50 and 100', '100 and 1000', '> 1000']
+    # plot_bar(data_to_plot, xLabels)
 
 
 

@@ -7,7 +7,18 @@ import networkx as nx
 import datetime as dt
 import operator
 import pickle
+from sqlalchemy import create_engine
 
+
+def dateToString(date):
+    yearNum = str(date.year)
+    monthNum = str(date.month)
+    dayNum =str(date.day)
+    if len(monthNum)<2:
+        monthNum = "0"+monthNum
+    if len(dayNum)<2:
+        dayNum= "0"+dayNum
+    return yearNum+"-"+monthNum+"-"+dayNum
 
 def getPostsList(keyword_List, start_date, end_date):
     count_data = 0
@@ -121,15 +132,44 @@ def getTopForumsByTopicsCount(forumTopicsList):
     sorted_forums = sorted(forums_threadCount.items(), key=operator.itemgetter(1), reverse=True)[:10]
     for k, v in sorted_forums:
         print(k, v)
-        
+
 
 def getCVEForums(kwList, cveData):
+    forums = {}
+    cves = {}
     for i, r in cveData.iterrows():
+        fId = r['forumID']
+        if fId not in cves:
+            cves[fId] = []
+
+        if r['vulnId'] in cves[fId]:
+            continue
+
+        cves[fId].append(r['vulnId'])
+
         swTags = r['softwareTags']
         if swTags == 'NA':
             continue
+        datePost = dateToString(r['postedDate'])
+        if datePost < '2016-01-01' or datePost >= '2017-01-01':
+            continue
+        flag = 0
         for st in swTags:
-            print(st)
+            st = st.lower()
+            for kw in kwList:
+                if st in kw or kw in st:
+                    if fId not in forums:
+                        forums[fId] = 0
+                    forums[fId] += 1
+                    flag = 1
+                    break
+
+            if flag == 1:
+                break
+
+    sortedForums = sorted(forums.items(), key=operator.itemgetter(1), reverse=True)
+    print(sortedForums)
+    return sortedForums
 
 
 if __name__ == "__main__":
@@ -138,14 +178,15 @@ if __name__ == "__main__":
     #0. Get the forums in which the CVEs are listed
     cveData = pickle.load(open("../../data/DW_data/08_29/Vulnerabilities-sample_v1+.pickle", 'rb'))
     cveData = cveData[cveData['indicator'] == 'Post']
+    # print(cveData)
     # cveData = cveData[cveData['itemName'] == '']
     kw_List = ['windows', 'microsoft', 'vista', 'windows xp', 'windows 8', 'windows 7',
-               'internet xxplorer']
+               'internet explorer']
 
     getCVEForums(kw_List, cveData)
     exit()
     # 1. Find the forums and topics relevant to these keywords in the time frame
-    # forumList = [200]
+    # forumList =[]
     # kw_List = ['windows', 'microsoft', 'vista', 'windows xp', 'win', 'windows 8', 'windows 8.1', 'windows 7',
     #            'operating system',  'linux', 'linux kernel', 'canonical', 'ubuntu', 'ubuntu os', 'apple', 'mac',
     #              'mackintosh', 'mac_os', 'mac operating system', 'google', 'google chrome', 'chrome', 'chrome OS']
@@ -164,3 +205,16 @@ if __name__ == "__main__":
 
     # 3. Get the Top forums bu count of topic threads posted
     # getTopForumsByTopicsCount(forum_topics_1)
+
+    engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cve')
+    for f in forumsList:
+        query = "select forumsid, topicid, posteddate::date, postsid, uid from dw_posts where posteddate::date > '" \
+                + startDate + "' and posteddate::date < '" + endDate + "' and forumsid=" + str(f)
+        print("ForumId: ", f)
+        print(query)
+
+        df = pd.read_sql_query(query, con=engine)
+        print(df)
+        # results_df = results_df.append(df)
+
+    # results_df.to_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jul16.csv')
