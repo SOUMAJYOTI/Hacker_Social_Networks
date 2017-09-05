@@ -136,53 +136,82 @@ def topThreadsUsers(data_df, topicIdsList, limit):
 
     return list(set(topUsers))
 
+
+def getVulnMentUsers(data_df):
+    userCVE = {}
+    userlist = []
+    for i, r in data_df.iterrows():
+        for u in r['users']:
+            if u not in userCVE:
+                userCVE[u] = []
+
+            userCVE[u].append(r['vulnId'])
+            if u not in userlist:
+                userlist.append(u)
+
+    return userCVE, userlist
+
+# def getTopUsersWithVulMent():
+
+
 if __name__ == "__main__":
     startDate = "2010-07-01"
     endDate = "2016-08-01"
 
     results_df = pd.DataFrame()
-    # forumsList = [259]
-    # forumsList = [113]
-
-    # engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cve')
-    # for f in forumsList:
-    #     query = "select forumsid, topicid, posteddate::date, postsid, uid from dw_posts where posteddate::date > '" \
-    #             + startDate + "' and posteddate::date < '" + endDate + "' and forumsid=" + str(f)
-    #     print("ForumId: ", f)
-    #     print(query)
-    #
-    #     df = pd.read_sql_query(query, con=engine)
-    #     print(df)
-    #     results_df = results_df.append(df)
-
-    # results_df.to_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jul16.csv')
 
     dw_user_edges = pickle.load(open('../../data/Mohammed/DW_user_edges_DataFrame_June15-June16.pickle', 'rb'))
-    posts_df = pd.read_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jan-Mar16.csv')
+
+    posts_df = pickle.load(open('../../data/DW_data/08_29/DW_data_selected_forums_Jan-Mar16.pickle', 'rb'))
+    threadids = list(set(posts_df['topicid']))
+    dw_user_edges = dw_user_edges[dw_user_edges['topicid'].isin(threadids)]
+    # print(len(dw_user_edges))
 
     # topicsId_list = list(set(posts_df['topicid'].tolist()))
     # dw_user_edges = dw_user_edges[dw_user_edges['topicid'].isin(topicsId_list)]
-    #
+
     # print('Creating network....')
     # nw_edges = store_edges(dw_user_edges)
     # network = nx.DiGraph()
     # network.add_edges_from(nw_edges)
     #
     # print("Computing centralities....")
-    # cent = computeCentrality(network, 'core')
-    # pickle.dump(cent, open('../../data/DW_data/core_Jan-Mar2016.pickle', 'wb'))
+    # c = computeCentrality(network, 'OutDegree')
+    # pickle.dump(c, open('../../data/DW_data/08_29/cent/outDeg_Jan-Mar2016.pickle', 'wb'))
+
+    c = pickle.load(open('../../data/DW_data/08_29/cent/outDeg_Jan-Mar2016.pickle', 'rb'))
+    #2. Find top users by centrality
+    perc = 0.2
+    k = int(perc * len(c))
+    topKUid = list(topKUsers(c, k).keys())
+
+    print("Load Vul Data...")
+    vulData = pickle.load(open("../../data/DW_data/08_29/Vulnerabilities-sample_v1+.pickle", 'rb'))
+
+    userCVE, userList = getVulnMentUsers(vulData)
+
+    print("Total number of users: ", len(c))
+    print("Total number of top K users: ", len(topKUid))
+
+    print("Number of top users with CVE mentions: ")
+    print(len(list(set(topKUid).intersection(set(userList)))))
+    print("Number of users with CVE mentions: ")
+    print(len(list(set(list(c.keys())).intersection(set(userList)))))
+
+
+
 
     # print(len(list(set(posts_df['uid']))))
-    pr = pickle.load(open('../../data/Network_stats/core_Jan-Mar2016.pickle', 'rb'))
+    # pr = pickle.load(open('../../data/Network_stats/core_Jan-Mar2016.pickle', 'rb'))
     # print(pr)
 
     # 2. Find the relevant popular users to the history
-    posts_df_new = pd.read_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jul16.csv')
-    for p in [0.1, 0.2, 0.3, 0.4]:
-        k = int(p* len(pr))
-
-        topKUid = list(topKUsers(pr, k).keys())
-        newThreadUsers = list(set(posts_df_new['uid'].tolist()))
-
-        commonUsers = list(set(topKUid).intersection(set(newThreadUsers)))
-        print(p, len(commonUsers)/len(newThreadUsers))
+    # posts_df_new = pd.read_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jul16.csv')
+    # for p in [0.1, 0.2, 0.3, 0.4]:
+    #     k = int(p* len(pr))
+    #
+    #     topKUid = list(topKUsers(pr, k).keys())
+    #     newThreadUsers = list(set(posts_df_new['uid'].tolist()))
+    #
+    #     commonUsers = list(set(topKUid).intersection(set(newThreadUsers)))
+    #     print(p, len(commonUsers)/len(newThreadUsers))

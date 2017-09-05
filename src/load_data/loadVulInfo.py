@@ -9,8 +9,8 @@ import pandas as pd
 if __name__ == "__main__":
     dataLim = 30000
     countData = 0
-    startDate = dt.datetime.strptime('2010-01-01', '%Y-%m-%d')
-    endDate = dt.datetime.strptime('2017-01-01', '%Y-%m-%d')
+    # startDate = dt.datetime.strptime('2010-01-01', '%Y-%m-%d')
+    # endDate = dt.datetime.strptime('2017-01-01', '%Y-%m-%d')
     vIds = []
     pDates = []
     marketPlaces = []
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     numUsers = []
     users = []
 
-    while countData < dataLim:
+    while True:
         print("Count_Data: " , countData)
         # try:
         results = ldap.getVulnerabilityInfo(start=countData, limNum=5000)
@@ -30,6 +30,8 @@ if __name__ == "__main__":
         # except:
         #     break
 
+        if len(results) == 0:
+            break
         for r_idx in range(len(results)):
             item = results[r_idx]
 
@@ -88,6 +90,6 @@ if __name__ == "__main__":
     df['numUsers'] = numUsers
     df['users'] = users
 
-    pickle.dump(df, open("../../data/DW_data/08_29/Vulnerabilities-sample_v1+.pickle", 'wb'))
+    pickle.dump(df, open("../../data/DW_data/08_29/Vulnerabilities-sample_v2+.pickle", 'wb'))
 
     print(df)
