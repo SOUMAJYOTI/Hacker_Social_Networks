@@ -26,8 +26,8 @@ def getUsersForums(userId, limNum=0):
     return response.json()['results']
 
 def getHackingPosts(start=0, fromDate=dt.date.today(), toDate=dt.date.today(), limNum=0, fId=40):
-    url = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit="+str(limNum)+\
-          "&from="+dateToString(fromDate)+"&to="+dateToString(toDate)+"&forumsId="+str(fId) + "&start="+str(start)
+    url = "https://apigargoyle.com/GargoyleApi/getHackingPosts?limit=" + str(limNum) + \
+          "&forumsId=" + str(fId) + "&start=" + str(start)
     headers = {"userId" : "labuser", "apiKey" : "a9a2370f-4959-4511-b263-5477d31329cf"}
     response = requests.get(url, headers=headers)
     return response.json()['results']

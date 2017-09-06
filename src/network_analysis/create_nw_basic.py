@@ -179,24 +179,30 @@ if __name__ == "__main__":
     # c = computeCentrality(network, 'OutDegree')
     # pickle.dump(c, open('../../data/DW_data/08_29/cent/outDeg_Jan-Mar2016.pickle', 'wb'))
 
-    c = pickle.load(open('../../data/DW_data/08_29/cent/outDeg_Jan-Mar2016.pickle', 'rb'))
-    #2. Find top users by centrality
-    perc = 0.2
-    k = int(perc * len(c))
-    topKUid = list(topKUsers(c, k).keys())
+    # c = pickle.load(open('../../data/DW_data/08_29/cent/outDeg_Jan-Mar2016.pickle', 'rb'))
+    # #2. Find top users by centrality
+    # perc = 0.2
+    # k = int(perc * len(c))
+    # topKUid = list(topKUsers(c, k).keys())
 
+    start_date = pd.to_datetime('2016-04-01')
+    end_date = pd.to_datetime('2016-06-01')
     print("Load Vul Data...")
     vulData = pickle.load(open("../../data/DW_data/08_29/Vulnerabilities-sample_v1+.pickle", 'rb'))
+    vulData['postedDate'] = pd.to_datetime(vulData['postedDate'])
+    vulData = vulData[vulData['postedDate'] > start_date]
+    vulData = vulData[vulData['postedDate'] < endDate]
+    pickle.dump(vulData, open('../../data/DW_data/VulnData/Vulnerabilities_Apr-May2016.pickle', 'wb'))
 
-    userCVE, userList = getVulnMentUsers(vulData)
-
-    print("Total number of users: ", len(c))
-    print("Total number of top K users: ", len(topKUid))
-
-    print("Number of top users with CVE mentions: ")
-    print(len(list(set(topKUid).intersection(set(userList)))))
-    print("Number of users with CVE mentions: ")
-    print(len(list(set(list(c.keys())).intersection(set(userList)))))
+    # userCVE, userList = getVulnMentUsers(vulData)
+    #
+    # print("Total number of users: ", len(c))
+    # print("Total number of top K users: ", len(topKUid))
+    #
+    # print("Number of top users with CVE mentions: ")
+    # print(len(list(set(topKUid).intersection(set(userList)))))
+    # print("Number of users with CVE mentions: ")
+    # print(len(list(set(list(c.keys())).intersection(set(userList)))))
 
 
 

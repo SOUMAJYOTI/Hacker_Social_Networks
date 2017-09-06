@@ -2,7 +2,7 @@ import load_data_api as ldap
 import pandas as pd
 from sqlalchemy import create_engine
 import datetime as dt
-
+import pickle
 
 def getDW_Data(forums_list, start_date, end_date):
     results_df = pd.DataFrame()
@@ -53,14 +53,14 @@ def getDW_Data(forums_list, start_date, end_date):
 
 
 if __name__ == "__main__":
-    # forums_cve_mentions = [46, 12, 150, 113, 261, 40, 117, 38, 35, 84, 105, 41]
     forums_cve_mentions = [88, 248, 133, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197]
 
-    start_date = dt.datetime.strptime('2010-01-01', '%Y-%m-%d')
+    start_date = dt.datetime.strptime('2016-01-01', '%Y-%m-%d')
     end_date = dt.datetime.strptime('2016-03-01', '%Y-%m-%d')
 
     results_final = getDW_Data(forums_cve_mentions, start_date, end_date)
     results_final.to_csv('../../data/DW_data/08_29/DW_data_selected_forums_Jan-Mar16.csv')
+    pickle.dump(results_final, open('../../data/DW_data/08_29/DW_data_selected_forums_Jan-Mar16.csv', 'wb'))
 
     # engine = create_engine('postgresql://postgres:Impossible2@localhost:5432/DarkWeb_Soum')
     # results_final.to_sql('DW_forums_topCVE_mention', engine, if_exists='append')
