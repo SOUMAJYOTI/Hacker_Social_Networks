@@ -53,7 +53,7 @@ def getDW_Data(forums_list, start_date, end_date):
 
 
 if __name__ == "__main__":
-    forums_cve_mentions = [88, 248, 133, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197]
+    forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197]
 
     start_date = dt.datetime.strptime('2016-01-01', '%Y-%m-%d')
     end_date = dt.datetime.strptime('2016-03-01', '%Y-%m-%d')

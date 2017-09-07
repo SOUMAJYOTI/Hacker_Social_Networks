@@ -139,19 +139,14 @@ def getCVEForums(kwList, cveData):
     cves = {}
     for i, r in cveData.iterrows():
         fId = r['forumID']
-        if fId not in cves:
-            cves[fId] = []
-
         if r['vulnId'] in cves[fId]:
             continue
-
-        cves[fId].append(r['vulnId'])
 
         swTags = r['softwareTags']
         if swTags == 'NA':
             continue
         datePost = dateToString(r['postedDate'])
-        if datePost < '2016-01-01' or datePost >= '2017-01-01':
+        if datePost < '2015-01-01' or datePost >= '2016-04-01':
             continue
         flag = 0
         for st in swTags:
@@ -161,6 +156,10 @@ def getCVEForums(kwList, cveData):
                     if fId not in forums:
                         forums[fId] = 0
                     forums[fId] += 1
+                    if fId not in cves:
+                        cves[fId] = []
+                    cves[fId].append(r['vulnId'])
+
                     flag = 1
                     break
 
@@ -181,7 +180,7 @@ if __name__ == "__main__":
     # print(cveData)
     # cveData = cveData[cveData['itemName'] == '']
     kw_List = ['windows', 'microsoft', 'vista', 'windows xp', 'windows 8', 'windows 7',
-               'internet explorer']
+               'internet explorer', 'internet', 'explorer']
 
     getCVEForums(kw_List, cveData)
     exit()
@@ -206,15 +205,15 @@ if __name__ == "__main__":
     # 3. Get the Top forums bu count of topic threads posted
     # getTopForumsByTopicsCount(forum_topics_1)
 
-    engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cve')
-    for f in forumsList:
-        query = "select forumsid, topicid, posteddate::date, postsid, uid from dw_posts where posteddate::date > '" \
-                + startDate + "' and posteddate::date < '" + endDate + "' and forumsid=" + str(f)
-        print("ForumId: ", f)
-        print(query)
-
-        df = pd.read_sql_query(query, con=engine)
-        print(df)
+    # engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cve')
+    # for f in forumsList:
+    #     query = "select forumsid, topicid, posteddate::date, postsid, uid from dw_posts where posteddate::date > '" \
+    #             + startDate + "' and posteddate::date < '" + endDate + "' and forumsid=" + str(f)
+    #     print("ForumId: ", f)
+    #     print(query)
+    #
+    #     df = pd.read_sql_query(query, con=engine)
+    #     print(df)
         # results_df = results_df.append(df)
 
     # results_df.to_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jul16.csv')

@@ -67,7 +67,6 @@ def getVulnMentUsers(data_df):
     userlist = []
     for i, r in data_df.iterrows():
         for u in r['users']:
-            print(u)
             if u not in userCVE:
                 userCVE[u] = []
 
@@ -96,6 +95,7 @@ if __name__ == "__main__":
     tgt = set(dw_user_edges['target'])
 
     users = list(src.union(tgt))
+    users = [str(users[i]) for i in range(len(users))]
     vulData = pickle.load(open('../../data/DW_data/VulnData/Vulnerabilities_Apr-May2016.pickle', 'rb'))
 
     userCVE, userList = getVulnMentUsers(vulData)

@@ -163,6 +163,7 @@ if __name__ == "__main__":
     dw_user_edges = pickle.load(open('../../data/Mohammed/DW_user_edges_DataFrame_June15-June16.pickle', 'rb'))
 
     posts_df = pickle.load(open('../../data/DW_data/08_29/DW_data_selected_forums_Jan-Mar16.pickle', 'rb'))
+
     threadids = list(set(posts_df['topicid']))
     dw_user_edges = dw_user_edges[dw_user_edges['topicid'].isin(threadids)]
     # print(len(dw_user_edges))

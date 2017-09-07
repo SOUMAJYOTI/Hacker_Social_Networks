@@ -11,8 +11,9 @@ def dateToString(date):
         dayNum= "0"+dayNum
     return yearNum+"-"+monthNum+"-"+dayNum
 
-def getVulnerabilityInfo(start=0, limNum=5000):
-    url = 'https://apigargoyle.com/GargoyleApi/getDetailedVulnerabilityInfo?limit=' + str(limNum) + "&start=" + str(start)
+def getVulnerabilityInfo(start=0, fromDate=dt.date.today(), toDate=dt.date.today(), limNum=5000):
+    url = 'https://apigargoyle.com/GargoyleApi/getDetailedVulnerabilityInfo?limit=' + str(limNum) + "&start=" + str(start)\
+          + "&from=" + dateToString(fromDate) + "&to=" + dateToString(toDate)
     headers = {"userId": "labuser", "apiKey": "a9a2370f-4959-4511-b263-5477d31329cf"}
     response = requests.get(url, headers=headers)
     return response.json()['results']
@@ -34,14 +35,14 @@ if __name__ == "__main__":
 
     while True:
         print("Start: ", countData)
-        results = getHackingPosts(start=countData, fromDate=start_date, toDate=end_date, limNum=5000, fId=88)
+        results = getVulnerabilityInfo(start=countData, fromDate=start_date, toDate=end_date, limNum=5000)
 
-        for r_idx in range(len(results)):
-            # try:
-            item = results[r_idx]
-            print(item['postedDate'])
-
-        exit()
+        # for r_idx in range(len(results)):
+        #     # try:
+        #     item = results[r_idx]
+        #     print(item['postedDate'])
+        #
+        # exit()
         if len(results) == 0:
             break
 
