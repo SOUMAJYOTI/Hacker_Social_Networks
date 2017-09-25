@@ -35,12 +35,12 @@ if __name__ == "__main__":
 
     while True:
         print("Start: ", countData)
-        results = getVulnerabilityInfo(start=countData, fromDate=start_date, toDate=end_date, limNum=5000)
+        results = getHackingPosts(start=countData, fromDate=start_date, toDate=end_date, limNum=5000)
 
-        # for r_idx in range(len(results)):
-        #     # try:
-        #     item = results[r_idx]
-        #     print(item['postedDate'])
+        for r_idx in range(len(results)):
+            # try:
+            item = results[r_idx]
+            print(item['postedDate'])
         #
         # exit()
         if len(results) == 0:

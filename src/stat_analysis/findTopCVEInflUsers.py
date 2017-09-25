@@ -24,6 +24,7 @@ def binarySearch(alist, item):
 
     return found
 
+
 def relevantInfUsers(centDict, newUsers):
     countRel = 0
     for uid in newUsers:
@@ -40,6 +41,7 @@ def topKUsers(centDict, K):
         newCentDict[key] = v
 
     return newCentDict
+
 
 def topThreadsUsers(data_df, topicIdsList, limit):
     '''

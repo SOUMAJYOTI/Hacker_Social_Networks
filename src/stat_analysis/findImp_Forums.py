@@ -139,35 +139,42 @@ def getCVEForums(kwList, cveData):
     cves = {}
     for i, r in cveData.iterrows():
         fId = r['forumID']
+
+        if fId not in cves:
+            cves[fId] = []
+        if fId not in forums:
+            forums[fId] = 0
         if r['vulnId'] in cves[fId]:
             continue
 
         swTags = r['softwareTags']
-        if swTags == 'NA':
-            continue
+        # if swTags == 'NA':
+        #     continue
         datePost = dateToString(r['postedDate'])
         if datePost < '2015-01-01' or datePost >= '2016-04-01':
             continue
-        flag = 0
-        for st in swTags:
-            st = st.lower()
-            for kw in kwList:
-                if st in kw or kw in st:
-                    if fId not in forums:
-                        forums[fId] = 0
-                    forums[fId] += 1
-                    if fId not in cves:
-                        cves[fId] = []
-                    cves[fId].append(r['vulnId'])
 
-                    flag = 1
-                    break
-
-            if flag == 1:
-                break
+        cves[fId].append(r['vulnId'])
+        forums[fId] += 1
+        # flag = 0
+        # for st in swTags:
+        #     st = st.lower()
+        #     for kw in kwList:
+        #         if st in kw or kw in st:
+        #             if fId not in forums:
+        #                 forums[fId] = 0
+        #             forums[fId] += 1
+        #             if fId not in cves:
+        #                 cves[fId] = []
+        #             cves[fId].append(r['vulnId'])
+        #
+        #             flag = 1
+        #             break
+        #
+        #     if flag == 1:
+        #         break
 
     sortedForums = sorted(forums.items(), key=operator.itemgetter(1), reverse=True)
-    print(sortedForums)
     return sortedForums
 
 
@@ -179,11 +186,15 @@ if __name__ == "__main__":
     cveData = cveData[cveData['indicator'] == 'Post']
     # print(cveData)
     # cveData = cveData[cveData['itemName'] == '']
-    kw_List = ['windows', 'microsoft', 'vista', 'windows xp', 'windows 8', 'windows 7',
-               'internet explorer', 'internet', 'explorer']
+    kw_List = ['windows', 'microsoft', 'vista', 'windows xp', 'win', 'windows 8', 'windows 8.1', 'windows 7',
+               'operating system',  'linux', 'linux kernel', 'canonical', 'ubuntu', 'ubuntu os', 'apple', 'mac',
+                 'mackintosh', 'mac_os', 'mac operating system', 'google', 'google chrome', 'chrome', 'chrome OS',
+               'oracle', 'gnu', 'glibc', 'adobe', 'flash player', 'cisco', 'mcafee']
 
-    getCVEForums(kw_List, cveData)
-    exit()
+    sortedForums = getCVEForums(kw_List, cveData)
+    for f, val in sortedForums:
+        if val > 10:
+            print(f, val)
     # 1. Find the forums and topics relevant to these keywords in the time frame
     # forumList =[]
     # kw_List = ['windows', 'microsoft', 'vista', 'windows xp', 'win', 'windows 8', 'windows 8.1', 'windows 7',
