@@ -65,23 +65,6 @@ def plot_hist(data, numBins, xLabel='', yLabel='', titleName=''):
     plt.show()
 
 
-def plot_histLine(data, xLabel='', yLabel='', titleName=''):
-    in_values = sorted(set(data))
-    list_degree_values = list(data)
-    in_hist = [list_degree_values.count(x) for x in in_values]
-
-    plt.figure()
-    plt.loglog(in_values, in_hist, basex=2, basey=2)
-    # plt.xlim([1, 2 ** 14])
-    plt.xlabel(xLabel, size=25)
-    plt.ylabel(yLabel, size=25)
-    plt.title(titleName, size=25)
-    plt.grid(True)
-    plt.tick_params('x', labelsize=20)
-    plt.tick_params('y', labelsize=20)
-    plt.show()
-
-
 def relevantInfUsers(centDict, newUsers):
     countRel = 0
     for uid in newUsers:
@@ -112,6 +95,9 @@ def computeCentrality(network, arg):
 
     if arg == "core":
         cent = nx.core_number(network)
+
+    if arg == 'neighbors':
+        cent = nx.degree(network)
 
     return cent
 
@@ -153,6 +139,31 @@ def getVulnMentUsers(data_df):
 
 # def getTopUsersWithVulMent():
 
+def commUsers(train, test):
+    users_train = set(train['source']).union(set(train['target']))
+    users_test = set(test['source']).union(set(test['target']))
+
+    commUsersList = list(users_train.intersection(users_test))
+    print("Total train users: ", len(list(users_train)))
+    print("Users common: ", len(commUsersList))
+    print("New users: ", len(users_train.difference(users_test)))
+
+
+def plot_DegDist(data, title=''):
+    sorted_X = sorted(set(data.values()))
+    Y = list(data.values())
+    distributionX = [Y.count(x) for x in sorted_X]
+    plt.figure()
+    plt.loglog(sorted_X, distributionX, 'ro', basex=2, basey=2)
+    # plt.xlim([])
+    plt.xlabel('Out-Degree (Neighbors)', size=35)
+    plt.ylabel('Number of nodes', size=30)
+    plt.xticks(size=30)
+    plt.yticks(size=30)
+    plt.title(title, size=25)
+    plt.grid(True)
+    plt.show()
+
 
 if __name__ == "__main__":
     startDate = "2010-07-01"
@@ -160,9 +171,12 @@ if __name__ == "__main__":
 
     # Load the data
     # forums to be considered
-    dw_user_edges = pickle.load(open('../../data/DW_data/09_15/user_edges_selected_forums_Jan-Mar16.pickle', 'rb'))
-    print(dw_user_edges[:10])
-    exit()
+    dw_user_edges_train = pickle.load(open('../../data/DW_data/09_15/train/edges/user_edges_selected_forums_Oct15-Mar16.pickle', 'rb'))
+    dw_user_edges_test = pickle.load(open('../../data/DW_data/09_15/test/edges/user_edges_selected_forums_Apr16.pickle', 'rb'))
+
+    # print(dw_user_edges_test[:10])
+    # commUsers(dw_user_edges_train, dw_user_edges_test)
+
     # posts_df = pickle.load(open('../../data/DW_data/09_15/DW_data_selected_forums_Jan-Mar16.pickle', 'rb'))
     #
     # results_df = pd.DataFrame()
@@ -175,13 +189,16 @@ if __name__ == "__main__":
     # dw_user_edges = dw_user_edges[dw_user_edges['topicid'].isin(topicsId_list)]
 
     print('Creating network....')
-    nw_edges = store_edges(dw_user_edges)
+    nw_edges = store_edges(dw_user_edges_train)
     network = nx.DiGraph()
     network.add_edges_from(nw_edges)
 
-    # print("Computing centralities....")
-    # c = computeCentrality(network, 'OutDegree')
-    # pickle.dump(c, open('../../data/DW_data/09_15/centralities/outDeg_Jan-Mar2016.pickle', 'wb'))
+    print("Computing centralities....")
+    c = computeCentrality(network, 'neighbors')
+    plot_DegDist(c)
+    exit()
+    # pickle.dump(c, open('../../data/DW
+    # _data/09_15/centralities/outDeg_Jan-Mar2016.pickle', 'wb'))
 
     c = pickle.load(open('../../data/DW_data/09_15/centralities/outDeg_Jan-Mar2016.pickle', 'rb'))
     # 2. Find top users by centrality

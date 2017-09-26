@@ -217,11 +217,11 @@ if __name__ == "__main__":
     # endDate = "2016-05-01"
 
     results_df = pd.DataFrame()
-    posts_df = pickle.load(open('../../data/DW_data/09_15/DW_data_selected_forums_Aprr16.pickle', 'rb'))
+    posts_df = pickle.load(open('../../data/DW_data/09_15/DW_data_selected_forums_OCt15-Mar16.pickle', 'rb'))
 
     threadids = list(set(posts_df['topicid']))
 
     # diff_data = replyTimeDist(posts_df, threadids)
     df_edges = storeEdges(posts_df, threadids)
     print(len(df_edges))
-    pickle.dump(df_edges, open('../../data/DW_data/09_15/user_edges_selected_forums_Apr16.pickle', 'wb'))
+    pickle.dump(df_edges, open('../../data/DW_data/09_15/user_edges_selected_forums_Oct15-Mar16.pickle', 'wb'))

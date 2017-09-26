@@ -75,11 +75,11 @@ if __name__ == "__main__":
     # start_date = dt.datetime.strptime('2016-01-01', '%Y-%m-%d')
     # end_date = dt.datetime.strptime('2016-03-01', '%Y-%m-%d')
 
-    start_date = '2016-03-01'
-    end_date = '2016-04-01'
+    start_date = '2015-12-01'
+    end_date = '2016-06-01'
 
     results_final = getDW_data_postgres(forums_cve_mentions, start_date, end_date)
-    pickle.dump(results_final, open('../../data/DW_data/09_15/DW_data_selected_forums_Apr16.pickle', 'wb'))
+    pickle.dump(results_final, open('../../data/DW_data/09_15/DW_data_selected_forums_Dec15-May16.pickle', 'wb'))
 
     # results_final = getDW_Data(forums_cve_mentions, start_date, end_date)
     # results_final.to_csv('../../data/DW_data/08_29/DW_data_selected_forums_Jan-Mar16.csv')
