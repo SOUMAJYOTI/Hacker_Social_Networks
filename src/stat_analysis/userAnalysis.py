@@ -40,6 +40,19 @@ def store_neighbors(network_df):
 
     return network_nbrList
 
+def edgeCountPairs(network_df):
+    edgeCount = {}
+    for idx, row in network_df.iterrows():
+        src = row['source']
+        tgt = row['target']
+
+        pairUsers = str(src) + '_' + str(tgt)
+        if pairUsers not in edgeCount:
+            edgeCount[pairUsers] = 0
+
+        edgeCount[pairUsers] += 1
+
+    return edgeCount
 
 def store_edges(network_df):
     network_edgeList = []
@@ -147,6 +160,7 @@ def commUsers(train, test):
     print("Total train users: ", len(list(users_train)))
     print("Users common: ", len(commUsersList))
     print("New users: ", len(users_train.difference(users_test)))
+
 
 
 def plot_DegDist(data, title=''):
