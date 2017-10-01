@@ -15,6 +15,7 @@ import numpy as np
 import networkx.algorithms.cuts as nxCut
 import datetime
 import createConnections as ccon
+import load_dataDW as ldDW
 
 def dateToString(date):
     yearNum = str(date.year)
@@ -136,23 +137,20 @@ def segmentPostsWeek(posts, G):
             end_dayStr = str('0') + str(end_day)
         else:
             end_dayStr = str(end_day)
-        end_date = datetime.datetime.strptime(str(start_year) + '-' + str(start_month) + '-' + end_dayStr + ' 00:00:00',
+        end_date = datetime.datetime.strptime(str(start_year) + '-' + str(start_month) + '-' + end_dayStr + ' 23:59:00',
                                                 '%Y-%m-%d %H:%M:%S')
 
         posts_currWeek = posts[posts['DateTime'] >= start_date]
-        posts_currWeek = posts_currWeek[posts_currWeek['DateTime'] <= end_date]
+        posts_currWeek = posts_currWeek[posts_currWeek['DateTime'] < end_date]
 
         topics = list(set(posts_currWeek['topicid']))
         df_edgesCurrWeek = ccon.storeEdges(posts_currWeek, topics)
         dfEges_WeeklyList.append(df_edgesCurrWeek)
 
-        currIndex += len(df_edgesCurrWeek)
-        print(currIndex, len(posts))
-        start_day = end_day+1
-        if start_day > numDaysCurrMonth:
+        currIndex += len(posts_currWeek)
+        start_day = end_day
+        if start_day >= numDaysCurrMonth:
             break
-        # if start_day == numDaysCurrMonth:
-        #     break
 
     return dfEges_WeeklyList
 
@@ -183,12 +181,67 @@ def computeWeeklyConductance(networkKB, df_edgesWeekly, userGroup):
         conductanceDist = nxCut.conductance(networkNew, userGroup, userListWeek)
         graphConductanceDist.append(conductanceDist)
 
+    return graphConductanceDist
+
+def monthlyFeatureCompute(forums, start_date, usersCVE):
+    '''
+    One of the main issues here is the automation of the rolling basis dates of KB and training data
+
+    :param forums:
+    :param start_date:
+    :param usersCVE:
+    :return:
+    '''
+    KB_gap = 3
+    start_month = int(start_date[5:7])
+    end_month = start_month + KB_gap
+    if end_month < 10:
+        end_monthStr = str('0') + str(end_month)
+    else:
+        end_monthStr = str(end_month)
+
+    end_date = start_date[:5] + end_monthStr + start_date[7:]
+    df_KB = ldDW.getDW_data_postgres(forums, start_date, end_date)
+
+    threadids = list(set(df_KB['topicid']))
+    KB_edges = ccon.storeEdges(df_KB, threadids)
+
+    network, topUsers, usersCVE = splitUsers(users_CVE_map, KB_edges)
+
+    train_start_month = end_month + 1
+    train_end_month = train_start_month + 1
+    if train_start_month < 10:
+        train_start_monthStr = str('0') + str(train_start_month)
+    else:
+        train_start_monthStr = str(train_start_month)
+
+    if train_end_month < 10:
+        train_end_monthStr = str('0') + str(train_end_month)
+    else:
+        train_end_monthStr = str(train_end_month)
+
+    train_start_date = start_date[:5] + train_start_monthStr + start_date[7:]
+    train_end_date = start_date[:5] + train_end_monthStr + start_date[7:]
+
+    df_train = ldDW.getDW_data_postgres(forums, train_start_date, train_end_date)
+    threadidsTrain = list(set(df_train['topicid']))
+    train_edges = ccon.storeEdges(df_train, threadidsTrain)
+
+    df_edgesWeekly = segmentPostsWeek(posts_train, network)
+    computeWeeklyConductance(network, df_edgesWeekly, usersCVE)
+
+
 
 if __name__ == "__main__":
-    engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cyber_events_pred')
-    query = "select vendor, product, cluster_tag, cve from  cve_cpegroups"
+    forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197]
+    # engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cyber_events_pred')
+    # query = "select vendor, product, cluster_tag, cve from  cve_cpegroups"
     posts_df = pickle.load(open('../../data/DW_data/09_15/train/data/DW_data_selected_forums_Oct15-Mar16.pickle', 'rb'))
     vulData = pickle.load(open('../../data/DW_data/08_29/Vulnerabilities-sample_v2+.pickle', 'rb'))
+
+    start_date = '2016-01-01'
+    monthlyFeatureCompute(start_date)
+    exit()
 
     # df = pd.read_sql_query(query, con=engine)
     # df.to_csv('../../data/DW_data/09_15/CVE_CPE_groups.csv')
