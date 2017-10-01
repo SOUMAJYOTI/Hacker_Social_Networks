@@ -152,7 +152,7 @@ def storeEdges(nwData, topics):
     postTime = []
     forumIds = []
 
-    print(nwData)
+    # print(nwData)
     for topicid in topics:
         threads = nwData[nwData['topicid'] == topicid]
         threads.is_copy=False

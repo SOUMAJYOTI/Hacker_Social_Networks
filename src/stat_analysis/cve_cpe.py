@@ -12,7 +12,7 @@ import pickle
 from sqlalchemy import create_engine
 import userAnalysis as usAn
 import numpy as np
-import networkx.algorithms.cuts
+import networkx.algorithms.cuts as nxCut
 import datetime
 import createConnections as ccon
 
@@ -49,6 +49,7 @@ def user_CVE_groups(cve_cpe_data, vul_data):
             usersCVE_map[u].append(cve)
 
     return usersCVE_map, CVE_usersMap
+
 
 def conductance(network, group_1,group_2 ):
     return conductance(network, group_1, group_2, weight=None)
@@ -115,29 +116,73 @@ def segmentPostsWeek(posts, G):
     start_month = posts['DateTime'].iloc[0].month
 
     start_day = 1
-    if start_day < 10:
-        start_dayStr = str('0') + str(start_day)
-    else:
-        start_dayStr = str(start_day)
-    start_date = datetime.datetime.strptime(str(start_year)+'-'+str(start_month)+'-'+start_dayStr+' 00:00:00', '%Y-%m-%d %H:%M:%S')
+    currIndex = 0
+    dfEges_WeeklyList = []
+    daysMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    numDaysCurrMonth = daysMonths[start_month-1]
 
-    end_day = start_day + 7
-    if end_day < 10:
-        end_day = str('0') + str(end_day)
-    else:
-        end_day = str(end_day)
-    end_date = datetime.datetime.strptime(str(start_year) + '-' + str(start_month) + '-' + end_day + ' 00:00:00',
-                                            '%Y-%m-%d %H:%M:%S')
+    while True:
+        if start_day < 10:
+            start_dayStr = str('0') + str(start_day)
+        else:
+            start_dayStr = str(start_day)
+        start_date = datetime.datetime.strptime(str(start_year)+'-'+str(start_month)+'-'+start_dayStr+' 00:00:00', '%Y-%m-%d %H:%M:%S')
 
-    posts_currWeek = posts[posts['DateTime'] > start_date ]
-    posts_currWeek = posts_currWeek[posts_currWeek['DateTime'] < end_date]
+        end_day = start_day + 7
+        if end_day > numDaysCurrMonth:
+            end_day = numDaysCurrMonth
 
-    topics = list(set(posts_currWeek['topicid']))
-    df_edges = ccon.storeEdges(posts_currWeek, topics)
-    print(df_edges[:10])
+        if end_day < 10:
+            end_dayStr = str('0') + str(end_day)
+        else:
+            end_dayStr = str(end_day)
+        end_date = datetime.datetime.strptime(str(start_year) + '-' + str(start_month) + '-' + end_dayStr + ' 00:00:00',
+                                                '%Y-%m-%d %H:%M:%S')
 
-    # print(start_year, start_month)
-    # start_date = da
+        posts_currWeek = posts[posts['DateTime'] >= start_date]
+        posts_currWeek = posts_currWeek[posts_currWeek['DateTime'] <= end_date]
+
+        topics = list(set(posts_currWeek['topicid']))
+        df_edgesCurrWeek = ccon.storeEdges(posts_currWeek, topics)
+        dfEges_WeeklyList.append(df_edgesCurrWeek)
+
+        currIndex += len(df_edgesCurrWeek)
+        print(currIndex, len(posts))
+        start_day = end_day+1
+        if start_day > numDaysCurrMonth:
+            break
+        # if start_day == numDaysCurrMonth:
+        #     break
+
+    return dfEges_WeeklyList
+
+
+def computeWeeklyConductance(networkKB, df_edgesWeekly, userGroup):
+    graphConductanceDist = []
+    networkNew = networkKB.copy()
+    for w in range(len(df_edgesWeekly)):
+        if len(df_edgesWeekly[w]) == 0:
+            graphConductanceDist.append(0)
+
+        currEdgeList = []
+        userListWeek = []
+        for i, r in df_edgesWeekly[w].iterrows():
+            src = str(int(r['source']))
+            tgt = str(int(r['target']))
+
+            userListWeek.append(src)
+            userListWeek.append(tgt)
+            if (src, tgt) not in currEdgeList:
+                currEdgeList.append((src, tgt))
+
+        userListWeek = list(set(userListWeek))
+
+        networkNew.add_edges_from(currEdgeList)
+        userListWeek = list(set(userListWeek).difference(set(userGroup))) # remove the experts from the new users
+
+        conductanceDist = nxCut.conductance(networkNew, userGroup, userListWeek)
+        graphConductanceDist.append(conductanceDist)
+
 
 if __name__ == "__main__":
     engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cyber_events_pred')
@@ -165,4 +210,5 @@ if __name__ == "__main__":
     # results_df.to_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jul16.csv')
 
     posts_train = pickle.load(open('../../data/DW_data/09_15/train/data/DW_data_selected_forums_Apr16.pickle', 'rb'))
-    segmentPostsWeek(posts_train, network)
+    df_edgesWeekly = segmentPostsWeek(posts_train, network)
+    computeWeeklyConductance(network, df_edgesWeekly, usersCVE)
