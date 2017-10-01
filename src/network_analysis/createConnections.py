@@ -152,6 +152,7 @@ def storeEdges(nwData, topics):
     postTime = []
     forumIds = []
 
+    print(nwData)
     for topicid in topics:
         threads = nwData[nwData['topicid'] == topicid]
         threads.is_copy=False
@@ -212,16 +213,16 @@ def storeEdges(nwData, topics):
     return df_edges
 
 
-if __name__ == "__main__":
-    # startDate = "2010-04-01"
-    # endDate = "2016-05-01"
-
-    results_df = pd.DataFrame()
-    posts_df = pickle.load(open('../../data/DW_data/09_15/DW_data_selected_forums_OCt15-Mar16.pickle', 'rb'))
-
-    threadids = list(set(posts_df['topicid']))
-
-    # diff_data = replyTimeDist(posts_df, threadids)
-    df_edges = storeEdges(posts_df, threadids)
-    print(len(df_edges))
-    pickle.dump(df_edges, open('../../data/DW_data/09_15/user_edges_selected_forums_Oct15-Mar16.pickle', 'wb'))
+# if __name__ == "__main__":
+#     # startDate = "2010-04-01"
+#     # endDate = "2016-05-01"
+#
+#     results_df = pd.DataFrame()
+#     posts_df = pickle.load(open('../../data/DW_data/09_15/DW_data_selected_forums_Oct15-Mar16.pickle', 'rb'))
+#
+#     threadids = list(set(posts_df['topicid']))
+#
+#     # diff_data = replyTimeDist(posts_df, threadids)
+#     df_edges = storeEdges(posts_df, threadids)
+#     print(len(df_edges))
+#     pickle.dump(df_edges, open('../../data/DW_data/09_15/user_edges_selected_forums_Oct15-Mar16.pickle', 'wb'))
