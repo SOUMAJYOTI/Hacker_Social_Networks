@@ -16,6 +16,7 @@ import networkx.algorithms.cuts as nxCut
 import datetime
 import createConnections as ccon
 import load_dataDW as ldDW
+import matplotlib.pyplot as plt
 
 def dateToString(date):
     yearNum = str(date.year)
@@ -55,17 +56,18 @@ def user_CVE_groups(cve_cpe_data, vul_data):
 def conductance(network, group_1,group_2 ):
     return conductance(network, group_1, group_2, weight=None)
 
+
 def splitUsers(usersCVE_map, df_edges):
     trainUsersGlobal = list(set(df_edges['source']).union(set(df_edges['target'])))
     usersCVE = list(usersCVE_map.keys())
     trainUsersGlobal = [str(int(i)) for i in trainUsersGlobal]
     commonUsers = set(usersCVE).intersection(set(trainUsersGlobal))
-    print(len(trainUsersGlobal))
+    # print(len(trainUsersGlobal))
 
     # compute the top users in the network of the last 6 months
     # print('Creating network....')
     nw_edges = usAn.store_edges(df_edges)
-    edgeCounts = usAn.edgeCountPairs(df_edges)
+    # edgeCounts = usAn.edgeCountPairs(df_edges)
     # print(np.mean(np.array(list(edgeCounts.values()))))
     # usAn.plot_hist(list(edgeCounts.values()), numBins=20, xLabel = 'Number of edges b/w node pairs', yLabel='Count')
 
@@ -85,7 +87,7 @@ def splitUsers(usersCVE_map, df_edges):
     sortedUsersByCent = sorted(centValues.items(), key=operator.itemgetter(1), reverse=True)
     K = int(0.2 * len(sortedUsersByCent)) # THIS IS IMPORTANT --- PERCENT OF ALL USERS AS TOP COUNT
     topUsers = []
-    for u, val in sortedUsersByCent:
+    for u, val in sortedUsersByCent[:K]:
         topUsers.append(u)
 
     commExperts = set(usersCVE).intersection(set(topUsers))
@@ -149,7 +151,7 @@ def segmentPostsWeek(posts, G):
 
         currIndex += len(posts_currWeek)
         start_day = end_day
-        if start_day >= numDaysCurrMonth:
+        if start_day >= 29:
             break
 
     return dfEges_WeeklyList
@@ -183,7 +185,8 @@ def computeWeeklyConductance(networkKB, df_edgesWeekly, userGroup):
 
     return graphConductanceDist
 
-def monthlyFeatureCompute(forums, start_date, usersCVE):
+
+def monthlyFeatureCompute(forums, start_date, users_CVE_map):
     '''
     One of the main issues here is the automation of the rolling basis dates of KB and training data
 
@@ -193,75 +196,218 @@ def monthlyFeatureCompute(forums, start_date, usersCVE):
     :return:
     '''
     KB_gap = 3
-    start_month = int(start_date[5:7])
-    end_month = start_month + KB_gap
-    if end_month < 10:
-        end_monthStr = str('0') + str(end_month)
-    else:
-        end_monthStr = str(end_month)
+    titlesList = []
+    graphConductance_topUsers = []
+    graphConductance_experts = []
+    week_number = 14
+    for idx in range(6):
+        # KB network formation
+        start_month = int(start_date[5:7]) + idx
+        end_month = start_month + KB_gap
+        if start_month < 10:
+            start_monthStr = str('0') + str(start_month)
+        else:
+            start_monthStr = str(start_month)
 
-    end_date = start_date[:5] + end_monthStr + start_date[7:]
-    df_KB = ldDW.getDW_data_postgres(forums, start_date, end_date)
+        if end_month < 10:
+            end_monthStr = str('0') + str(end_month)
+        else:
+            end_monthStr = str(end_month)
 
-    threadids = list(set(df_KB['topicid']))
-    KB_edges = ccon.storeEdges(df_KB, threadids)
+        start_dateCurr = start_date[:5] + start_monthStr + start_date[7:]
+        end_dateCurr = start_date[:5] + end_monthStr + start_date[7:]
+        print("KB info: ")
+        print("Start date: ", start_dateCurr, " ,End date: ", end_dateCurr)
+        df_KB = ldDW.getDW_data_postgres(forums, start_dateCurr, end_dateCurr)
+        threadidsKB = list(set(df_KB['topicid']))
+        KB_edges = ccon.storeEdges(df_KB, threadidsKB)
 
-    network, topUsers, usersCVE = splitUsers(users_CVE_map, KB_edges)
+        networkKB, topUsersKB, usersCVE = splitUsers(users_CVE_map, KB_edges)
 
-    train_start_month = end_month + 1
-    train_end_month = train_start_month + 1
-    if train_start_month < 10:
-        train_start_monthStr = str('0') + str(train_start_month)
-    else:
-        train_start_monthStr = str(train_start_month)
+        # Training network formation starts from here
+        train_start_month = end_month
+        train_end_month = train_start_month + 1
+        if train_start_month < 10:
+            train_start_monthStr = str('0') + str(train_start_month)
+        else:
+            train_start_monthStr = str(train_start_month)
 
-    if train_end_month < 10:
-        train_end_monthStr = str('0') + str(train_end_month)
-    else:
-        train_end_monthStr = str(train_end_month)
+        if train_end_month < 10:
+            train_end_monthStr = str('0') + str(train_end_month)
+        else:
+            train_end_monthStr = str(train_end_month)
 
-    train_start_date = start_date[:5] + train_start_monthStr + start_date[7:]
-    train_end_date = start_date[:5] + train_end_monthStr + start_date[7:]
+        train_start_date = start_date[:5] + train_start_monthStr + start_date[7:]
+        train_end_date = start_date[:5] + train_end_monthStr + start_date[7:]
 
-    df_train = ldDW.getDW_data_postgres(forums, train_start_date, train_end_date)
-    threadidsTrain = list(set(df_train['topicid']))
-    train_edges = ccon.storeEdges(df_train, threadidsTrain)
+        print("Training data info: ")
+        print("Start date: ", train_start_date, " ,End_date: ", train_end_date)
 
-    df_edgesWeekly = segmentPostsWeek(posts_train, network)
-    computeWeeklyConductance(network, df_edgesWeekly, usersCVE)
+        df_train = ldDW.getDW_data_postgres(forums, train_start_date, train_end_date)
+        train_edgesWeekly = segmentPostsWeek(df_train, networkKB)
+        gcExperts = computeWeeklyConductance(networkKB, train_edgesWeekly, usersCVE)
+        gc_Top = computeWeeklyConductance(networkKB, train_edgesWeekly, topUsersKB)
+        graphConductance_experts.extend(gcExperts)
+        graphConductance_topUsers.extend(gc_Top)
 
+        print(len(gcExperts), len(gc_Top))
+        for wnum in range(len(gc_Top)):
+            title = start_date[:5] + ', ' + str(week_number + wnum)
+            titlesList.extend(title)
+
+        week_number += len(gc_Top)
+
+    return graphConductance_experts, graphConductance_topUsers, titlesList
+
+
+def clusterDist(df):
+    # print(df[:10])
+    clusters = {}
+
+    for idx, row in df.iterrows():
+        if row['cluster_tag'] not in clusters:
+            clusters[row['cluster_tag']] = 0
+
+        clusters[row['cluster_tag']] += 1
+
+    clustersSorted = sorted(clusters.items(), key=operator.itemgetter(1), reverse=True)[20:40]
+    topClusters = {}
+    for cl, val in clustersSorted:
+        topClusters[cl] = val
+    # print(clusters)
+    return topClusters
+
+
+def plot_bars(data, titles):
+    width=0.35
+    ind = np.arange(len(data))  # the x locations for the groups
+    fig = plt.figure(figsize=(12, 8))
+    ax = fig.add_subplot(111)
+    ## the bars
+    # rects1 = ax.bar(ind, data_mean, width,
+    #                 color='#C0C0C0')
+    rects1 = ax.bar(ind, data, width,
+                    color='#0000ff')  # axes and labels
+    ax.set_xlim(-width, len(ind) + width)
+    # ax.set_ylim(0, 200)
+    ax.set_ylabel('Number of CVEs', size=40)
+    # ax.set_xlabel('Date frame (start of each week)', size=30)
+    ax.set_title('Distribution of CVEs within CPE groups', size=30)
+    xTickMarks = titles
+    ax.set_xticks(ind)
+    xtickNames = ax.set_xticklabels(xTickMarks)
+    plt.setp(xtickNames, rotation=45, fontsize=5, ha='right')
+    plt.grid(True)
+    plt.xticks(size=25)
+    plt.yticks(size=25)
+    plt.subplots_adjust(left=0.13, bottom=0.50, top=0.9)
+    ## add a legend
+    # ax.legend( (rects1[0], ('Men', 'Women') )
+
+    plt.show()
+
+
+def topCPEGroups(start_date, end_date, vulInfo, cveCPE):
+    vulCurr = vulInfo[vulInfo['postedDate'] >= start_date]
+    vulCurr = vulCurr[vulCurr['postedDate'] < end_date]
+
+    vulnerab = vulCurr['vulnId']
+    cveCPE_curr = cveCPE[cveCPE['cve'].isin(vulnerab)]
+    topCPEs = {}
+    for idx, row in cveCPE_curr.iterrows():
+        clTag = row['cluster_tag']
+        if clTag not in topCPEs:
+            topCPEs[clTag] = 0
+
+        topCPEs[clTag] += 1
+
+    # print(topCPEs)
+    topCPEs_sorted = sorted(topCPEs.items(), key=operator.itemgetter(1), reverse=True)[:20]
+    topCPEsList = []
+    for cpe, count in topCPEs_sorted:
+        topCPEsList.append(cpe)
+
+    topCVE = cveCPE[cveCPE['cluster_tag'].isin(topCPEsList)]
+
+    return list(topCVE['cve'])
+
+
+def getRelUsers_inCPE(topCVE, CVE_userMap, usersKB):
+    usersCVECount = {}
+    for tc in topCVE:
+        userCurrCVE = CVE_userMap[tc]
+        if len(userCurrCVE) == 0:
+            continue
+        for u in userCurrCVE[0]:
+            if u in usersKB:
+                if u not in usersCVECount:
+                    usersCVECount[u] = 0
+                usersCVECount[u] += 1
+
+    usersSorted = sorted(usersCVECount.items(), key=operator.itemgetter(1), reverse=True)
+    print(len(usersSorted))
 
 
 if __name__ == "__main__":
     forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197]
     # engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cyber_events_pred')
     # query = "select vendor, product, cluster_tag, cve from  cve_cpegroups"
-    posts_df = pickle.load(open('../../data/DW_data/09_15/train/data/DW_data_selected_forums_Oct15-Mar16.pickle', 'rb'))
+    # posts_df = pickle.load(open('../../data/DW_data/09_15/train/data/DW_data_selected_forums_Oct15-Mar16.pickle', 'rb'))
     vulData = pickle.load(open('../../data/DW_data/08_29/Vulnerabilities-sample_v2+.pickle', 'rb'))
+    vulDataFiltered = vulData[vulData['forumID'].isin(forums_cve_mentions)]
 
     start_date = '2016-01-01'
-    monthlyFeatureCompute(start_date)
+    end_date = '2016-04-01'
+    df = pd.read_csv('../../data/DW_data/09_15/CVE_CPE_groups.csv')
+    # print(df[:10])
+    # print(len(list(set(df['vendor']))))
+    # print(len(list(set(df['product']))))
+    # print(len(list(set(df['cluster_tag']))))
+
+    topCVE = topCPEGroups(start_date, end_date, vulDataFiltered, df )
+    users_CVE_map, CVE_users_map = user_CVE_groups(df, vulData)
+
+    df_KB = ldDW.getDW_data_postgres(forums_cve_mentions, start_date, end_date)
+    threadidsKB = list(set(df_KB['topicid']))
+    KB_edges = ccon.storeEdges(df_KB, threadidsKB)
+
+    networkKB, topUsersKB, usersCVE = splitUsers(users_CVE_map, KB_edges)
+    getRelUsers_inCPE(topCVE, CVE_users_map, list(networkKB.nodes()))
+    # clustersDict = clusterDist(df)
+    #
+    # data = []
+    # titlesList = []
+    # for cl in clustersDict:
+    #     data.append(clustersDict[cl])
+    #     titlesList.append(cl)
+
+    # plot_bars(data, titlesList)
     exit()
+    users_CVE_map, CVE_users_map = user_CVE_groups(df, vulData)
+    graphConductance_experts, graphConductance_topUsers, titlesList = monthlyFeatureCompute(forums_cve_mentions, start_date, users_CVE_map)
+    pickle.dump((graphConductance_experts, graphConductance_topUsers, titlesList),
+                open('../../data/DW_data/09_15/train/features/conductance_top0.2+experts.pickle', 'wb'))
+
+    # exit()
 
     # df = pd.read_sql_query(query, con=engine)
     # df.to_csv('../../data/DW_data/09_15/CVE_CPE_groups.csv')
-    df = pd.read_csv('../../data/DW_data/09_15/CVE_CPE_groups.csv')
-    print("Number of cluster tags: ", len(list(set(df['cluster_tag']))))
+    # print("Number of cluster tags: ", len(list(set(df['cluster_tag']))))
 
-    users_CVE_map, CVE_users_map = user_CVE_groups(df, vulData)
+
     # print(len(users_CVE_map))
 
-    dw_user_edges_train = pickle.load(
-        open('../../data/DW_data/09_15/train/edges/user_edges_selected_forums_Oct15-Mar16.pickle', 'rb'))
-
-    network, topUsers, usersCVE = splitUsers(users_CVE_map, dw_user_edges_train)
-
-    # cpe_groups = df['cluster_tag']
-    # print(cpe_groups)
-    # cveUsers(df)
-
-    # results_df.to_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jul16.csv')
-
-    posts_train = pickle.load(open('../../data/DW_data/09_15/train/data/DW_data_selected_forums_Apr16.pickle', 'rb'))
-    df_edgesWeekly = segmentPostsWeek(posts_train, network)
-    computeWeeklyConductance(network, df_edgesWeekly, usersCVE)
+    # dw_user_edges_train = pickle.load(
+    #     open('../../data/DW_data/09_15/train/edges/user_edges_selected_forums_Oct15-Mar16.pickle', 'rb'))
+    #
+    # network, topUsers, usersCVE = splitUsers(users_CVE_map, dw_user_edges_train)
+    #
+    # # cpe_groups = df['cluster_tag']
+    # # print(cpe_groups)
+    # # cveUsers(df)
+    #
+    # # results_df.to_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jul16.csv')
+    #
+    # posts_train = pickle.load(open('../../data/DW_data/09_15/train/data/DW_data_selected_forums_Apr16.pickle', 'rb'))
+    # df_edgesWeekly = segmentPostsWeek(posts_train, network)
+    # computeWeeklyConductance(network, df_edgesWeekly, usersCVE)
