@@ -5,6 +5,7 @@ import pickle
 import matplotlib.pyplot as plt
 import operator
 
+
 def probBoxPlots(dataDict):
     '''
     dict: key - month; values = list of time differences
@@ -80,6 +81,7 @@ def probBoxPlots(dataDict):
     plt.show()
     # plt.savefig(file_save)
     plt.close()
+
 
 def timeDiffCVE_amEvent(cveData, amData):
     '''

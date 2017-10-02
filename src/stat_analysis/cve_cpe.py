@@ -53,10 +53,6 @@ def user_CVE_groups(cve_cpe_data, vul_data):
     return usersCVE_map, CVE_usersMap
 
 
-def conductance(network, group_1,group_2 ):
-    return conductance(network, group_1, group_2, weight=None)
-
-
 def splitUsers(usersCVE_map, df_edges):
     trainUsersGlobal = list(set(df_edges['source']).union(set(df_edges['target'])))
     usersCVE = list(usersCVE_map.keys())
@@ -66,7 +62,7 @@ def splitUsers(usersCVE_map, df_edges):
 
     # compute the top users in the network of the last 6 months
     # print('Creating network....')
-    nw_edges = usAn.store_edges(df_edges)
+    nw_edges , nw_edges_multiple = usAn.store_edges(df_edges)
     # edgeCounts = usAn.edgeCountPairs(df_edges)
     # print(np.mean(np.array(list(edgeCounts.values()))))
     # usAn.plot_hist(list(edgeCounts.values()), numBins=20, xLabel = 'Number of edges b/w node pairs', yLabel='Count')
@@ -100,7 +96,20 @@ def splitUsers(usersCVE_map, df_edges):
     return network, topUsers, usersCVE
 
 
-def segmentPostsWeek(posts, G):
+def shortest_pathLengths(network, sourceNodes, targetNodes):
+    shortest_pathDist = []
+    for s in sourceNodes:
+        for t in targetNodes:
+            try:
+                shortest_pathDist.append(nx.shortest_path_length(network,source=s,target=t))
+                # print(nx.shortest_path_length(network,source=s,target=t))
+            except:
+                continue # or some high value
+
+    return shortest_pathDist
+
+
+def segmentPostsWeek(posts, G, cveCPE_data, vulData, CVE_users_map):
     posts['DateTime'] = posts['posteddate'].map(str) + ' ' + posts['postedtime'].map(str)
     posts['DateTime'] = posts['DateTime'].apply(lambda x:
                                                     datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
@@ -123,6 +132,8 @@ def segmentPostsWeek(posts, G):
     dfEges_WeeklyList = []
     daysMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     numDaysCurrMonth = daysMonths[start_month-1]
+    weeksList = []
+    expertUsersListWeekly = []
 
     while True:
         if start_day < 10:
@@ -130,6 +141,7 @@ def segmentPostsWeek(posts, G):
         else:
             start_dayStr = str(start_day)
         start_date = datetime.datetime.strptime(str(start_year)+'-'+str(start_month)+'-'+start_dayStr+' 00:00:00', '%Y-%m-%d %H:%M:%S')
+        weeksList.append(str(start_year)+'-'+str(start_month)+'-'+start_dayStr)
 
         end_day = start_day + 7
         if end_day > numDaysCurrMonth:
@@ -148,16 +160,25 @@ def segmentPostsWeek(posts, G):
         topics = list(set(posts_currWeek['topicid']))
         df_edgesCurrWeek = ccon.storeEdges(posts_currWeek, topics)
         dfEges_WeeklyList.append(df_edgesCurrWeek)
+        usersCurrWeek = list(set(df_edgesCurrWeek['source']).union(set(df_edgesCurrWeek['target'])))
+
+        # Find the experts in the training data of the week
+        start_dateStr = str(start_year)+'-'+str(start_month)+'-'+start_dayStr
+        end_dateStr = str(start_year) + '-' + str(start_month) + '-' + end_dayStr
+        topCVETrain = topCPEGroups(start_dateStr, end_dateStr, vulData, cveCPE_data, K=-1)
+        expertsDictTrain = getExperts(topCVETrain, CVE_users_map, usersCurrWeek)
+
+        expertUsersListWeekly.append(expertsDictTrain)
 
         currIndex += len(posts_currWeek)
         start_day = end_day
         if start_day >= 29:
             break
 
-    return dfEges_WeeklyList
+    return dfEges_WeeklyList, expertUsersListWeekly, weeksList
 
 
-def computeWeeklyConductance(networkKB, df_edgesWeekly, userGroup):
+def computeWeeklyConductance(networkKB, df_edgesWeekly, trainExpertsWeekly, userGroup):
     graphConductanceDist = []
     networkNew = networkKB.copy()
     for w in range(len(df_edgesWeekly)):
@@ -166,6 +187,7 @@ def computeWeeklyConductance(networkKB, df_edgesWeekly, userGroup):
 
         currEdgeList = []
         userListWeek = []
+        trainExperts = trainExpertsWeekly[w] # expert users
         for i, r in df_edgesWeekly[w].iterrows():
             src = str(int(r['source']))
             tgt = str(int(r['target']))
@@ -180,13 +202,41 @@ def computeWeeklyConductance(networkKB, df_edgesWeekly, userGroup):
         networkNew.add_edges_from(currEdgeList)
         userListWeek = list(set(userListWeek).difference(set(userGroup))) # remove the experts from the new users
 
-        conductanceDist = nxCut.conductance(networkNew, userGroup, userListWeek)
+        conductanceDist = nxCut.conductance(networkNew, userGroup, trainExperts)
         graphConductanceDist.append(conductanceDist)
 
     return graphConductanceDist
 
 
-def monthlyFeatureCompute(forums, start_date, users_CVE_map):
+def computeWeeklyShortestPath(networkKB, df_edgesWeekly, trainExpertsWeekly, expertGroup):
+    shortestPathDist = []
+    networkNew = networkKB.copy()
+    for w in range(len(df_edgesWeekly)):
+        # print(w)
+        if len(df_edgesWeekly[w]) == 0:
+            shortestPathDist.append([])
+
+        currEdgeList = []
+        userListWeek = []
+        trainExperts = trainExpertsWeekly[w] # expert users
+        for i, r in df_edgesWeekly[w].iterrows():
+            src = str(int(r['source']))
+            tgt = str(int(r['target']))
+
+            userListWeek.append(src)
+            userListWeek.append(tgt)
+            if (src, tgt) not in currEdgeList:
+                currEdgeList.append((src, tgt))
+
+        userListWeek = list(set(userListWeek))
+        networkNew.add_edges_from(currEdgeList)
+
+        shortestPathDist.append(shortest_pathLengths(networkNew, userListWeek, expertGroup))
+
+    return shortestPathDist
+
+
+def monthlyFeatureCompute(forums, start_date, users_CVE_map, CVE_users_map, vulData, cveCPE_data):
     '''
     One of the main issues here is the automation of the rolling basis dates of KB and training data
 
@@ -197,9 +247,9 @@ def monthlyFeatureCompute(forums, start_date, users_CVE_map):
     '''
     KB_gap = 3
     titlesList = []
-    graphConductance_topUsers = []
-    graphConductance_experts = []
-    week_number = 14
+    feat_topUsers = []
+    feat_experts = []
+    # week_number = 14
     for idx in range(6):
         # KB network formation
         start_month = int(start_date[5:7]) + idx
@@ -224,6 +274,10 @@ def monthlyFeatureCompute(forums, start_date, users_CVE_map):
 
         networkKB, topUsersKB, usersCVE = splitUsers(users_CVE_map, KB_edges)
 
+        # Find the experts in the KB
+        topCVE = topCPEGroups(start_dateCurr, end_dateCurr, vulData, cveCPE_data, K=20)
+        expertsDict = getExperts(topCVE, CVE_users_map, list(networkKB.nodes()))
+
         # Training network formation starts from here
         train_start_month = end_month
         train_end_month = train_start_month + 1
@@ -244,20 +298,33 @@ def monthlyFeatureCompute(forums, start_date, users_CVE_map):
         print("Start date: ", train_start_date, " ,End_date: ", train_end_date)
 
         df_train = ldDW.getDW_data_postgres(forums, train_start_date, train_end_date)
-        train_edgesWeekly = segmentPostsWeek(df_train, networkKB)
-        gcExperts = computeWeeklyConductance(networkKB, train_edgesWeekly, usersCVE)
-        gc_Top = computeWeeklyConductance(networkKB, train_edgesWeekly, topUsersKB)
-        graphConductance_experts.extend(gcExperts)
-        graphConductance_topUsers.extend(gc_Top)
+        train_edgesWeekly, expertUsersListWeekly, weekList = \
+            segmentPostsWeek(df_train, networkKB, cveCPE_data, vulData, CVE_users_map)
 
-        print(len(gcExperts), len(gc_Top))
-        for wnum in range(len(gc_Top)):
-            title = start_date[:5] + ', ' + str(week_number + wnum)
-            titlesList.extend(title)
+        # Graph conductance
+        # gcExperts = computeWeeklyConductance(networkKB, train_edgesWeekly, expertUsersListWeekly, list(expertsDict.keys()))
+        # gc_Top = computeWeeklyConductance(networkKB, train_edgesWeekly, expertUsersListWeekly, topUsersKB)
 
-        week_number += len(gc_Top)
+        # Shortest path
+        # spExperts = computeWeeklyShortestPath(networkKB, train_edgesWeekly, expertUsersListWeekly,
+        #                                      list(expertsDict.keys()))
+        # spTop = computeWeeklyShortestPath(networkKB, train_edgesWeekly, expertUsersListWeekly, topUsersKB)
 
-    return graphConductance_experts, graphConductance_topUsers, titlesList
+        '''
+        *****************************
+        '''
+        feat_experts.extend([])
+        feat_topUsers.extend([])
+
+        # print(len(gcExperts), len(gc_Top))
+        titlesList.extend(weekList)
+        # for wnum in range(len(gc_Top)):
+        #     title = start_date[:5] + ', ' + str(week_number + wnum)
+        #     titlesList.append(title)
+
+        # week_number += len(gc_Top)
+
+    return feat_experts, feat_topUsers, titlesList
 
 
 def clusterDist(df):
@@ -307,7 +374,7 @@ def plot_bars(data, titles):
     plt.show()
 
 
-def topCPEGroups(start_date, end_date, vulInfo, cveCPE):
+def topCPEGroups(start_date, end_date, vulInfo, cveCPE, K):
     vulCurr = vulInfo[vulInfo['postedDate'] >= start_date]
     vulCurr = vulCurr[vulCurr['postedDate'] < end_date]
 
@@ -322,7 +389,9 @@ def topCPEGroups(start_date, end_date, vulInfo, cveCPE):
         topCPEs[clTag] += 1
 
     # print(topCPEs)
-    topCPEs_sorted = sorted(topCPEs.items(), key=operator.itemgetter(1), reverse=True)[:20]
+    if K==-1:
+        K = len(topCPEs)
+    topCPEs_sorted = sorted(topCPEs.items(), key=operator.itemgetter(1), reverse=True)[:K]
     topCPEsList = []
     for cpe, count in topCPEs_sorted:
         topCPEsList.append(cpe)
@@ -332,20 +401,97 @@ def topCPEGroups(start_date, end_date, vulInfo, cveCPE):
     return list(topCVE['cve'])
 
 
-def getRelUsers_inCPE(topCVE, CVE_userMap, usersKB):
+def getExperts(topCVE, CVE_userMap, usersGlobal):
     usersCVECount = {}
     for tc in topCVE:
         userCurrCVE = CVE_userMap[tc]
         if len(userCurrCVE) == 0:
             continue
-        for u in userCurrCVE[0]:
-            if u in usersKB:
+        for u in list(set(userCurrCVE[0])):
+            if u in usersGlobal:
                 if u not in usersCVECount:
                     usersCVECount[u] = 0
                 usersCVECount[u] += 1
 
     usersSorted = sorted(usersCVECount.items(), key=operator.itemgetter(1), reverse=True)
-    print(len(usersSorted))
+    mean_count = np.mean(np.array(list(usersCVECount.values())))
+    threshold = 0
+
+    usersCVECount_top = {}
+    for u, count in usersSorted:
+        if count >= threshold:
+            usersCVECount_top[u] = count
+
+    return usersCVECount_top
+
+
+def preprocessProb(network):
+    transition_probs = {}
+    userEdgeCount = {}
+    for src, tgt in network:
+        if src not in transition_probs:
+            transition_probs[src] = {}
+            userEdgeCount[src] = 0
+        if tgt not in transition_probs[src]:
+            transition_probs[src][tgt] = 0
+        transition_probs[src][tgt] += 1
+
+        userEdgeCount[src] += 1
+
+    for src in transition_probs:
+        for tgt in transition_probs[src]:
+            transition_probs[src][tgt] /= userEdgeCount[src]
+
+    return transition_probs
+
+
+def random_walk(network, source_node, expertGroup):
+    transition_matrix = preprocessProb(network)
+    lengthWalk = 10
+    countPositive = 0
+    totalCount = 0
+    for idx in range(50):
+        traversedNodes = []
+        for l in range(lengthWalk):
+            nextNbrs = network.neighbors(source_node)
+            transitionNext = transition_matrix[source_node]
+
+            nodesChoices = []
+            probChoices = []
+            for nbr in transitionNext:
+                if nbr in traversedNodes:
+                    continue
+                nodesChoices.append(nbr)
+                probChoices.append(transition_matrix[source_node][nbr])
+
+            nextNode = np.random.choice(nodesChoices, 1, p=probChoices)
+
+            if nextNode in expertGroup:
+                countPositive += 1
+                break
+        totalCount += 1
+
+    return countPositive/totalCount
+
+
+def computeCondProbAttackWeekly(networkKB, df_edgesWeekly, expertGroup):
+    probDist = []
+    for w in range(len(df_edgesWeekly)):
+        # print(w)
+        if len(df_edgesWeekly[w]) == 0:
+            probDist.append([])
+
+        currEdgeList = []
+        userListWeek = []
+        for i, r in df_edgesWeekly[w].iterrows():
+            src = str(int(r['source']))
+            tgt = str(int(r['target']))
+
+            if (src, tgt) not in networkKB.edges():
+                networkKB.add_edge((src, tgt))
+
+            probPositive = random_walk(networkKB, src, expertGroup)
+
 
 
 if __name__ == "__main__":
@@ -358,21 +504,33 @@ if __name__ == "__main__":
 
     start_date = '2016-01-01'
     end_date = '2016-04-01'
-    df = pd.read_csv('../../data/DW_data/09_15/CVE_CPE_groups.csv')
+    df_cve_cpe = pd.read_csv('../../data/DW_data/09_15/CVE_CPE_groups.csv')
+
+    users_CVE_map, CVE_users_map = user_CVE_groups(df_cve_cpe, vulData)
+    graphConductance_experts, graphConductance_topUsers, titlesList = \
+        monthlyFeatureCompute(forums_cve_mentions, start_date, users_CVE_map, CVE_users_map, vulDataFiltered,
+                              df_cve_cpe)
+    # pickle.dump(graphConductance_experts,
+    #             open('../../data/DW_data/09_15/train/features/spath_allExpertsKB_alltrainUsers.pickle', 'wb'))
+    # pickle.dump(graphConductance_experts,
+    #             open('../../data/DW_data/09_15/train/features/spath_top0.2KB_alltrainUsers.pickle', 'wb'))
+    pickle.dump(titlesList,
+                open('../../data/DW_data/09_15/train/features/titles_weekly.pickle', 'wb'))
+
     # print(df[:10])
     # print(len(list(set(df['vendor']))))
     # print(len(list(set(df['product']))))
     # print(len(list(set(df['cluster_tag']))))
 
-    topCVE = topCPEGroups(start_date, end_date, vulDataFiltered, df )
-    users_CVE_map, CVE_users_map = user_CVE_groups(df, vulData)
-
-    df_KB = ldDW.getDW_data_postgres(forums_cve_mentions, start_date, end_date)
-    threadidsKB = list(set(df_KB['topicid']))
-    KB_edges = ccon.storeEdges(df_KB, threadidsKB)
-
-    networkKB, topUsersKB, usersCVE = splitUsers(users_CVE_map, KB_edges)
-    getRelUsers_inCPE(topCVE, CVE_users_map, list(networkKB.nodes()))
+    # topCVE = topCPEGroups(start_date, end_date, vulDataFiltered, df )
+    # users_CVE_map, CVE_users_map = user_CVE_groups(df, vulData)
+    #
+    # df_KB = ldDW.getDW_data_postgres(forums_cve_mentions, start_date, end_date)
+    # threadidsKB = list(set(df_KB['topicid']))
+    # KB_edges = ccon.storeEdges(df_KB, threadidsKB)
+    #
+    # networkKB, topUsersKB, usersCVE = splitUsers(users_CVE_map, KB_edges)
+    # getRelUsers_inCPE(topCVE, CVE_users_map, list(networkKB.nodes()))
     # clustersDict = clusterDist(df)
     #
     # data = []
@@ -382,11 +540,7 @@ if __name__ == "__main__":
     #     titlesList.append(cl)
 
     # plot_bars(data, titlesList)
-    exit()
-    users_CVE_map, CVE_users_map = user_CVE_groups(df, vulData)
-    graphConductance_experts, graphConductance_topUsers, titlesList = monthlyFeatureCompute(forums_cve_mentions, start_date, users_CVE_map)
-    pickle.dump((graphConductance_experts, graphConductance_topUsers, titlesList),
-                open('../../data/DW_data/09_15/train/features/conductance_top0.2+experts.pickle', 'wb'))
+
 
     # exit()
 

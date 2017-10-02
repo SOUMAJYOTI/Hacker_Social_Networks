@@ -57,6 +57,7 @@ def edgeCountPairs(network_df):
 
 def store_edges(network_df):
     network_edgeList = []
+    network_edgeList_multiple = []
     for idx, row in network_df.iterrows():
         src = row['source']
         tgt = row['target']
@@ -64,7 +65,9 @@ def store_edges(network_df):
         if not binarySearch(network_edgeList, (src, tgt)):
             network_edgeList.append((src, tgt))
 
-    return network_edgeList
+        network_edgeList_multiple.append((src, tgt))
+
+    return network_edgeList, network_edgeList_multiple
 
 
 def plot_hist(data, numBins, xLabel='', yLabel='', titleName=''):
