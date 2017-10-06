@@ -18,6 +18,7 @@ import createConnections as ccon
 import load_dataDW as ldDW
 import matplotlib.pyplot as plt
 
+
 def dateToString(date):
     yearNum = str(date.year)
     monthNum = str(date.month)
@@ -236,97 +237,6 @@ def computeWeeklyShortestPath(networkKB, df_edgesWeekly, trainExpertsWeekly, exp
     return shortestPathDist
 
 
-def monthlyFeatureCompute(forums, start_date, users_CVE_map, CVE_users_map, vulData, cveCPE_data):
-    '''
-    One of the main issues here is the automation of the rolling basis dates of KB and training data
-
-    :param forums:
-    :param start_date:
-    :param usersCVE:
-    :return:
-    '''
-    KB_gap = 3
-    titlesList = []
-    feat_topUsers = []
-    feat_experts = []
-    # week_number = 14
-    for idx in range(6):
-        # KB network formation
-        start_month = int(start_date[5:7]) + idx
-        end_month = start_month + KB_gap
-        if start_month < 10:
-            start_monthStr = str('0') + str(start_month)
-        else:
-            start_monthStr = str(start_month)
-
-        if end_month < 10:
-            end_monthStr = str('0') + str(end_month)
-        else:
-            end_monthStr = str(end_month)
-
-        start_dateCurr = start_date[:5] + start_monthStr + start_date[7:]
-        end_dateCurr = start_date[:5] + end_monthStr + start_date[7:]
-        print("KB info: ")
-        print("Start date: ", start_dateCurr, " ,End date: ", end_dateCurr)
-        df_KB = ldDW.getDW_data_postgres(forums, start_dateCurr, end_dateCurr)
-        threadidsKB = list(set(df_KB['topicid']))
-        KB_edges = ccon.storeEdges(df_KB, threadidsKB)
-
-        networkKB, topUsersKB, usersCVE = splitUsers(users_CVE_map, KB_edges)
-
-        # Find the experts in the KB
-        topCVE = topCPEGroups(start_dateCurr, end_dateCurr, vulData, cveCPE_data, K=20)
-        expertsDict = getExperts(topCVE, CVE_users_map, list(networkKB.nodes()))
-
-        # Training network formation starts from here
-        train_start_month = end_month
-        train_end_month = train_start_month + 1
-        if train_start_month < 10:
-            train_start_monthStr = str('0') + str(train_start_month)
-        else:
-            train_start_monthStr = str(train_start_month)
-
-        if train_end_month < 10:
-            train_end_monthStr = str('0') + str(train_end_month)
-        else:
-            train_end_monthStr = str(train_end_month)
-
-        train_start_date = start_date[:5] + train_start_monthStr + start_date[7:]
-        train_end_date = start_date[:5] + train_end_monthStr + start_date[7:]
-
-        print("Training data info: ")
-        print("Start date: ", train_start_date, " ,End_date: ", train_end_date)
-
-        df_train = ldDW.getDW_data_postgres(forums, train_start_date, train_end_date)
-        train_edgesWeekly, expertUsersListWeekly, weekList = \
-            segmentPostsWeek(df_train, networkKB, cveCPE_data, vulData, CVE_users_map)
-
-        # Graph conductance
-        # gcExperts = computeWeeklyConductance(networkKB, train_edgesWeekly, expertUsersListWeekly, list(expertsDict.keys()))
-        # gc_Top = computeWeeklyConductance(networkKB, train_edgesWeekly, expertUsersListWeekly, topUsersKB)
-
-        # Shortest path
-        # spExperts = computeWeeklyShortestPath(networkKB, train_edgesWeekly, expertUsersListWeekly,
-        #                                      list(expertsDict.keys()))
-        # spTop = computeWeeklyShortestPath(networkKB, train_edgesWeekly, expertUsersListWeekly, topUsersKB)
-
-        '''
-        *****************************
-        '''
-        feat_experts.extend([])
-        feat_topUsers.extend([])
-
-        # print(len(gcExperts), len(gc_Top))
-        titlesList.extend(weekList)
-        # for wnum in range(len(gc_Top)):
-        #     title = start_date[:5] + ', ' + str(week_number + wnum)
-        #     titlesList.append(title)
-
-        # week_number += len(gc_Top)
-
-    return feat_experts, feat_topUsers, titlesList
-
-
 def clusterDist(df):
     # print(df[:10])
     clusters = {}
@@ -428,12 +338,15 @@ def getExperts(topCVE, CVE_userMap, usersGlobal):
 def preprocessProb(network):
     transition_probs = {}
     userEdgeCount = {}
-    for src, tgt in network:
+    for src, tgt in network.edges():
         if src not in transition_probs:
             transition_probs[src] = {}
             userEdgeCount[src] = 0
         if tgt not in transition_probs[src]:
             transition_probs[src][tgt] = 0
+        if tgt not in transition_probs:
+            transition_probs[tgt] = {}
+            userEdgeCount[tgt] = 0
         transition_probs[src][tgt] += 1
 
         userEdgeCount[src] += 1
@@ -447,52 +360,190 @@ def preprocessProb(network):
 
 def random_walk(network, source_node, expertGroup):
     transition_matrix = preprocessProb(network)
-    lengthWalk = 10
+    lengthWalk = 50
     countPositive = 0
     totalCount = 0
-    for idx in range(50):
+    for idx in range(20):
         traversedNodes = []
         for l in range(lengthWalk):
-            nextNbrs = network.neighbors(source_node)
+            # nextNbrs = network.neighbors(source_node)
             transitionNext = transition_matrix[source_node]
+            print(transitionNext)
 
             nodesChoices = []
             probChoices = []
             for nbr in transitionNext:
                 if nbr in traversedNodes:
                     continue
+                traversedNodes.append(nbr)
                 nodesChoices.append(nbr)
-                probChoices.append(transition_matrix[source_node][nbr])
+                probChoices.append(transitionNext[nbr])
 
-            nextNode = np.random.choice(nodesChoices, 1, p=probChoices)
+            if len(nodesChoices) == 0:
+                source_node = np.random.choice(list(network.nodes()))[0]
+                continue
+            nextNode = np.random.choice(nodesChoices, 1, p=probChoices)[0]
 
             if nextNode in expertGroup:
                 countPositive += 1
                 break
+            source_node = nextNode
+
         totalCount += 1
 
     return countPositive/totalCount
 
 
-def computeCondProbAttackWeekly(networkKB, df_edgesWeekly, expertGroup):
+def getNextWeekDate(currDate):
+    day = int(currDate[8:])
+
+    day += 7
+
+    if day > 29:
+        return -1
+
+    if day < 10:
+        dayStr = str(0) + str(day)
+    else:
+        dayStr = str(day)
+
+    return currDate[:7] + '-' + dayStr
+
+
+def computeCondProbAttackWeekly(networkKB, df_edgesWeekly, expertGroup, amEvents):
     probDist = []
     for w in range(len(df_edgesWeekly)):
         # print(w)
         if len(df_edgesWeekly[w]) == 0:
             probDist.append([])
+            continue
 
-        currEdgeList = []
-        userListWeek = []
+        currProbList= []
+
         for i, r in df_edgesWeekly[w].iterrows():
             src = str(int(r['source']))
             tgt = str(int(r['target']))
 
             if (src, tgt) not in networkKB.edges():
-                networkKB.add_edge((src, tgt))
+                networkKB.add_edge(src, tgt)
 
+            curr_Date = str(r['diffTime'])[:10]
+            if curr_Date == -1:
+                continue
+            end_date = getNextWeekDate(curr_Date)
+
+            print(curr_Date, end_date)
+            # print(list(amEvents['date'])[0], type(list(amEvents['date'])[0]))
+            # exit()
+            amEventsNextWeek = amEvents[amEvents['date'] > curr_Date]
+            amEventsNextWeek = amEventsNextWeek[amEventsNextWeek['date'] <= end_date]
+
+            if len(amEventsNextWeek) == 0:
+                continue
+
+            print(len(amEventsNextWeek))
             probPositive = random_walk(networkKB, src, expertGroup)
+            currProbList.append(probPositive)
+
+        probDist.append(currProbList)
+        print(currProbList)
+    return probDist
 
 
+def monthlyFeatureCompute(forums, start_date, users_CVE_map, CVE_users_map, vulData, cveCPE_data, amEvents):
+    '''
+    One of the main issues here is the automation of the rolling basis dates of KB and training data
+
+    :param forums:
+    :param start_date:
+    :param usersCVE:
+    :return:
+    '''
+    KB_gap = 3
+    titlesList = []
+    feat_topUsers = []
+    feat_experts = []
+    # week_number = 14
+    for idx in range(6):
+        # KB network formation
+        start_month = int(start_date[5:7]) + idx
+        end_month = start_month + KB_gap
+        if start_month < 10:
+            start_monthStr = str('0') + str(start_month)
+        else:
+            start_monthStr = str(start_month)
+
+        if end_month < 10:
+            end_monthStr = str('0') + str(end_month)
+        else:
+            end_monthStr = str(end_month)
+
+        start_dateCurr = start_date[:5] + start_monthStr + start_date[7:]
+        end_dateCurr = start_date[:5] + end_monthStr + start_date[7:]
+        print("KB info: ")
+        print("Start date: ", start_dateCurr, " ,End date: ", end_dateCurr)
+        df_KB = ldDW.getDW_data_postgres(forums, start_dateCurr, end_dateCurr)
+        threadidsKB = list(set(df_KB['topicid']))
+        KB_edges = ccon.storeEdges(df_KB, threadidsKB)
+
+        networkKB, topUsersKB, usersCVE = splitUsers(users_CVE_map, KB_edges)
+
+        # Find the experts in the KB
+        topCVE = topCPEGroups(start_dateCurr, end_dateCurr, vulData, cveCPE_data, K=20)
+        expertsDict = getExperts(topCVE, CVE_users_map, list(networkKB.nodes()))
+
+        # Training network formation starts from here
+        train_start_month = end_month
+        train_end_month = train_start_month + 1
+        if train_start_month < 10:
+            train_start_monthStr = str('0') + str(train_start_month)
+        else:
+            train_start_monthStr = str(train_start_month)
+
+        if train_end_month < 10:
+            train_end_monthStr = str('0') + str(train_end_month)
+        else:
+            train_end_monthStr = str(train_end_month)
+
+        train_start_date = start_date[:5] + train_start_monthStr + start_date[7:]
+        train_end_date = start_date[:5] + train_end_monthStr + start_date[7:]
+
+        print("Training data info: ")
+        print("Start date: ", train_start_date, " ,End_date: ", train_end_date)
+
+        df_train = ldDW.getDW_data_postgres(forums, train_start_date, train_end_date)
+        train_edgesWeekly, expertUsersListWeekly, weekList = \
+            segmentPostsWeek(df_train, networkKB, cveCPE_data, vulData, CVE_users_map)
+
+        # Graph conductance
+        # gcExperts = computeWeeklyConductance(networkKB, train_edgesWeekly, expertUsersListWeekly, list(expertsDict.keys()))
+        # gc_Top = computeWeeklyConductance(networkKB, train_edgesWeekly, expertUsersListWeekly, topUsersKB)
+
+        # Shortest path
+        # spExperts = computeWeeklyShortestPath(networkKB, train_edgesWeekly, expertUsersListWeekly,
+        #                                      list(expertsDict.keys()))
+        # spTop = computeWeeklyShortestPath(networkKB, train_edgesWeekly, expertUsersListWeekly, topUsersKB)
+
+        # Random Walk probability
+        probDistList = computeCondProbAttackWeekly(networkKB, train_edgesWeekly,
+                                                   list(expertsDict.keys()), amEvents)
+
+
+        '''
+        *****************************
+        '''
+        feat_experts.extend(probDistList)
+        feat_topUsers.extend([])
+
+        # print(len(gcExperts), len(gc_Top))
+        titlesList.extend(weekList)
+        # for wnum in range(len(gc_Top)):
+        #     title = start_date[:5] + ', ' + str(week_number + wnum)
+        #     titlesList.append(title)
+
+        # week_number += len(gc_Top)
+
+    return feat_experts, feat_topUsers, titlesList
 
 if __name__ == "__main__":
     forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197]
@@ -502,20 +553,23 @@ if __name__ == "__main__":
     vulData = pickle.load(open('../../data/DW_data/08_29/Vulnerabilities-sample_v2+.pickle', 'rb'))
     vulDataFiltered = vulData[vulData['forumID'].isin(forums_cve_mentions)]
 
+    read_path = '../../data/Armstrong_data/eventsDF_v1.0-demo.csv'
+    amEvents = pd.read_csv(read_path)
+
     start_date = '2016-01-01'
     end_date = '2016-04-01'
     df_cve_cpe = pd.read_csv('../../data/DW_data/09_15/CVE_CPE_groups.csv')
 
     users_CVE_map, CVE_users_map = user_CVE_groups(df_cve_cpe, vulData)
-    graphConductance_experts, graphConductance_topUsers, titlesList = \
+    feat_experts, feat_topUsers, titlesList = \
         monthlyFeatureCompute(forums_cve_mentions, start_date, users_CVE_map, CVE_users_map, vulDataFiltered,
-                              df_cve_cpe)
-    # pickle.dump(graphConductance_experts,
-    #             open('../../data/DW_data/09_15/train/features/spath_allExpertsKB_alltrainUsers.pickle', 'wb'))
+                              df_cve_cpe, amEvents)
+    pickle.dump(feat_experts,
+                open('../../data/DW_data/09_15/train/features/randomWalkProb_allExpertsKB_alltrainUsers.pickle', 'wb'))
     # pickle.dump(graphConductance_experts,
     #             open('../../data/DW_data/09_15/train/features/spath_top0.2KB_alltrainUsers.pickle', 'wb'))
-    pickle.dump(titlesList,
-                open('../../data/DW_data/09_15/train/features/titles_weekly.pickle', 'wb'))
+    # pickle.dump(titlesList,
+    #             open('../../data/DW_data/09_15/train/features/titles_weekly.pickle', 'wb'))
 
     # print(df[:10])
     # print(len(list(set(df['vendor']))))
