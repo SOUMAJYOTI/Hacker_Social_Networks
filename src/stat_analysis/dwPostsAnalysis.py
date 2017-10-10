@@ -34,7 +34,7 @@ def plot_bar(data, xTicks, xLabels='', yLabels=''):
     plt.xticks(size=20)
     plt.yticks(size=20)
     # plt.subplots_adjust(left=0.13, bottom=0.30, top=0.9)
-    plt.subplots_adjust(left=0.13, bottom=0.50, top=0.9)
+    plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
     ## add a legend
     # ax.legend( (rects1[0], ('Men', 'Women') )
 
@@ -55,7 +55,6 @@ def plot_bar(data, xTicks, xLabels='', yLabels=''):
 #
 #     return results_df
 
-
 def segmentPostsWeek(posts):
     posts['DateTime'] = posts['posteddate'].map(str) + ' ' + posts['postedtime'].map(str)
     posts['DateTime'] = posts['DateTime'].apply(lambda x:
@@ -69,7 +68,7 @@ def segmentPostsWeek(posts):
     start_day = 1
     currIndex = 0
     posts_WeeklyList = []
-    daysMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    daysMonths = [31, 30, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     numDaysCurrMonth = daysMonths[start_month-1]
     weeksList = []
 
@@ -98,6 +97,57 @@ def segmentPostsWeek(posts):
         posts_WeeklyList.append(posts_currWeek)
         currIndex += len(posts_currWeek)
         start_day = end_day
+        print(start_day, end_day)
+        if start_day >= 29:
+            break
+
+    return posts_WeeklyList
+
+
+def topCPEWeekly(dfCPE):
+    dfCPE = dfCPE.sort('postedDate', ascending=True)
+
+    # Form the network for each week
+    start_year = dfCPE['postedDate'].iloc[0].year
+    start_month = dfCPE['postedDate'].iloc[0].month
+
+    # print(start_year, start_month)
+
+    start_day = 1
+    currIndex = 0
+    posts_WeeklyList = []
+    daysMonths = [31, 30, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    numDaysCurrMonth = daysMonths[start_month-1]
+    weeksList = []
+
+    while True:
+        if start_day < 10:
+            start_dayStr = str('0') + str(start_day)
+        else:
+            start_dayStr = str(start_day)
+        start_date = pd.to_datetime(
+            str(start_year) + '-' + str(start_month) + '-' + start_dayStr, format='%Y-%m-%d')
+        weeksList.append(str(start_year) + '-' + str(start_month) + '-' + start_dayStr)
+
+        end_day = start_day + 7
+        if end_day > numDaysCurrMonth:
+            end_day = numDaysCurrMonth
+
+        if end_day < 10:
+            end_dayStr = str('0') + str(end_day)
+        else:
+            end_dayStr = str(end_day)
+        end_date = pd.to_datetime(str(start_year) + '-' + str(start_month) + '-' + end_dayStr, format='%Y-%m-%d' )
+
+        # print(start_date, end_date)
+        posts_currWeek = dfCPE[dfCPE['postedDate'] >= start_date]
+        posts_currWeek = posts_currWeek[posts_currWeek['postedDate'] < end_date]
+
+        # print(posts_currWeek)
+        posts_WeeklyList.append(posts_currWeek)
+        currIndex += len(posts_currWeek)
+        start_day = end_day
+        print(start_day, end_day)
         if start_day >= 29:
             break
 
@@ -108,9 +158,15 @@ if __name__ == "__main__":
     titles = pickle.load(open('../../data/DW_data/09_15/train/features/titles_weekly.pickle', 'rb'))
     forums = [88, 248, 133, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197]
 
-    start_date = "2016-01-01"
-    end_date= "2016-04-01"
-    KB_gap = 3
+    vulData = pickle.load(open('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle', 'rb'))
+    vulData['postedDate'] = pd.to_datetime(vulData['postedDate'], format='%Y-%m-%d')
+    vulDataFiltered = vulData[vulData['forumID'].isin(forums)]
+
+    # df_cve_cpe = pd.read_csv('../../data/DW_data/09_15/CVE_CPE_groups.csv')
+
+    start_date = "2016-04-01"
+    end_date= "2016-05-01"
+    time_gap = 1
 
     numThreads = []
     numPosts = []
@@ -118,7 +174,7 @@ if __name__ == "__main__":
     for idx in range(6):
         # KB network formation
         start_month = int(start_date[5:7]) + idx
-        end_month = start_month + KB_gap
+        end_month = start_month + time_gap
         if start_month < 10:
             start_monthStr = str('0') + str(start_month)
         else:
@@ -134,10 +190,14 @@ if __name__ == "__main__":
         print("KB info: ")
         print("Start date: ", start_dateCurr, " ,End date: ", end_dateCurr)
         df_KB = ldDW.getDW_data_postgres(forums, start_dateCurr, end_dateCurr)
-
+        vulDataFiltered = vulData[vulData['postedDate'] >= start_dateCurr]
+        vulDataFiltered = vulDataFiltered[vulDataFiltered['postedDate'] < end_dateCurr]
+        # print(vulDataFiltered)
         postsWeekly = segmentPostsWeek(df_KB)
+        # postsWeekly = topCPEWeekly(vulDataFiltered)  # exit()
 
         for w in range(len(postsWeekly)):
+            # print(len(postsWeekly[w]))
             numPosts.append(len(postsWeekly[w]))
             numThreads.append(len(list(set(postsWeekly[w]['topicid']))))
 

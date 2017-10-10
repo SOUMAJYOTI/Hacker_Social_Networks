@@ -12,6 +12,11 @@ def dateToString(date):
         dayNum= "0"+dayNum
     return yearNum+"-"+monthNum+"-"+dayNum
 
+def getVulnerabilityInfoAll(start=0, fromDate=dt.date.today(), toDate=dt.date.today(), limNum=5000):
+    url = 'https://apigargoyle.com/GargoyleApi/getVulnerabilityInfo?limit=' + str(limNum) + "&start=" + str(start)
+    headers = {"userId": "labuser", "apiKey": "a9a2370f-4959-4511-b263-5477d31329cf"}
+    response = requests.get(url, headers=headers)
+    return response.json()['results']
 
 def getVulnerabilityInfo(start=0, fromDate=dt.date.today(), toDate=dt.date.today(), limNum=5000):
     url = 'https://apigargoyle.com/GargoyleApi/getDetailedVulnerabilityInfo?limit=' + str(limNum) + "&start=" + str(start)

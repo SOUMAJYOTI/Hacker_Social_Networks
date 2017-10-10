@@ -136,6 +136,8 @@ def segmentPostsWeek(posts, G, cveCPE_data, vulData, CVE_users_map):
     weeksList = []
     expertUsersListWeekly = []
 
+    newUsersWeekly = []
+
     while True:
         if start_day < 10:
             start_dayStr = str('0') + str(start_day)
@@ -171,12 +173,17 @@ def segmentPostsWeek(posts, G, cveCPE_data, vulData, CVE_users_map):
 
         expertUsersListWeekly.append(expertsDictTrain)
 
+        trainUsers = set(df_edgesCurrWeek['source']).union(set(df_edgesCurrWeek['target']))
+
+        newUsers = list(set(trainUsers).difference(set(list(expertsDictTrain.keys()))))
+
+        newUsersWeekly.append(len(newUsers)/len(trainUsers)*100)
         currIndex += len(posts_currWeek)
         start_day = end_day
         if start_day >= 29:
             break
 
-    return dfEges_WeeklyList, expertUsersListWeekly, weeksList
+    return dfEges_WeeklyList, expertUsersListWeekly, newUsersWeekly, weeksList
 
 
 def computeWeeklyConductance(networkKB, df_edgesWeekly, trainExpertsWeekly, userGroup):
@@ -255,34 +262,32 @@ def clusterDist(df):
     return topClusters
 
 
-def plot_bars(data, titles):
-    width=0.35
-    ind = np.arange(len(data))  # the x locations for the groups
+def plot_bars(data, xTicks, xLabels='', yLabels=''):
+    hfont = {'fontname': 'Arial'}
+    ind = np.arange(len(data))
     fig = plt.figure(figsize=(12, 8))
     ax = fig.add_subplot(111)
-    ## the bars
-    # rects1 = ax.bar(ind, data_mean, width,
-    #                 color='#C0C0C0')
+
+    width=0.35
     rects1 = ax.bar(ind, data, width,
                     color='#0000ff')  # axes and labels
     ax.set_xlim(-width, len(ind) + width)
-    # ax.set_ylim(0, 200)
-    ax.set_ylabel('Number of CVEs', size=40)
-    # ax.set_xlabel('Date frame (start of each week)', size=30)
-    ax.set_title('Distribution of CVEs within CPE groups', size=30)
-    xTickMarks = titles
+    # ax.set_ylim(87, 95)
+    ax.set_ylabel(yLabels, size=30, **hfont)
+    ax.set_xlabel(xLabels, size=30, **hfont)
     ax.set_xticks(ind)
-    xtickNames = ax.set_xticklabels(xTickMarks)
-    plt.setp(xtickNames, rotation=45, fontsize=5, ha='right')
+    xtickNames = ax.set_xticklabels(xTicks, **hfont)
+    plt.setp(xtickNames, rotation=45, fontsize=5)
     plt.grid(True)
-    plt.xticks(size=25)
-    plt.yticks(size=25)
-    plt.subplots_adjust(left=0.13, bottom=0.50, top=0.9)
+    plt.xticks(size=20)
+    plt.yticks(size=20)
+    # plt.subplots_adjust(left=0.13, bottom=0.30, top=0.9)
+    plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
     ## add a legend
     # ax.legend( (rects1[0], ('Men', 'Women') )
 
     plt.show()
-
+    plt.close()
 
 def topCPEGroups(start_date, end_date, vulInfo, cveCPE, K):
     vulCurr = vulInfo[vulInfo['postedDate'] >= start_date]
@@ -450,7 +455,7 @@ def computeCondProbAttackWeekly(networkKB, df_edgesWeekly, expertGroup, amEvents
     return probDist
 
 
-def monthlyFeatureCompute(forums, start_date, users_CVE_map, CVE_users_map, vulData, cveCPE_data, amEvents):
+def monthlyFeatureCompute(forums, start_date, users_CVE_map, CVE_users_map, vulData, cveCPE_data, amEvents, titles):
     '''
     One of the main issues here is the automation of the rolling basis dates of KB and training data
 
@@ -464,6 +469,7 @@ def monthlyFeatureCompute(forums, start_date, users_CVE_map, CVE_users_map, vulD
     feat_topUsers = []
     feat_experts = []
     # week_number = 14
+    newUsersWeeklyPercList = []
     for idx in range(6):
         # KB network formation
         start_month = int(start_date[5:7]) + idx
@@ -512,8 +518,11 @@ def monthlyFeatureCompute(forums, start_date, users_CVE_map, CVE_users_map, vulD
         print("Start date: ", train_start_date, " ,End_date: ", train_end_date)
 
         df_train = ldDW.getDW_data_postgres(forums, train_start_date, train_end_date)
-        train_edgesWeekly, expertUsersListWeekly, weekList = \
+        train_edgesWeekly, expertUsersListWeekly, newUsersWeeklyPerc, weekList = \
             segmentPostsWeek(df_train, networkKB, cveCPE_data, vulData, CVE_users_map)
+
+        newUsersWeeklyPercList.extend(newUsersWeeklyPerc)
+
 
         # Graph conductance
         # gcExperts = computeWeeklyConductance(networkKB, train_edgesWeekly, expertUsersListWeekly, list(expertsDict.keys()))
@@ -525,27 +534,28 @@ def monthlyFeatureCompute(forums, start_date, users_CVE_map, CVE_users_map, vulD
         # spTop = computeWeeklyShortestPath(networkKB, train_edgesWeekly, expertUsersListWeekly, topUsersKB)
 
         # Random Walk probability
-        probDistList = computeCondProbAttackWeekly(networkKB, train_edgesWeekly,
-                                                   list(expertsDict.keys()), amEvents)
+        # probDistList = computeCondProbAttackWeekly(networkKB, train_edgesWeekly,
+        #                                            list(expertsDict.keys()), amEvents)
 
 
         '''
         *****************************
         '''
-        feat_experts.extend(probDistList)
-        feat_topUsers.extend([])
+        # feat_experts.extend(probDistList)
+        # feat_topUsers.extend([])
 
         # print(len(gcExperts), len(gc_Top))
-        titlesList.extend(weekList)
+        # titlesList.extend(weekList)
         # for wnum in range(len(gc_Top)):
         #     title = start_date[:5] + ', ' + str(week_number + wnum)
         #     titlesList.append(title)
 
         # week_number += len(gc_Top)
-
+    plot_bars(newUsersWeeklyPercList, titles, 'Date Time (start of week)', '%age of new users')
     return feat_experts, feat_topUsers, titlesList
 
 if __name__ == "__main__":
+    titles = pickle.load(open('../../data/DW_data/09_15/train/features/titles_weekly.pickle', 'rb'))
     forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197]
     # engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cyber_events_pred')
     # query = "select vendor, product, cluster_tag, cve from  cve_cpegroups"
@@ -563,9 +573,9 @@ if __name__ == "__main__":
     users_CVE_map, CVE_users_map = user_CVE_groups(df_cve_cpe, vulData)
     feat_experts, feat_topUsers, titlesList = \
         monthlyFeatureCompute(forums_cve_mentions, start_date, users_CVE_map, CVE_users_map, vulDataFiltered,
-                              df_cve_cpe, amEvents)
-    pickle.dump(feat_experts,
-                open('../../data/DW_data/09_15/train/features/randomWalkProb_allExpertsKB_alltrainUsers.pickle', 'wb'))
+                              df_cve_cpe, amEvents, titles)
+    # pickle.dump(feat_experts,
+    #             open('../../data/DW_data/09_15/train/features/randomWalkProb_allExpertsKB_alltrainUsers.pickle', 'wb'))
     # pickle.dump(graphConductance_experts,
     #             open('../../data/DW_data/09_15/train/features/spath_top0.2KB_alltrainUsers.pickle', 'wb'))
     # pickle.dump(titlesList,
