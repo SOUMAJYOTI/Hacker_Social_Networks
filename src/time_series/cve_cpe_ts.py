@@ -29,7 +29,6 @@ def dateToString(date):
     return yearNum+"-"+monthNum+"-"+dayNum
 
 
-
 def user_CVE_groups(cve_cpe_data, vul_data):
     usersCVE_map = {}
     CVE_usersMap = {}
@@ -68,8 +67,6 @@ def segmentEventDaily(eventsDf):
 
     while start_month <= 12:
         start_day = 1
-        currIndex = 0
-        daysList = []
 
         while True:
             eventType = []
@@ -77,17 +74,22 @@ def segmentEventDaily(eventsDf):
                 start_dayStr = str('0') + str(start_day)
             else:
                 start_dayStr = str(start_day)
-            start_date = datetime.datetime.strptime(
-                str(start_year) + '-' + str(start_month) + '-' + start_dayStr + ' 00:00:00', '%Y-%m-%d %H:%M:%S')
-            daysList.append(str(start_year) + '-' + str(start_month) + '-' + start_dayStr)
 
-            end_date = datetime.datetime.strptime(str(start_year) + '-' + str(start_month) + '-' + start_dayStr + ' 23:59:00',
+            if start_month < 10:
+                start_monthStr = str('0') + str(start_month)
+            else:
+                start_monthStr = str(start_month)
+
+            start_date = datetime.datetime.strptime(
+                str(start_year) + '-' + start_monthStr + '-' + start_dayStr + ' 00:00:00', '%Y-%m-%d %H:%M:%S')
+
+            end_date = datetime.datetime.strptime(str(start_year) + '-' + start_monthStr + '-' + start_dayStr + ' 23:59:00',
                                                   '%Y-%m-%d %H:%M:%S')
 
-            events_currDay = eventsDf[eventsDf['DateTime'] >= start_date]
-            events_currDay = events_currDay[events_currDay['DateTime'] < end_date]
+            events_currDay = eventsDf[eventsDf['date'] >= start_date]
+            events_currDay = events_currDay[events_currDay['date'] < end_date]
 
-            datesList.append(events_currDay)
+            datesList.append(start_date)
             numEventsList.append(len(events_currDay))
 
             for idx, row in events_currDay.iterrows():
@@ -96,17 +98,32 @@ def segmentEventDaily(eventsDf):
             eventTypeList.append(eventType)
 
             start_day += 1
-            if start_day > daysMonths[start_month]:
+
+            # Break condition
+            if start_day > daysMonths[start_month-1]:
                 break
 
         start_month += 1
+        if start_month < 10:
+            start_monthStr = str('0') + str(start_month)
+        else:
+            start_monthStr = str(start_month)
 
         # Break condition
-        events_currDay = eventsDf[eventsDf['DateTime'] >= start_date]
-        if
+        events_nextMonth = eventsDf[eventsDf['date'] >= \
+                                  pd.to_datetime(str(start_year)+'-'+start_monthStr+'-01', format='%Y-%m-%d')]
+        events_nextMonth = events_nextMonth[events_nextMonth['date'] <= \
+                                    pd.to_datetime(str(start_year) + '-' + start_monthStr + '-' + str(daysMonths[start_month-1])
+                                                   , format='%Y-%m-%d')]
+        if len(events_nextMonth) == 0:
+            break
 
     df_amEventsTS['date'] = datesList
-    
+    df_amEventsTS['number_events'] = numEventsList
+    df_amEventsTS['event_types'] = eventTypeList
+
+    return df_amEventsTS
+
 
 def clusterDist(df):
     # print(df[:10])
@@ -176,6 +193,7 @@ def getExperts(topCVE, CVE_userMap, usersGlobal):
 
     return usersCVECount_top
 
+
 def getNextWeekDate(currDate):
     day = int(currDate[8:])
 
@@ -206,68 +224,16 @@ if __name__ == "__main__":
     amEvents['date'] = pd.to_datetime(amEvents['date'], format="%Y-%m-%d")
     amEvents = amEvents[amEvents['date'] < pd.to_datetime('2016-12-01')]
 
-    segmentEventDaily(amEvents)
+    df_ts = segmentEventDaily(amEvents)
 
-    start_date = '2016-01-01'
-    end_date = '2016-04-01'
-    df_cve_cpe = pd.read_csv('../../data/DW_data/09_15/CVE_CPE_groups.csv')
+    pickle.dump(df_ts, open('../../data/Armstrong_data/eventsDF_df_days.pickle', 'wb'))
 
-    users_CVE_map, CVE_users_map = user_CVE_groups(df_cve_cpe, vulData)
-    feat_experts, feat_topUsers, titlesList = \
-        monthlyFeatureCompute(forums_cve_mentions, start_date, users_CVE_map, CVE_users_map, vulDataFiltered,
-                              df_cve_cpe, amEvents, titles)
-    # pickle.dump(feat_experts,
-    #             open('../../data/DW_data/09_15/train/features/randomWalkProb_allExpertsKB_alltrainUsers.pickle', 'wb'))
-    # pickle.dump(graphConductance_experts,
-    #             open('../../data/DW_data/09_15/train/features/spath_top0.2KB_alltrainUsers.pickle', 'wb'))
-    # pickle.dump(titlesList,
-    #             open('../../data/DW_data/09_15/train/features/titles_weekly.pickle', 'wb'))
+    df_ts.plot(x='date', y='number_events')
+    plt.grid()
+    plt.xticks(size=20)
+    plt.yticks(size=20)
+    plt.xlabel('Date Time frame', size=20)
+    plt.ylabel('Number of Armstrong events', size=20)
+    plt.subplots_adjust(left=0.13, bottom=0.15, top=0.9)
 
-    # print(df[:10])
-    # print(len(list(set(df['vendor']))))
-    # print(len(list(set(df['product']))))
-    # print(len(list(set(df['cluster_tag']))))
-
-    # topCVE = topCPEGroups(start_date, end_date, vulDataFiltered, df )
-    # users_CVE_map, CVE_users_map = user_CVE_groups(df, vulData)
-    #
-    # df_KB = ldDW.getDW_data_postgres(forums_cve_mentions, start_date, end_date)
-    # threadidsKB = list(set(df_KB['topicid']))
-    # KB_edges = ccon.storeEdges(df_KB, threadidsKB)
-    #
-    # networkKB, topUsersKB, usersCVE = splitUsers(users_CVE_map, KB_edges)
-    # getRelUsers_inCPE(topCVE, CVE_users_map, list(networkKB.nodes()))
-    # clustersDict = clusterDist(df)
-    #
-    # data = []
-    # titlesList = []
-    # for cl in clustersDict:
-    #     data.append(clustersDict[cl])
-    #     titlesList.append(cl)
-
-    # plot_bars(data, titlesList)
-
-
-    # exit()
-
-    # df = pd.read_sql_query(query, con=engine)
-    # df.to_csv('../../data/DW_data/09_15/CVE_CPE_groups.csv')
-    # print("Number of cluster tags: ", len(list(set(df['cluster_tag']))))
-
-
-    # print(len(users_CVE_map))
-
-    # dw_user_edges_train = pickle.load(
-    #     open('../../data/DW_data/09_15/train/edges/user_edges_selected_forums_Oct15-Mar16.pickle', 'rb'))
-    #
-    # network, topUsers, usersCVE = splitUsers(users_CVE_map, dw_user_edges_train)
-    #
-    # # cpe_groups = df['cluster_tag']
-    # # print(cpe_groups)
-    # # cveUsers(df)
-    #
-    # # results_df.to_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jul16.csv')
-    #
-    # posts_train = pickle.load(open('../../data/DW_data/09_15/train/data/DW_data_selected_forums_Apr16.pickle', 'rb'))
-    # df_edgesWeekly = segmentPostsWeek(posts_train, network)
-    # computeWeeklyConductance(network, df_edgesWeekly, usersCVE)
+    plt.show()

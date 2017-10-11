@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b3af467-004d-4a29-a6fe-96d8d390283e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/network_analysis/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/network_analysis/cve_cpe_nw.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utilities/plot_bars.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/stat_analysis/cve_cpe.py" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/time_series/nw_feat_ts.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/load_data/loadVulInfo.py" afterPath="$PROJECT_DIR$/src/load_data/loadVulInfo.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/load_data/load_data_api.py" afterPath="$PROJECT_DIR$/src/load_data/load_data_api.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py" afterPath="$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/time_series/cve_cpe_ts.py" afterPath="$PROJECT_DIR$/src/time_series/cve_cpe_ts.py" />
     </list>
     <ignored path="Hacker_Social_Networks.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,7 +27,7 @@
       <file leaf-file-name="userAnalysis.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/stat_analysis/userAnalysis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="22">
+            <state relative-caret-position="418">
               <caret line="47" column="23" selection-start-line="47" selection-start-column="23" selection-end-line="47" selection-end-column="23" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -44,11 +39,51 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cve_cpe_ts.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="cve_cpe_ts.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/time_series/cve_cpe_ts.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3102">
-              <caret line="108" column="4" selection-start-line="108" selection-start-column="4" selection-end-line="108" selection-end-column="4" />
+            <state relative-caret-position="520">
+              <caret line="238" column="14" selection-start-line="230" selection-start-column="3" selection-end-line="238" selection-end-column="14" />
+              <folding>
+                <element signature="e#449#678#0" expanded="false" />
+                <element signature="e#730#1302#0" expanded="false" />
+                <element signature="e#3860#4292#0" expanded="false" />
+                <element signature="e#4359#5084#0" expanded="false" />
+                <element signature="e#5141#5810#0" expanded="false" />
+                <element signature="e#5848#6050#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="nw_feat_ts.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/time_series/nw_feat_ts.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="25">
+              <caret line="106" column="0" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
+              <folding>
+                <element signature="e#517#746#0" expanded="false" />
+                <element signature="e#807#3396#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cve_cpe_nw.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/network_analysis/cve_cpe_nw.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="242">
+              <caret line="475" column="40" selection-start-line="475" selection-start-column="40" selection-end-line="475" selection-end-column="40" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="load_dataDW.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/load_data/load_dataDW.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="607">
+              <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -57,7 +92,7 @@
       <file leaf-file-name="amEvent_CVE.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/stat_analysis/amEvent_CVE.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="141">
+            <state relative-caret-position="1188">
               <caret line="133" column="72" selection-start-line="132" selection-start-column="4" selection-end-line="133" selection-end-column="72" />
               <folding>
                 <element signature="e#154#2448#0" expanded="false" />
@@ -66,21 +101,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="plot_bars.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utilities/plot_bars.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="594">
-              <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="dwPostsAnalysis.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2860">
-              <caret line="130" column="0" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
+            <state relative-caret-position="528">
+              <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -160,14 +185,16 @@
         <option value="$PROJECT_DIR$/utilities/plot_bars.py" />
         <option value="$PROJECT_DIR$/src/time_series/nw_feature.py" />
         <option value="$PROJECT_DIR$/src/time_series/cve_cpe_ts.py" />
+        <option value="$PROJECT_DIR$/src/network_analysis/cve_cpe_nw.py" />
+        <option value="$PROJECT_DIR$/src/time_series/nw_feat_ts.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1689" />
-    <option name="y" value="17" />
-    <option name="width" value="1698" />
-    <option name="height" value="1018" />
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
+    <option name="width" value="1938" />
+    <option name="height" value="1048" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -194,6 +221,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -304,14 +333,30 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="load_data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Hacker_Social_Networks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Hacker_Social_Networks" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -325,7 +370,7 @@
       <recent name="F:\Github\Hacker_Social_Networks\src\load_data" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.cve_cpe_ts">
+  <component name="RunManager" selected="Python.nw_feat_ts">
     <configuration default="false" name="cve_cpe" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -339,23 +384,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Hacker_Social_Networks" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/stat_analysis/cve_cpe.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="plot_shortest_paths" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utilities" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Hacker_Social_Networks" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utilities/plot_shortest_paths.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -407,6 +435,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Hacker_Social_Networks" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/time_series/cve_cpe_ts.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="nw_feat_ts" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/time_series" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Hacker_Social_Networks" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/time_series/nw_feat_ts.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -547,18 +592,18 @@
     </configuration>
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.cve_cpe" />
-      <item index="1" class="java.lang.String" itemvalue="Python.plot_shortest_paths" />
-      <item index="2" class="java.lang.String" itemvalue="Python.dwPostsAnalysis" />
-      <item index="3" class="java.lang.String" itemvalue="Python.loadVulInfo" />
-      <item index="4" class="java.lang.String" itemvalue="Python.cve_cpe_ts" />
+      <item index="1" class="java.lang.String" itemvalue="Python.dwPostsAnalysis" />
+      <item index="2" class="java.lang.String" itemvalue="Python.loadVulInfo" />
+      <item index="3" class="java.lang.String" itemvalue="Python.cve_cpe_ts" />
+      <item index="4" class="java.lang.String" itemvalue="Python.nw_feat_ts" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.cve_cpe_ts" />
-        <item index="1" class="java.lang.String" itemvalue="Python.dwPostsAnalysis" />
-        <item index="2" class="java.lang.String" itemvalue="Python.cve_cpe" />
-        <item index="3" class="java.lang.String" itemvalue="Python.loadVulInfo" />
-        <item index="4" class="java.lang.String" itemvalue="Python.plot_shortest_paths" />
+        <item index="0" class="java.lang.String" itemvalue="Python.nw_feat_ts" />
+        <item index="1" class="java.lang.String" itemvalue="Python.cve_cpe_ts" />
+        <item index="2" class="java.lang.String" itemvalue="Python.dwPostsAnalysis" />
+        <item index="3" class="java.lang.String" itemvalue="Python.cve_cpe" />
+        <item index="4" class="java.lang.String" itemvalue="Python.loadVulInfo" />
       </list>
     </recent_temporary>
   </component>
@@ -579,15 +624,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1689" y="17" width="1698" height="1018" extended-state="6" />
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19166666" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16763617" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3030647" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17553794" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -607,12 +652,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="12" />
+      <option name="time" value="15" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/getArmstrongData_dw.py" />
     <entry file="file://$PROJECT_DIR$/src/load_data_sdk.py" />
     <entry file="file://$PROJECT_DIR$/src/load_armstrong_data.py" />
     <entry file="file://$PROJECT_DIR$/src/plot_neo4j_stats.py" />
@@ -812,13 +856,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/load_data/load_dataDW.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/load_data/load_neo4j_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -845,25 +882,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/stat_analysis/cve_cpe.py" />
     <entry file="file://$PROJECT_DIR$/src/time_series.py" />
-    <entry file="file://$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2860">
-          <caret line="130" column="0" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/time_series/nw_feature.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44">
-          <caret line="111" column="0" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/time_series/nw_feature.py" />
     <entry file="file://$PROJECT_DIR$/src/stat_analysis/userAnalysis.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
+        <state relative-caret-position="418">
           <caret line="47" column="23" selection-start-line="47" selection-start-column="23" selection-end-line="47" selection-end-column="23" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
@@ -874,25 +896,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/network_analysis/cve_cpe_nw.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="10" selection-start-line="0" selection-start-column="10" selection-end-line="0" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/utilities/plot_bars.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/stat_analysis/amEvent_CVE.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
+        <state relative-caret-position="1188">
           <caret line="133" column="72" selection-start-line="132" selection-start-column="4" selection-end-line="133" selection-end-column="72" />
           <folding>
             <element signature="e#154#2448#0" expanded="false" />
@@ -900,11 +906,61 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/utilities/plot_bars.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="438">
+          <caret line="21" column="23" selection-start-line="21" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="528">
+          <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/load_data/load_dataDW.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="607">
+          <caret line="74" column="0" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/network_analysis/cve_cpe_nw.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="475" column="40" selection-start-line="475" selection-start-column="40" selection-end-line="475" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/time_series/cve_cpe_ts.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3102">
-          <caret line="108" column="4" selection-start-line="108" selection-start-column="4" selection-end-line="108" selection-end-column="4" />
-          <folding />
+        <state relative-caret-position="520">
+          <caret line="238" column="14" selection-start-line="230" selection-start-column="3" selection-end-line="238" selection-end-column="14" />
+          <folding>
+            <element signature="e#449#678#0" expanded="false" />
+            <element signature="e#730#1302#0" expanded="false" />
+            <element signature="e#3860#4292#0" expanded="false" />
+            <element signature="e#4359#5084#0" expanded="false" />
+            <element signature="e#5141#5810#0" expanded="false" />
+            <element signature="e#5848#6050#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/time_series/nw_feat_ts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25">
+          <caret line="106" column="0" selection-start-line="106" selection-start-column="0" selection-end-line="106" selection-end-column="0" />
+          <folding>
+            <element signature="e#517#746#0" expanded="false" />
+            <element signature="e#807#3396#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
