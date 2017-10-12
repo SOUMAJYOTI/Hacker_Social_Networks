@@ -268,6 +268,26 @@ def Conductance(network, userG1, userG2):
     return conductanceVal
 
 
+def centralities(network, arg, users):
+    cent = {}
+    if arg == "InDegree":
+        cent = nx.in_degree_centrality(network)
+
+    if arg == "OutDegree":
+        cent = nx.out_degree_centrality(network)
+
+    if arg == "Pagerank":
+        cent = nx.pagerank(network)
+
+    if arg == "core":
+        cent = nx.core_number(network)
+
+    cent_sum = 0.
+    for u in users:
+        cent_sum += cent[u]
+
+    return cent_sum / len(users)
+
 def computeFeatureTimeSeries(start_date, end_date, forums, cve_cpeData, vulnData, postsDailyDf, allPosts):
     KB_gap = 3
     titlesList = []
@@ -275,6 +295,11 @@ def computeFeatureTimeSeries(start_date, end_date, forums, cve_cpeData, vulnData
     feat_experts = []
     newUsersWeeklyPercList = []
     conductanceList = []
+    prList = []
+    datesList = []
+    nbrsList = []
+    coreList = []
+    featDF = pd.DataFrame()
 
     # Map of users with CVE to user and user to CVE
     users_CVEMap, CVE_usersMap = user_CVE_groups(cve_cpeData, vulnData)
@@ -339,12 +364,15 @@ def computeFeatureTimeSeries(start_date, end_date, forums, cve_cpeData, vulnData
         print("Start date: ", train_start_date, " ,End_date: ", train_end_date)
 
         postsDailyDf_curr = postsDailyDf[postsDailyDf['date'] >= train_start_date]
-        postsDailyDf_curr = postsDailyDf_curr[postsDailyDf_curr['date'] < train_end_date]
+        postsDailyDf_curr = postsDailyDf_curr[postsDailyDf_curr['date'] <= train_end_date]
 
         # print(postsDailyDf_curr)
         dates_curr = list(postsDailyDf_curr['date'])
         mergeEdges = KB_edges.copy()
         for idx_date in range(len(dates_curr)):
+            if idx_date == len(dates_curr)-1:
+                break
+            datesList.append(dates_curr[idx_date])
             print("Computing for date:", dates_curr[idx_date])
             date_start_curr = str(dates_curr[idx_date])[:10]
             date_end_curr = str(dates_curr[idx_date+1])[:10]
@@ -372,9 +400,16 @@ def computeFeatureTimeSeries(start_date, end_date, forums, cve_cpeData, vulnData
             G.add_edges_from(mergeEgdes)
 
             conductanceList.append(Conductance(G, usersCVE, users_curr))
+            prList.append(centralities(G, 'Pagerank', users_curr))
+            nbrsList.append(centralities(G, 'OutDegree', users_curr))
 
-    postsDailyDf['conductance'] = conductanceList
-    return postsDailyDf
+    # postsDailyDf['conductance'] = conductanceList
+    featDF['date'] = datesList
+    featDF['conductance'] = conductanceList
+    featDF['pagerank'] = prList
+    featDF['outdegree'] = nbrsList
+
+    return featDF
 
 if __name__ == "__main__":
     titles = pickle.load(open('../../data/DW_data/09_15/train/features/titles_weekly.pickle', 'rb'))
@@ -394,11 +429,12 @@ if __name__ == "__main__":
     # print(df_postsTS)
     # pickle.dump(df_postsTS, open('../../data/DW_data/posts_daysV1.0.pickle', 'wb'))
 
+
     allPosts = pickle.load(open('../../data/DW_data/09_15/DW_data_selected_forums_2016.pickle', 'rb'))
     allPosts['posteddate'] = allPosts['posteddate'].map(str)
     df_postsTS = pickle.load(open('../../data/DW_data/posts_daysV1.0.pickle', 'rb'))
-    df_postsTS = computeFeatureTimeSeries(start_date, end_date, forums_cve_mentions, df_cve_cpe, vulData, df_postsTS, allPosts)
-    pickle.dump(df_postsTS, open('../../data/DW_data/posts_daysV2.0.pickle', 'wb'))
+    featTS = computeFeatureTimeSeries(start_date, end_date, forums_cve_mentions, df_cve_cpe, vulData, df_postsTS, allPosts)
+    pickle.dump(featTS, open('../../data/DW_data/features_daysV1.0.pickle', 'wb'))
 
     # df_postsTS.plot(x='date', y='number_posts')
     # plt.grid()
