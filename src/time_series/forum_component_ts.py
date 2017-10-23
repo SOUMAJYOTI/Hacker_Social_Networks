@@ -438,18 +438,36 @@ def formTSMatrix(forumTS):
         num_postsList = list(currTS['number_posts'])
         for idx_t in range(len(currTS)):
             A[idx_t, idx_f] = num_postsList[idx_t]
-    return A
+
+    centerd_A = np.zeros(A.shape)
+    for c in range(centerd_A.shape[1]):
+        colMean = np.mean(A[:, c])
+        for r in range(centerd_A.shape[0]):
+            centerd_A[r, c] = A[r, c] - colMean
+
+    return A, centerd_A
 
 
-def getTopComponents(forumMat):
+def getTopComponents(forumMat, numComp):
     # print(forumMat.shape)
-    pca = PCA(n_components=10)
+    pca = PCA(n_components=numComp)
     pca.fit(forumMat)
 
     comp = np.transpose(pca.components_)
     # return comp
 
     pca_var = pca.explained_variance_ratio_
+    # plt.plot(pca_var)
+    # # plt.title('Forum: ' + str(f))
+    # plt.grid()
+    # plt.xticks(size=15)
+    # plt.yticks(size=15)
+    # plt.xlabel('Date Time frame', size=15)
+    # plt.ylabel('Number of conversations', size=15)
+    # plt.subplots_adjust(left=0.17, bottom=0.17, top=0.9)
+    #
+    # plt.show()
+
     return comp
 
 
@@ -473,14 +491,48 @@ def getTopComponents(forumMat):
     #     plt.close()
 
 
-def projectionSeparation(components, data):
-    
+def projectSubspace(components, data):
+    for c in range(components.shape[1]): # the column vector corresponds to each component
+        # print(data.shape, components[:, c].shape)
+        pAxis_vector = np.dot(data, components[c, :])
+        pA_norm = np.linalg.norm(pAxis_vector)
+        pAxis_vector /= pA_norm
 
-if __name__ == "__main__":
+
+    # Set the threshold to choose the normal subspaces - for now choose the first 6 subspaces
+    # as normal and the next 10 as anomalous
+
+    normal_subspace = components[:, :6]
+    anomaly_subspace = components[:, 6: 16]
+
+    return normal_subspace, anomaly_subspace
+
+
+def projectionSeparation(normal_subspace, anomaly_subspace, test_data):
+    PP_T_normal = np.dot(normal_subspace, np.transpose(normal_subspace))
+    PP_T_anomaly = np.dot(anomaly_subspace, np.transpose(anomaly_subspace))
+
+    state_vec = np.dot(PP_T_normal, test_data)
+    residual_vec = np.dot(PP_T_anomaly, test_data)
+
+    return state_vec, residual_vec
+
+
+def formProjectedTS(normal_sub, anomaly_sub, test_data):
+    y_res = np.zeros((test_data.shape[0], 1))
+    y_state = np.zeros((test_data.shape[0], 1))
+    for idx_t in range(test_data.shape[0]):
+        sVEc, rVec = projectionSeparation(normal_sub, anomaly_sub, test_data[idx_t, :])
+        y_res[idx_t] = np.linalg.norm(sVEc)
+        y_state[idx_t] = np.linalg.norm(rVec)
+
+    return y_res, y_state
+
+def main():
     print(matplotlib.get_backend())
     titles = pickle.load(open('../../data/DW_data/09_15/train/features/titles_weekly.pickle', 'rb'))
     forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 220
-                           , 179, 219, 265, 98, 150, 121, 35, 214, 266, 89, 71, 146, 107, 64,
+        , 179, 219, 265, 98, 150, 121, 35, 214, 266, 89, 71, 146, 107, 64,
                            218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
 
     vulData = pickle.load(open('../../data/DW_data/08_29/Vulnerabilities-sample_v2+.pickle', 'rb'))
@@ -499,53 +551,12 @@ if __name__ == "__main__":
 
     forumPostsTS = pickle.load(open('../../data/DW_data/posts_days_forumsV1.0.pickle', 'rb'))
     forumPostsTS = forumPostsTS.drop_duplicates(['forum', 'date'])
-    mat = formTSMatrix(forumPostsTS)
-    getTopComponents(mat)
+    mat, centered_mat = formTSMatrix(forumPostsTS)
+    comp = getTopComponents(centered_mat, len(forums_cve_mentions))
+    normSub, anomSub = projectSubspace(comp, mat)
+    # print(comp.shape)
+    formProjectedTS(normSub, anomSub, mat)
 
-    #
-    # for f in forums_cve_mentions:
-    #     data = forumPostsTS[forumPostsTS['forum'] == f]
-    #
-    #     # plt.figure(32, 24)
-    #     data.plot(x='date', y='number_posts')
-    #     plt.title('Forum: ' + str(f))
-    #     plt.grid()
-    #     plt.xticks(size=15)
-    #     plt.yticks(size=15)
-    #     plt.xlabel('Date Time frame', size=15)
-    #     plt.ylabel('Number of conversations', size=15)
-    #     plt.subplots_adjust(left=0.17, bottom=0.17, top=0.9)
-    #
-    #     # plt.show()
-    #     manager = plt.get_current_fig_manager()
-    #     manager.resize(*manager.window.maxsize())
-    #     plt.savefig('../../plots/dw_stats/forums_postTS/forum_' + str(f) + '.png' )
-    #     plt.close()
+if __name__ == "__main__":
+    main()
 
-    # allPosts = pickle.load(open('../../data/DW_data/09_15/DW_data_selected_forums_2016.pickle', 'rb'))
-    # allPosts['posteddate'] = allPosts['posteddate'].map(str)
-    # df_postsTS = pickle.load(open('../../data/DW_data/posts_daysV1.0.pickle', 'rb'))
-    # featTS = computeFeatureTimeSeries(start_date, end_date, forums_cve_mentions, df_cve_cpe, vulData, df_postsTS, allPosts)
-    # pickle.dump(featTS, open('../../data/DW_data/features_daysV1.0P2.pickle', 'wb'))
-    # featTS = pickle.load(open('../../data/DW_data/features_daysV1.0P2.pickle', 'rb'))
-    # print(featTS)
-    # featTS.plot(x='date', y='conductance')
-    # plt.grid()
-    # plt.xticks(size=20)
-    # plt.yticks(size=20)
-    # plt.xlabel('Date Time frame', size=20)
-    # plt.ylabel('Conductance - Experts', size=20)
-    # plt.subplots_adjust(left=0.13, bottom=0.15, top=0.9)
-    #
-    # plt.show()
-    # plt.close()
-    #
-    # df_postsTS.plot(x='date', y='number_users')
-    # plt.grid()
-    # plt.xticks(size=20)
-    # plt.yticks(size=20)
-    # plt.xlabel('Date Time frame', size=20)
-    # plt.ylabel('Number of Users', size=20)
-    # plt.subplots_adjust(left=0.13, bottom=0.15, top=0.9)
-    #
-    # plt.show()
