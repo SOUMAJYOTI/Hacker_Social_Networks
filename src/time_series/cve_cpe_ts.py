@@ -64,7 +64,8 @@ def segmentEventDaily(eventsDf):
     datesList = []
     numEventsList = []
     eventTypeList = []
-
+    endpoint_malwareList = []
+    malicious_destList = []
     while start_month <= 12:
         start_day = 1
 
@@ -92,10 +93,19 @@ def segmentEventDaily(eventsDf):
             datesList.append(start_date)
             numEventsList.append(len(events_currDay))
 
+            endpoint_malware = 0
+            malicious_dest = 0
+
             for idx, row in events_currDay.iterrows():
+                if row['event_type'] == 'endpoint-malware':
+                    endpoint_malware += 1
+                else:
+                    malicious_dest += 1
                 eventType.append(row['event_type'])
 
             eventTypeList.append(eventType)
+            endpoint_malwareList.append(endpoint_malware)
+            malicious_destList.append(malicious_dest)
 
             start_day += 1
 
@@ -120,7 +130,10 @@ def segmentEventDaily(eventsDf):
 
     df_amEventsTS['date'] = datesList
     df_amEventsTS['number_events'] = numEventsList
+    df_amEventsTS['malicious-dest'] = malicious_destList
+    df_amEventsTS['endpoint-malware'] = endpoint_malwareList
     df_amEventsTS['event_types'] = eventTypeList
+
 
     return df_amEventsTS
 
@@ -228,12 +241,12 @@ if __name__ == "__main__":
 
     pickle.dump(df_ts, open('../../data/Armstrong_data/eventsDF_df_days.pickle', 'wb'))
 
-    df_ts.plot(x='date', y='number_events')
+    df_ts.plot(x='date', y='endpoint-malware')
     plt.grid()
     plt.xticks(size=20)
     plt.yticks(size=20)
     plt.xlabel('Date Time frame', size=20)
-    plt.ylabel('Number of Armstrong events', size=20)
+    plt.ylabel('Number of endpoint malware events', size=20)
     plt.subplots_adjust(left=0.13, bottom=0.15, top=0.9)
 
     plt.show()

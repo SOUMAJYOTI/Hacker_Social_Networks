@@ -9,7 +9,6 @@ import networkx as nx
 import datetime as dt
 import operator
 import pickle
-from sqlalchemy import create_engine
 import userAnalysis as usAn
 import numpy as np
 import networkx.algorithms.cuts as nxCut
@@ -17,7 +16,8 @@ import datetime
 import createConnections as ccon
 import load_dataDW as ldDW
 import matplotlib.pyplot as plt
-
+import matplotlib
+from sklearn.decomposition import PCA
 
 def dateToString(date):
     yearNum = str(date.year)
@@ -114,10 +114,7 @@ def getExperts(topCVE, CVE_userMap):
     return usersCVECount_topCPE
 
 
-def countConversations(start_date, end_date, forums):
-    start_year = 2016
-    start_month = 4
-
+def countConversations(sd, ed, forums):
     daysMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     df_postsTS = pd.DataFrame()
 
@@ -125,63 +122,72 @@ def countConversations(start_date, end_date, forums):
     numPostsList = []
     uidsList = []
     uidsCount = []
+    forumsList = []
 
-    while start_month <= 12:
-        # print("Start Date:", start_date )
-        postsDf = ldDW.getDW_data_postgres(forums, start_date, end_date)
-        postsDf['DateTime'] = postsDf['posteddate'].map(str) + ' ' + postsDf['postedtime'].map(str)
-        postsDf['DateTime'] = postsDf['DateTime'].apply(lambda x:
-                                                        datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
-        postsDf = postsDf.sort('DateTime', ascending=True)
+    for f in forums:
+        print("Forum: ", f)
+        start_date = sd
+        end_date = ed
+        start_year = 2016
+        start_month = 4
+        while start_month <= 12:
+            # print("Start Date:", start_date )
+            postsDf = ldDW.getDW_data_postgres(forums_list=[f], start_date=start_date, end_date=end_date)
+            postsDf['DateTime'] = postsDf['posteddate'].map(str) + ' ' + postsDf['postedtime'].map(str)
+            postsDf['DateTime'] = postsDf['DateTime'].apply(lambda x:
+                                                            datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
+            postsDf = postsDf.sort('DateTime', ascending=True)
 
-        start_day = 1
-        while True:
-            usersTempList = []
-            if start_day < 10:
-                start_dayStr = str('0') + str(start_day)
-            else:
-                start_dayStr = str(start_day)
+            start_day = 1
+            while True:
+                usersTempList = []
+                if start_day < 10:
+                    start_dayStr = str('0') + str(start_day)
+                else:
+                    start_dayStr = str(start_day)
 
+                if start_month < 10:
+                    start_monthStr = str('0') + str(start_month)
+                else:
+                    start_monthStr = str(start_month)
+
+                start_date = datetime.datetime.strptime(
+                    str(start_year) + '-' + start_monthStr + '-' + start_dayStr + ' 00:00:00', '%Y-%m-%d %H:%M:%S')
+
+                end_date = datetime.datetime.strptime(
+                    str(start_year) + '-' + start_monthStr + '-' + start_dayStr + ' 23:59:00',
+                    '%Y-%m-%d %H:%M:%S')
+
+                posts_currDay = postsDf[postsDf['DateTime'] >= start_date]
+                posts_currDay = posts_currDay[posts_currDay['DateTime'] < end_date]
+
+                datesList.append(start_date)
+                numPostsList.append(len(posts_currDay))
+
+                for idx, row in posts_currDay.iterrows():
+                    usersTempList.append(row['uid'])
+
+                uidsList.append(usersTempList)
+                uidsCount.append(len(list(set(usersTempList))))
+                forumsList.append(f)
+                start_day += 1
+
+                # Break condition
+                if start_day > daysMonths[start_month - 1]:
+                    break
+
+            start_month += 1
+            if start_month > 12:
+                break
             if start_month < 10:
                 start_monthStr = str('0') + str(start_month)
             else:
                 start_monthStr = str(start_month)
+            start_date = str(start_year) + '-' + start_monthStr + '-01'
+            end_date = str(start_year) + '-' + start_monthStr + '-' + str(
+                                                    daysMonths[start_month - 1])
 
-            start_date = datetime.datetime.strptime(
-                str(start_year) + '-' + start_monthStr + '-' + start_dayStr + ' 00:00:00', '%Y-%m-%d %H:%M:%S')
-
-            end_date = datetime.datetime.strptime(
-                str(start_year) + '-' + start_monthStr + '-' + start_dayStr + ' 23:59:00',
-                '%Y-%m-%d %H:%M:%S')
-
-            posts_currDay = postsDf[postsDf['DateTime'] >= start_date]
-            posts_currDay = posts_currDay[posts_currDay['DateTime'] < end_date]
-
-            datesList.append(start_date)
-            numPostsList.append(len(posts_currDay))
-
-            for idx, row in posts_currDay.iterrows():
-                usersTempList.append(row['uid'])
-
-            uidsList.append(usersTempList)
-            uidsCount.append(len(list(set(usersTempList))))
-            start_day += 1
-
-            # Break condition
-            if start_day > daysMonths[start_month - 1]:
-                break
-
-        start_month += 1
-        if start_month > 12:
-            break
-        if start_month < 10:
-            start_monthStr = str('0') + str(start_month)
-        else:
-            start_monthStr = str(start_month)
-        start_date = str(start_year) + '-' + start_monthStr + '-01'
-        end_date = str(start_year) + '-' + start_monthStr + '-' + str(
-                                                daysMonths[start_month - 1])
-
+    df_postsTS['forum'] = forumsList
     df_postsTS['date'] = datesList
     df_postsTS['number_posts'] = numPostsList
     df_postsTS['users'] = uidsList
@@ -287,6 +293,7 @@ def centralities(network, arg, users):
         cent_sum += cent[u]
 
     return cent_sum / len(users)
+
 
 def computeFeatureTimeSeries(start_date, end_date, forums, cve_cpeData, vulnData, postsDailyDf, allPosts):
     KB_gap = 3
@@ -412,9 +419,70 @@ def computeFeatureTimeSeries(start_date, end_date, forums, cve_cpeData, vulnData
 
     return featDF
 
+
+def formTSMatrix(forumTS):
+    """
+
+    :param forumTS:
+    :return: A  - matrix of time series t x f containing number of posts
+                    t - time
+                    f - forum
+    """
+    forums = list(set(forumTS['forum']))
+    len_TS = len(forumTS[forumTS['forum'] == forums[0]])
+    A = np.zeros((len_TS, len(forums)))
+
+    for idx_f in range(len(forums)):
+        f = forums[idx_f]
+        currTS = forumTS[forumTS['forum'] == f]
+        num_postsList = list(currTS['number_posts'])
+        for idx_t in range(len(currTS)):
+            A[idx_t, idx_f] = num_postsList[idx_t]
+    return A
+
+
+def getTopComponents(forumMat):
+    # print(forumMat.shape)
+    pca = PCA(n_components=10)
+    pca.fit(forumMat)
+
+    comp = np.transpose(pca.components_)
+    # return comp
+
+    pca_var = pca.explained_variance_ratio_
+    return comp
+
+
+    # for c in range(comp.shape[1]):
+    #     data = comp[:, c]
+    #
+    #     plt.plot(data)
+    #     # plt.title('Forum: ' + str(f))
+    #     plt.grid()
+    #     plt.xticks(size=15)
+    #     plt.yticks(size=15)
+    #     plt.xlabel('Date Time frame', size=15)
+    #     plt.ylabel('Number of conversations', size=15)
+    #     plt.subplots_adjust(left=0.17, bottom=0.17, top=0.9)
+    #
+    #     plt.show()
+    #     manager = plt.get_current_fig_manager()
+    #     manager.resize(*manager.window.maxsize())
+    #
+    #     # plt.savefig('../../plots/dw_stats/forums_postTS/forum_' + str(f) + '.png' )
+    #     plt.close()
+
+
+def projectionSeparation(components, data):
+    
+
 if __name__ == "__main__":
+    print(matplotlib.get_backend())
     titles = pickle.load(open('../../data/DW_data/09_15/train/features/titles_weekly.pickle', 'rb'))
-    forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197]
+    forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 220
+                           , 179, 219, 265, 98, 150, 121, 35, 214, 266, 89, 71, 146, 107, 64,
+                           218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
+
     vulData = pickle.load(open('../../data/DW_data/08_29/Vulnerabilities-sample_v2+.pickle', 'rb'))
     vulDataFiltered = vulData[vulData['forumID'].isin(forums_cve_mentions)]
 
@@ -426,27 +494,50 @@ if __name__ == "__main__":
     start_date = '2016-01-01'
     end_date = '2016-12-01'
 
-    # df_postsTS = countConversations(start_date, end_date, forums_cve_mentions)
-    # print(df_postsTS)
-    # pickle.dump(df_postsTS, open('../../data/DW_data/posts_daysV1.0.pickle', 'wb'))
+    # forumPostsTS = countConversations(start_date, end_date, forums_cve_mentions)
+    # pickle.dump(forumPostsTS, open('../../data/DW_data/posts_days_forumsV1.0.pickle', 'wb'))
 
+    forumPostsTS = pickle.load(open('../../data/DW_data/posts_days_forumsV1.0.pickle', 'rb'))
+    forumPostsTS = forumPostsTS.drop_duplicates(['forum', 'date'])
+    mat = formTSMatrix(forumPostsTS)
+    getTopComponents(mat)
+
+    #
+    # for f in forums_cve_mentions:
+    #     data = forumPostsTS[forumPostsTS['forum'] == f]
+    #
+    #     # plt.figure(32, 24)
+    #     data.plot(x='date', y='number_posts')
+    #     plt.title('Forum: ' + str(f))
+    #     plt.grid()
+    #     plt.xticks(size=15)
+    #     plt.yticks(size=15)
+    #     plt.xlabel('Date Time frame', size=15)
+    #     plt.ylabel('Number of conversations', size=15)
+    #     plt.subplots_adjust(left=0.17, bottom=0.17, top=0.9)
+    #
+    #     # plt.show()
+    #     manager = plt.get_current_fig_manager()
+    #     manager.resize(*manager.window.maxsize())
+    #     plt.savefig('../../plots/dw_stats/forums_postTS/forum_' + str(f) + '.png' )
+    #     plt.close()
 
     # allPosts = pickle.load(open('../../data/DW_data/09_15/DW_data_selected_forums_2016.pickle', 'rb'))
     # allPosts['posteddate'] = allPosts['posteddate'].map(str)
     # df_postsTS = pickle.load(open('../../data/DW_data/posts_daysV1.0.pickle', 'rb'))
     # featTS = computeFeatureTimeSeries(start_date, end_date, forums_cve_mentions, df_cve_cpe, vulData, df_postsTS, allPosts)
     # pickle.dump(featTS, open('../../data/DW_data/features_daysV1.0P2.pickle', 'wb'))
-    featTS = pickle.load(open('../../data/DW_data/features_daysV1.0P2.pickle', 'rb'))
-    print(featTS)
-    featTS.plot(x='date', y='conductance')
-    plt.grid()
-    plt.xticks(size=20)
-    plt.yticks(size=20)
-    plt.xlabel('Date Time frame', size=20)
-    plt.ylabel('Conductance - Experts', size=20)
-    plt.subplots_adjust(left=0.13, bottom=0.15, top=0.9)
-
-    plt.show()
+    # featTS = pickle.load(open('../../data/DW_data/features_daysV1.0P2.pickle', 'rb'))
+    # print(featTS)
+    # featTS.plot(x='date', y='conductance')
+    # plt.grid()
+    # plt.xticks(size=20)
+    # plt.yticks(size=20)
+    # plt.xlabel('Date Time frame', size=20)
+    # plt.ylabel('Conductance - Experts', size=20)
+    # plt.subplots_adjust(left=0.13, bottom=0.15, top=0.9)
+    #
+    # plt.show()
     # plt.close()
     #
     # df_postsTS.plot(x='date', y='number_users')

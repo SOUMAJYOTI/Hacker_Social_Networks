@@ -1,3 +1,6 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
 
 def plot_bars(data, xTicks, xLabels='', yLabels=''):
     hfont = {'fontname': 'Arial'}
