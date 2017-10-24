@@ -297,6 +297,7 @@ def computeFeatureTimeSeries(start_date, end_date, forums, cve_cpeData, vulnData
     conductanceList = []
     prList = []
     datesList = []
+    forumsList = []
     nbrsList = []
     coreList = []
     featDF = pd.DataFrame()
@@ -373,7 +374,6 @@ def computeFeatureTimeSeries(start_date, end_date, forums, cve_cpeData, vulnData
         for idx_date in range(len(dates_curr)):
             if idx_date == len(dates_curr)-1:
                 break
-            datesList.append(dates_curr[idx_date])
             print("Computing for date:", dates_curr[idx_date])
             date_start_curr = str(dates_curr[idx_date])[:10]
             date_end_curr = str(dates_curr[idx_date+1])[:10]
@@ -384,30 +384,39 @@ def computeFeatureTimeSeries(start_date, end_date, forums, cve_cpeData, vulnData
             # df_daily = ldDW.getDW_data_postgres(forums, date_start_curr, date_end_curr)
 
             topics_curr = list(set(df_daily['topicid']))
-            dailyEdges = ccon.storeEdges(df_daily, topics_curr)
 
-            if len(dailyEdges) == 0:
-                conductanceList.append(0)
-                continue
+            for f in forums:
+                df_daily_f = df_daily[df_daily['forumsid'] == float(f)]
+                dailyEdges = ccon.storeEdges(df_daily_f, topics_curr)
 
-            users_curr = list(set(dailyEdges['source']).intersection(set(dailyEdges['target'])))
-            users_curr = [str(int(i)) for i in users_curr]
-            # print(df_dailyEdges)
-            # print("Merging edges...")
-            mergeEgdes = ccon.network_merge(mergeEdges, dailyEdges) # Update the mergedEdges every day
-            # df_KB = pd.concat([df_KB, df_daily])  # This is the new KB Dataframe with merged posts
+                datesList.append(dates_curr[idx_date])
+                forumsList.append(f)
+                if len(dailyEdges) == 0:
+                    conductanceList.append(0)
+                    continue
 
-            G = nx.DiGraph()
-            G.add_edges_from(mergeEgdes)
+                users_curr = list(set(dailyEdges['source']).intersection(set(dailyEdges['target'])))
+                if len(users_curr) == 0:
+                    conductanceList.append(0)
+                    continue
+                users_curr = [str(int(i)) for i in users_curr]
+                # print(df_dailyEdges)
+                # print("Merging edges...")
+                mergeEgdes = ccon.network_merge(mergeEdges, dailyEdges) # Update the mergedEdges every day
+                # df_KB = pd.concat([df_KB, df_daily])  # This is the new KB Dataframe with merged posts
 
-            conductanceList.append(Conductance(G, expertUsers, users_curr))
-            prList.append(centralities(G, 'core', users_curr))
-            # nbrsList.append(centralities(G, 'OutDegree', users_curr))
+                G = nx.DiGraph()
+                G.add_edges_from(mergeEgdes)
+
+                # conductanceList.append(Conductance(G, expertUsers, users_curr))
+                # prList.append(centralities(G, 'core', users_curr))
+                nbrsList.append(centralities(G, 'OutDegree', users_curr))
 
     # postsDailyDf['conductance'] = conductanceList
     featDF['date'] = datesList
-    featDF['conductance'] = conductanceList
-    featDF['core'] = prList
+    featDF['forum'] = forumsList
+    featDF['conductance'] = nbrsList
+    # featDF['core'] = prList
     # featDF['outdegree'] = nbrsList
 
     return featDF
@@ -431,22 +440,22 @@ if __name__ == "__main__":
     # pickle.dump(df_postsTS, open('../../data/DW_data/posts_daysV1.0.pickle', 'wb'))
 
 
-    # allPosts = pickle.load(open('../../data/DW_data/09_15/DW_data_selected_forums_2016.pickle', 'rb'))
-    # allPosts['posteddate'] = allPosts['posteddate'].map(str)
-    # df_postsTS = pickle.load(open('../../data/DW_data/posts_daysV1.0.pickle', 'rb'))
-    # featTS = computeFeatureTimeSeries(start_date, end_date, forums_cve_mentions, df_cve_cpe, vulData, df_postsTS, allPosts)
-    # pickle.dump(featTS, open('../../data/DW_data/features_daysV1.0P2.pickle', 'wb'))
-    featTS = pickle.load(open('../../data/DW_data/features_daysV1.0P2.pickle', 'rb'))
-    print(featTS)
-    featTS.plot(x='date', y='conductance')
-    plt.grid()
-    plt.xticks(size=20)
-    plt.yticks(size=20)
-    plt.xlabel('Date Time frame', size=20)
-    plt.ylabel('Conductance - Experts', size=20)
-    plt.subplots_adjust(left=0.13, bottom=0.15, top=0.9)
-
-    plt.show()
+    allPosts = pickle.load(open('../../data/DW_data/09_15/DW_data_selected_forums_2016.pickle', 'rb'))
+    allPosts['posteddate'] = allPosts['posteddate'].map(str)
+    df_postsTS = pickle.load(open('../../data/DW_data/posts_daysV1.0.pickle', 'rb'))
+    featTS = computeFeatureTimeSeries(start_date, end_date, forums_cve_mentions, df_cve_cpe, vulData, df_postsTS, allPosts)
+    pickle.dump(featTS, open('../../data/DW_data/features_daysV1.0P3.pickle', 'wb'))
+    # featTS = pickle.load(open('../../data/DW_data/features_daysV1.0P2.pickle', 'rb'))
+    # print(featTS)
+    # featTS.plot(x='date', y='conductance')
+    # plt.grid()
+    # plt.xticks(size=20)
+    # plt.yticks(size=20)
+    # plt.xlabel('Date Time frame', size=20)
+    # plt.ylabel('Conductance - Experts', size=20)
+    # plt.subplots_adjust(left=0.13, bottom=0.15, top=0.9)
+    #
+    # plt.show()
     # plt.close()
     #
     # df_postsTS.plot(x='date', y='number_users')

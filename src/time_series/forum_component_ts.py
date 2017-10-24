@@ -420,7 +420,7 @@ def computeFeatureTimeSeries(start_date, end_date, forums, cve_cpeData, vulnData
     return featDF
 
 
-def formTSMatrix(forumTS):
+def formTSMatrix(forumTS, feat):
     """
 
     :param forumTS:
@@ -435,7 +435,7 @@ def formTSMatrix(forumTS):
     for idx_f in range(len(forums)):
         f = forums[idx_f]
         currTS = forumTS[forumTS['forum'] == f]
-        num_postsList = list(currTS['number_posts'])
+        num_postsList = list(currTS[feat])
         for idx_t in range(len(currTS)):
             A[idx_t, idx_f] = num_postsList[idx_t]
 
@@ -457,16 +457,6 @@ def getTopComponents(forumMat, numComp):
     # return comp
 
     pca_var = pca.explained_variance_ratio_
-    # plt.plot(pca_var)
-    # # plt.title('Forum: ' + str(f))
-    # plt.grid()
-    # plt.xticks(size=15)
-    # plt.yticks(size=15)
-    # plt.xlabel('Date Time frame', size=15)
-    # plt.ylabel('Number of conversations', size=15)
-    # plt.subplots_adjust(left=0.17, bottom=0.17, top=0.9)
-    #
-    # plt.show()
 
     return comp
 
@@ -508,12 +498,12 @@ def projectSubspace(components, data):
     return normal_subspace, anomaly_subspace
 
 
-def projectionSeparation(normal_subspace, anomaly_subspace, test_data):
+def projectionSeparation(normal_subspace, anomaly_subspace, data):
     PP_T_normal = np.dot(normal_subspace, np.transpose(normal_subspace))
     PP_T_anomaly = np.dot(anomaly_subspace, np.transpose(anomaly_subspace))
 
-    state_vec = np.dot(PP_T_normal, test_data)
-    residual_vec = np.dot(PP_T_anomaly, test_data)
+    state_vec = np.dot(PP_T_normal, data)
+    residual_vec = np.dot(PP_T_anomaly, data)
 
     return state_vec, residual_vec
 
@@ -523,10 +513,78 @@ def formProjectedTS(normal_sub, anomaly_sub, test_data):
     y_state = np.zeros((test_data.shape[0], 1))
     for idx_t in range(test_data.shape[0]):
         sVEc, rVec = projectionSeparation(normal_sub, anomaly_sub, test_data[idx_t, :])
-        y_res[idx_t] = np.linalg.norm(sVEc)
-        y_state[idx_t] = np.linalg.norm(rVec)
+        y_state[idx_t] = np.linalg.norm(sVEc)
+        y_res[idx_t] = np.linalg.norm(rVec)
 
-    return y_res, y_state
+    return y_state, y_res
+
+
+def plot_ROC(normal_sub, anomaly_sub, test_data, amEventsDates, feat):
+    perc = [0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 1]
+    # perc = [1]
+    test_mat, cent_test_mat = formTSMatrix(test_data, feat)
+
+    stateVec, resVec = formProjectedTS(normal_sub, anomaly_sub, test_mat)
+    test_dates = list(test_data['date'])
+
+    dates_consider = []
+    for d in test_dates:
+        dates_consider.append(str(d)[:10])
+
+    max_val = np.max(resVec)
+    TPR = []
+    FPR = []
+    for p in perc:
+        thresh = p * max_val
+        anomalies_list = []
+        for idx in  range(len(resVec)):
+            if resVec[idx] >= thresh:
+                anomalies_list.append(dates_consider[idx])
+
+        date_pred = []
+        for idx_anom in range(len(anomalies_list)):
+            date_anom = anomalies_list[idx_anom]
+
+            date_anom = datetime.datetime.strptime(date_anom, "%Y-%m-%d")
+            date_pred_1 = str(date_anom + datetime.timedelta(days=7))[:10]
+            date_pred_2 = str(date_anom + datetime.timedelta(days=8))[:10]
+            date_pred_3 = str(date_anom + datetime.timedelta(days = 9))[:10]
+
+            date_pred.append(date_pred_1)
+            date_pred.append(date_pred_2)
+            date_pred.append(date_pred_3)
+
+        date_pred = list(set(date_pred))
+
+        tp, fp, tn, fn = 0., 0., 0., 0.
+        for d in dates_consider:
+            if d in date_pred and d in amEventsDates:
+                tp += 1
+            elif d in date_pred and d not in amEventsDates:
+                fp += 1
+            elif d not in date_pred and d in amEventsDates:
+                fn += 1
+            else:
+                tn += 1
+
+        TPR.append(tp/(tp+fn))
+        FPR.append(fp/(fp+tn))
+
+    # plt.scatter(TPR, FPR)
+    # plt.plot(TPR, FPR)
+    # plt.grid()
+    # plt.xticks(size=15)
+    # plt.yticks(size=15)
+    # plt.xlabel('True Positive Rate', size=15)
+    # plt.ylabel('False Positive Rate', size=15)
+    # plt.subplots_adjust(left=0.17, bottom=0.17, top=0.9)
+    #
+    # plt.show()
+
+    return TPR, FPR
+
+
+
 
 def main():
     print(matplotlib.get_backend())
@@ -538,24 +596,78 @@ def main():
     vulData = pickle.load(open('../../data/DW_data/08_29/Vulnerabilities-sample_v2+.pickle', 'rb'))
     vulDataFiltered = vulData[vulData['forumID'].isin(forums_cve_mentions)]
 
+    start_date = '2016-01-01'
+    end_date = '2016-08-01'
+
     read_path = '../../data/Armstrong_data/eventsDF_v1.0-demo.csv'
     amEvents = pd.read_csv(read_path)
+    amEvents['date'] = pd.to_datetime(amEvents['date'], format="%Y-%m-%d")
+    amEvents = amEvents[amEvents['date'] > pd.to_datetime('2016-08-01')]
+    amEvents = amEvents[amEvents['date'] < pd.to_datetime('2016-12-01')]
+    amEvents_malware = amEvents[amEvents['event_type'] == 'malicious-email']
 
-    df_cve_cpe = pd.read_csv('../../data/DW_data/09_15/CVE_CPE_groups.csv')
 
-    start_date = '2016-01-01'
-    end_date = '2016-12-01'
+    dates_events = list(amEvents_malware['date'])
+    dates_occured = []
+    for d in dates_events:
+        dates_occured.append(str(d)[:10])
+
+    # featTS_1 = pickle.load(open('../../data/DW_data/features_daysV1.0P1.pickle', 'rb'))
+    # featTS_2 = pickle.load(open('../../data/DW_data/features_daysV1.0P2.pickle', 'rb'))
+    #
+    # featTS_2 = featTS_2.rename(columns={'conductance': 'conductance_experts', 'date': 'date_dup'})
+    #
+    # feat_TS = pd.concat([featTS_1, featTS_2], axis=1)
+    # feat_TS = feat_TS.drop('date_dup', axis=1)
+    # feat_TS = feat_TS[feat_TS['date'] >= start_date]
+    # feat_TS = feat_TS[feat_TS['date'] <= end_date]
+
+    # print(amEvents_malware)
 
     # forumPostsTS = countConversations(start_date, end_date, forums_cve_mentions)
     # pickle.dump(forumPostsTS, open('../../data/DW_data/posts_days_forumsV1.0.pickle', 'wb'))
 
+    test_start_date = datetime.datetime.strptime('2016-07-24' + ' 00:00:00', '%Y-%m-%d %H:%M:%S')
+
+    # forumPostsTS = pickle.load(open('../../data/DW_data/posts_days_forumsV1.0.pickle', 'rb'))
+    # forumPostsTS = forumPostsTS.drop_duplicates(['forum', 'date'])
+
+    # forumPostsTS_train = feat_TS[feat_TS['date'] < test_start_date]
+
+    feature = 'number_posts'
+
     forumPostsTS = pickle.load(open('../../data/DW_data/posts_days_forumsV1.0.pickle', 'rb'))
     forumPostsTS = forumPostsTS.drop_duplicates(['forum', 'date'])
-    mat, centered_mat = formTSMatrix(forumPostsTS)
+
+    forumPostsTS_train = forumPostsTS[forumPostsTS['date'] < test_start_date]
+
+    mat, centered_mat = formTSMatrix(forumPostsTS, feature)
     comp = getTopComponents(centered_mat, len(forums_cve_mentions))
     normSub, anomSub = projectSubspace(comp, mat)
+
+    mat, centered_mat = formTSMatrix(forumPostsTS_train, feature)
+    comp = getTopComponents(centered_mat, len(forums_cve_mentions))
+    normSub, anomSub = projectSubspace(comp, mat)
+
+    test_data = forumPostsTS[forumPostsTS['date'] >= test_start_date]
+    test_data = test_data[test_data['date'] < dates_occured[len(dates_occured)-1]]
     # print(comp.shape)
-    formProjectedTS(normSub, anomSub, mat)
+    TPR, FPR = plot_ROC(normSub, anomSub, test_data, dates_occured, feature)
+    # pickle.dump((TPR, FPR), open('../../data/results/ROC_feat/conductance.pickle', 'wb'))
+
+    # TPR, FPR = pickle.load(open('../../data/results/ROC_feat/num_posts.pickle', 'rb'))
+    plt.scatter(TPR, FPR)
+    plt.plot(TPR, FPR)
+    plt.grid()
+    plt.xticks(size=15)
+    plt.yticks(size=15)
+    plt.xlabel('True Positive Rate', size=15)
+    plt.ylabel('False Positive Rate', size=15)
+    plt.subplots_adjust(left=0.17, bottom=0.17, top=0.9)
+
+    plt.show()
+
+    return TPR, FPR
 
 if __name__ == "__main__":
     main()
