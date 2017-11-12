@@ -4,7 +4,7 @@ import pickle
 import datetime
 import src.network_analysis.createConnections as ccon
 import src.load_data.load_dataDW as ldDW
-
+import operator
 
 def dateToString(date):
     yearNum = str(date.year)
@@ -85,6 +85,40 @@ def countConversations(start_date, end_date, forums):
     return df_postsTS
 
 
+def topCPEGroups(start_date, end_date, vulInfo, cve_cpe_df, K):
+    currStartDate = start_date
+    currEndDate = start_date + relativedelta(months=3)
+
+    while currStartDate < end_date:
+        print(currStartDate, currEndDate)
+        vulCurr = vulInfo[vulInfo['postedDate'] >= currStartDate.date()]
+        vulCurr = vulCurr[vulCurr['postedDate'] < currEndDate.date()]
+
+        vulnerab = vulCurr['vulnId']
+        cve_cpe_curr = cve_cpe_df[cve_cpe_df['cve'].isin(vulnerab)]
+        topCPEs = {}
+        for idx, row in cve_cpe_curr.iterrows():
+            clTag = row['cluster']
+            if clTag not in topCPEs:
+                topCPEs[clTag] = 0
+
+            topCPEs[clTag] += 1
+
+        # topCPEs_sorted = sorted(topCPEs.items(), key=operator.itemgetter(1), reverse=True)
+        if K==-1:
+            K = len(topCPEs)
+        topCPEs_sorted = sorted(topCPEs.items(), key=operator.itemgetter(1), reverse=True)[:K]
+        topCPEsList = []
+        for cpe, count in topCPEs_sorted:
+            topCPEsList.append(cpe)
+
+        topCVE = cveCPE[cveCPE['cluster_tag'].isin(topCPEsList)]
+        currStartDate += relativedelta(months=1)
+        currEndDate = currStartDate + relativedelta(months=3)
+    #
+    # return list(topCVE['cve'])
+
+
 def computeKBnetwork(start_date, end_date, allPosts):
     currStartDate = start_date
     currEndDate = start_date + relativedelta(months=3)
@@ -104,6 +138,14 @@ def computeKBnetwork(start_date, end_date, allPosts):
 
     return KB_edges_Data
 
+def store_cve_cpe_map(cve_cpe_df):
+    cve_cpe_map = {}
+    for idx, row in cve_cpe_df.iterrows():
+        if row['cve'] not in cve_cpe_map:
+            cve_cpe_map[row['cve']] = []
+
+        cve_cpe_map[row['cve']].append(row['cluster'])
+    return cve_cpe_map
 
 if __name__ == "__main__":
     forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 220
@@ -112,13 +154,19 @@ if __name__ == "__main__":
     posts = pickle.load(open('../../data/Dw_data/posts_days_forumsV1.0.pickle', 'rb'))
 
     start_date = datetime.datetime.strptime('01-01-2016', '%m-%d-%Y')
-    end_date = datetime.datetime.strptime('09-30-2017', '%m-%d-%Y')
+    end_date = datetime.datetime.strptime('07-01-2017', '%m-%d-%Y')
 
     # df_posts = countConversations(start_date, end_date, forums_cve_mentions)
     # pickle.dump(df_posts, open('../../data/DW_data/posts_days_forumsV2.0.pickle', 'wb'))
 
-    # vulnInfo = pickle.load(open('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle', 'rb'))
-    # cve_cpe_map = pd.read_csv('../../data/DW_data/cve_cpe_map.csv')
+    vulnInfo = pickle.load(open('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle', 'rb'))
+
+    cve_cpe_df =  pd.read_csv('../../data/DW_data/cve_cpe_map.csv')
+    cve_cpe_map = store_cve_cpe_map(cve_cpe_df)
+
+    topCPEGroups(start_date, end_date, vulnInfo, cve_cpe_df, -1)
+    exit()
+
     # users_CVEMap, CVE_usersMap = user_CVE_groups(cve_cpe_map, vulnInfo)
 
     # CVE_usersMap_filtered = {}
