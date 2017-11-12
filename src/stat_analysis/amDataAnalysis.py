@@ -7,6 +7,7 @@ import operator
 import datetime
 import numpy as np
 
+
 def plot_bars(data, titles):
     width=0.35
     ind = np.arange(len(data))  # the x locations for the groups
@@ -36,7 +37,7 @@ def plot_bars(data, titles):
     plt.show()
 
 
-def plot_week_events(df_plot):
+def plot_events_TS(df_plot):
     # df_plot = df_plot[df_plot['date'] < '2016-10-01']
     # df_plot['week'] = df_plot['date'].map(lambda x: x.isocalendar()[1])
     # df_plot['year'] = df_plot['date'].map(lambda x: x.isocalendar()[0])
@@ -48,6 +49,8 @@ def plot_week_events(df_plot):
     start_month = 4
     daysMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     count_Events = []
+
+    start_date = df_plot
     while True:
         if start_day < 10:
             start_dayStr = str('0') + str(start_day)
@@ -88,23 +91,44 @@ def plot_week_events(df_plot):
 
     print(titles_list)
     plot_bars(count_Events, titles_list)
-    exit()
-    data['date'].plot(kind="bar")
-    plt.grid(True)
-    plt.xticks(rotation=60, size=20)
-    plt.yticks(size=20)
-    plt.xlabel("Date Timeframe (Year, Week #)", size=25)
-    plt.ylabel("# of events", size=25)
-    plt.title('Weekly distribution of events', size=25)
-    plt.show()
+    # exit()
+    # data['date'].plot(kind="bar")
+    # plt.grid(True)
+    # plt.xticks(rotation=60, size=20)
+    # plt.yticks(size=20)
+    # plt.xlabel("Date Timeframe (Year, Week #)", size=25)
+    # plt.ylabel("# of events", size=25)
+    # plt.title('Weekly distribution of events', size=25)
+    # plt.show()
 
 
 if __name__ == "__main__":
-    read_path = '../../data/Armstrong_data/eventsDF_v1.0-demo.csv'
+    read_path = '../../data/Armstrong_data/amEvents_11_17.csv'
     amEvents = pd.read_csv(read_path)
-    amEvents['date'] = pd.to_datetime(amEvents['date'], format="%Y-%m-%d")
+    amEvents['date'] = pd.to_datetime(amEvents['date'], format="%m/%d/%Y")
+    types = list(set(amEvents['type']))
+    for t in types:
+        dfType = pd.DataFrame()
+        temp = amEvents[amEvents['type'] == t]
+        dateList = list(temp['date'])
+        dateText = []
+        for d in range(len(dateList)):
+            dateText.append(str(dateList[d])[:10])
+        dateTextFilter = [dateText[i] for i in list(np.arange(0, len(temp), 50))]
+        plt.plot(range(len(temp)), list(list(temp['count'])))
+        plt.grid(True)
+        plt.xticks(np.arange(0, len(temp), 50), dateTextFilter, size=20, rotation=60)
+        plt.yticks(size=20)
+        plt.subplots_adjust(left=0.13, bottom=0.30, top=0.9)
+        plt.ylabel('Count', size=25)
+        # plt.xlabel('date', size=25)
+        plt.title(t, size=25)
+        plt.show()
+        plt.close()
+        # print(amEvents['count'].sum())
+
     # print(amEvents)
     # amEvents = amEvents[amEvents['date'] < pd.to_datetime('2016-12-01')]
-    plot_week_events(amEvents)
+    # plot_week_events(amEvents)
 
     # print(len(list(set(amEvents['event_type']))))

@@ -1,4 +1,4 @@
-import load_data_api as ldap
+import src.load_data.load_data_api as ldap
 import pandas as pd
 from sqlalchemy import create_engine
 import datetime as dt
@@ -69,21 +69,23 @@ def getDW_data_postgres(forums_list, start_date, end_date):
     results_final = pd.concat(cumulative)
     return results_final
 
-if __name__ == "__main__":
-    forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197]
-
-    # start_date = dt.datetime.strptime('2016-01-01', '%Y-%m-%d')
-    # end_date = dt.datetime.strptime('2016-03-01', '%Y-%m-%d')
-
-    start_date = '2016-01-01'
-    end_date = '2016-12-31'
-
-    results_final = getDW_data_postgres(forums_cve_mentions, start_date, end_date)
-    pickle.dump(results_final, open('../../data/DW_data/09_15/DW_data_selected_forums_2016.pickle', 'wb'))
-
-    # results_final = getDW_Data(forums_cve_mentions, start_date, end_date)
-    # results_final.to_csv('../../data/DW_data/08_29/DW_data_selected_forums_Jan-Mar16.csv')
-    # pickle.dump(results_final, open('../../data/DW_data/08_29/DW_data_selected_forums_Jan-Mar16.csv', 'wb'))
-
-    # engine = create_engine('postgresql://postgres:Impossible2@localhost:5432/DarkWeb_Soum')
-    # results_final.to_sql('DW_forums_topCVE_mention', engine, if_exists='append')
+# if __name__ == "__main__":
+#     forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 220
+#         , 179, 219, 265, 98, 150, 121, 35, 214, 266, 89, 71, 146, 107, 64,
+#                            218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
+#
+#     # start_date = dt.datetime.strptime('2016-01-01', '%Y-%m-%d')
+#     # end_date = dt.datetime.strptime('2016-03-01', '%Y-%m-%d')
+#
+#     start_date = '2016-01-01'
+#     end_date = '2016-12-31'
+#
+#     results_final = getDW_data_postgres(forums_cve_mentions, start_date, end_date)
+#     pickle.dump(results_final, open('../../data/DW_data/DW_data_selected_forums_2016.pickle', 'wb'))
+#
+#     # results_final = getDW_Data(forums_cve_mentions, start_date, end_date)
+#     # results_final.to_csv('../../data/DW_data/08_29/DW_data_selected_forums_Jan-Mar16.csv')
+#     # pickle.dump(results_final, open('../../data/DW_data/08_29/DW_data_selected_forums_Jan-Mar16.csv', 'wb'))
+#
+#     # engine = create_engine('postgresql://postgres:Impossible2@localhost:5432/DarkWeb_Soum')
+#     # results_final.to_sql('DW_forums_topCVE_mention', engine, if_exists='append')

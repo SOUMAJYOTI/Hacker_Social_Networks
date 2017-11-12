@@ -105,7 +105,7 @@ def getDetailedVulInfo():
     users = []
     cveRegExp = re.compile(r'cve-[0-9]+')
 
-    while True:
+    while countData < 2000:
         print("Count_Data: ", countData)
         # try:
         results = ldap.getVulnerabilityInfo(start=countData, limNum=1000)
@@ -114,6 +114,7 @@ def getDetailedVulInfo():
             break
         for r_idx in range(len(results)):
             item = results[r_idx]
+
             # if "postId" in item:
 
             if "date" not in item:
@@ -139,8 +140,10 @@ def getDetailedVulInfo():
             else:
                 numUsers.append('NA')
 
-            if "uids" in item:
-                users.append(item['uids'])
+            if "uid" in item:
+                users.append(item['uid'])
+            else:
+                users.append('')
 
             if item["indicator"] == "Item":
                 indic.append("Item")
@@ -159,7 +162,10 @@ def getDetailedVulInfo():
                     containsCVE.append(1)
                 else:
                     containsCVE.append(0.)
-                forums.append(item["forumsId"])
+                if 'forumsId' in item:
+                    forums.append(item["forumsId"])
+                else:
+                    forums.append('')
 
         countData += 1000
 
@@ -188,4 +194,5 @@ if __name__ == "__main__":
     # pickle.dump(df, open("../../data/DW_data/08_29/Vulnerabilities-sample_v2+.pickle", 'wb'))
     #
     # print(df)
-    pickle.dump(getDetailedVulInfo(), open("../../data/DW_data/09_15/Vulnerabilities-sample_v1+.pickle", 'wb'))
+    print(getDetailedVulInfo())
+    pickle.dump(getDetailedVulInfo(), open("../../data/DW_data/Vulnerabilities-sample_v3+.pickle", 'wb'))
