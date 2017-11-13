@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b3af467-004d-4a29-a6fe-96d8d390283e" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/utilities/plot_line.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/load_data/load_dataDW.py" afterPath="$PROJECT_DIR$/src/load_data/load_dataDW.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/load_data/load_data_sdk.py" afterPath="$PROJECT_DIR$/src/load_data/load_data_sdk.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/time_series/anomalyDetect.py" afterPath="$PROJECT_DIR$/src/time_series/anomalyDetect.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/time_series/computeFeat.py" afterPath="$PROJECT_DIR$/src/time_series/computeFeat.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/time_series/preprocessData.py" afterPath="$PROJECT_DIR$/src/time_series/preprocessData.py" />
     </list>
     <ignored path="Hacker_Social_Networks.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,29 +26,22 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="createConnections.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/network_analysis/createConnections.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="207" column="28" selection-start-line="207" selection-start-column="28" selection-end-line="207" selection-end-column="28" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="anomalyDetect.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/time_series/anomalyDetect.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-198">
-              <caret line="189" column="34" selection-start-line="189" selection-start-column="34" selection-end-line="189" selection-end-column="34" />
+            <state relative-caret-position="-1300">
+              <caret line="362" column="4" selection-start-line="362" selection-start-column="4" selection-end-line="362" selection-end-column="4" />
               <folding>
-                <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#246#475#0" expanded="false" />
-                <element signature="e#1339#2177#0" expanded="false" />
-                <element signature="e#2223#2766#0" expanded="false" />
-                <element signature="e#2840#3109#0" expanded="false" />
-                <element signature="e#3173#3511#0" expanded="false" />
-                <element signature="e#3589#5606#0" expanded="false" />
+                <element signature="e#321#550#0" expanded="false" />
+                <element signature="e#1404#2233#0" expanded="false" />
+                <element signature="e#2291#2748#0" expanded="false" />
+                <element signature="e#2822#3141#0" expanded="false" />
+                <element signature="e#3205#3543#0" expanded="false" />
+                <element signature="e#3598#4149#0" expanded="false" />
+                <element signature="e#4227#6244#0" expanded="false" />
+                <element signature="e#6302#7129#0" expanded="false" />
+                <element signature="e#7175#7631#0" expanded="false" />
+                <marker date="1510569767472" expanded="false" signature="585:1356" ph="..." />
               </folding>
             </state>
           </provider>
@@ -55,8 +50,8 @@
       <file leaf-file-name="computeFeat.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/time_series/computeFeat.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2606">
-              <caret line="314" column="76" selection-start-line="314" selection-start-column="76" selection-end-line="314" selection-end-column="76" />
+            <state relative-caret-position="-1948">
+              <caret line="34" column="33" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
               <folding>
                 <element signature="e#31#50#0" expanded="true" />
                 <element signature="e#1532#1761#0" expanded="false" />
@@ -66,11 +61,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cve_cpe_ts.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/time_series/cve_cpe_ts.py">
+      <file leaf-file-name="regressionAttacks.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/time_series/regressionAttacks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3">
-              <caret line="185" column="0" selection-start-line="185" selection-start-column="0" selection-end-line="207" selection-end-column="0" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -79,7 +74,7 @@
       <file leaf-file-name="preprocessData.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/time_series/preprocessData.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
+            <state relative-caret-position="-836">
               <caret line="107" column="17" selection-start-line="107" selection-start-column="17" selection-end-line="107" selection-end-column="17" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -106,11 +101,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/load_neo4j_data.py" />
         <option value="$PROJECT_DIR$/src/plot_neo4j_stats.py" />
         <option value="$PROJECT_DIR$/src/network_analysis/load_network_data.py" />
         <option value="$PROJECT_DIR$/src/load_data/__init__.py" />
-        <option value="$PROJECT_DIR$/src/load_data/load_data_sdk.py" />
         <option value="$PROJECT_DIR$/src/load_data/getArmstrongData_dw.py" />
         <option value="$PROJECT_DIR$/src/network_analysis/load_amEvent_data.py" />
         <option value="$PROJECT_DIR$/src/load_data/load_armstrong_data.py" />
@@ -134,7 +127,6 @@
         <option value="$PROJECT_DIR$/utilities/plot_conductance.py" />
         <option value="$PROJECT_DIR$/src/stat_analysis/amEvent_CVE.py" />
         <option value="$PROJECT_DIR$/utilities/plot_shortest_paths.py" />
-        <option value="$PROJECT_DIR$/src/load_data/load_data_api.py" />
         <option value="$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py" />
         <option value="$PROJECT_DIR$/src/stat_analysis/cve_cpe.py" />
         <option value="$PROJECT_DIR$/src/time_series.py" />
@@ -148,15 +140,18 @@
         <option value="$PROJECT_DIR$/src/time_series/forum_component_ts.py" />
         <option value="$PROJECT_DIR$/src/stat_analysis/amDataAnalysis.py" />
         <option value="$PROJECT_DIR$/src/time_series/cve_cpe_ts.py" />
-        <option value="$PROJECT_DIR$/src/load_data/load_dataDW.py" />
         <option value="$PROJECT_DIR$/src/load_data/load_data_postgres.py" />
         <option value="$PROJECT_DIR$/src/stat_analysis/cve_cpe_analysis.py" />
         <option value="$PROJECT_DIR$/src/load_data/loadVulInfo.py" />
         <option value="$PROJECT_DIR$/src/time_series/anomaly detection.py" />
-        <option value="$PROJECT_DIR$/src/time_series/regressionAttacks.py" />
         <option value="$PROJECT_DIR$/src/time_series/preprocessData.py" />
         <option value="$PROJECT_DIR$/src/time_series/computeFeat.py" />
+        <option value="$PROJECT_DIR$/utilities/plot_line.py" />
+        <option value="$PROJECT_DIR$/src/load_data/load_dataDW.py" />
+        <option value="$PROJECT_DIR$/src/load_data/load_data_api.py" />
+        <option value="$PROJECT_DIR$/src/load_data/load_data_sdk.py" />
         <option value="$PROJECT_DIR$/src/time_series/anomalyDetect.py" />
+        <option value="$PROJECT_DIR$/src/time_series/regressionAttacks.py" />
       </list>
     </option>
   </component>
@@ -342,78 +337,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plots" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dw_stats" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="10_11" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="DW_data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Armstrong_data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -432,23 +355,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Python.anomalyDetect">
-    <configuration default="false" name="amDataAnalysis" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/stat_analysis" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Hacker_Social_Networks" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/stat_analysis/amDataAnalysis.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
     <configuration default="false" name="anomaly detection" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -513,6 +419,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Hacker_Social_Networks" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/time_series/anomalyDetect.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="load_dataDW" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/load_data" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Hacker_Social_Networks" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/load_data/load_dataDW.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -652,19 +575,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.amDataAnalysis" />
-      <item index="1" class="java.lang.String" itemvalue="Python.anomaly detection" />
-      <item index="2" class="java.lang.String" itemvalue="Python.preprocessData" />
-      <item index="3" class="java.lang.String" itemvalue="Python.computeFeat" />
-      <item index="4" class="java.lang.String" itemvalue="Python.anomalyDetect" />
+      <item index="0" class="java.lang.String" itemvalue="Python.anomaly detection" />
+      <item index="1" class="java.lang.String" itemvalue="Python.preprocessData" />
+      <item index="2" class="java.lang.String" itemvalue="Python.computeFeat" />
+      <item index="3" class="java.lang.String" itemvalue="Python.anomalyDetect" />
+      <item index="4" class="java.lang.String" itemvalue="Python.load_dataDW" />
     </list>
     <recent_temporary>
       <list size="5">
         <item index="0" class="java.lang.String" itemvalue="Python.anomalyDetect" />
-        <item index="1" class="java.lang.String" itemvalue="Python.computeFeat" />
-        <item index="2" class="java.lang.String" itemvalue="Python.preprocessData" />
-        <item index="3" class="java.lang.String" itemvalue="Python.anomaly detection" />
-        <item index="4" class="java.lang.String" itemvalue="Python.amDataAnalysis" />
+        <item index="1" class="java.lang.String" itemvalue="Python.anomaly detection" />
+        <item index="2" class="java.lang.String" itemvalue="Python.load_dataDW" />
+        <item index="3" class="java.lang.String" itemvalue="Python.computeFeat" />
+        <item index="4" class="java.lang.String" itemvalue="Python.preprocessData" />
       </list>
     </recent_temporary>
   </component>
@@ -688,15 +611,15 @@
     <frame x="-1689" y="17" width="1698" height="1018" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2337977" sideWeight="0.80550456" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2337977" sideWeight="0.80752534" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36107856" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18991794" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2337977" sideWeight="0.19449541" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2337977" sideWeight="0.19247468" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3282532" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -713,12 +636,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="16" />
+      <option name="time" value="18" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/network_analysis/networkCVEStats.py" />
     <entry file="file://$PROJECT_DIR$/src/load_data/test_api_v1.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="496">
@@ -762,31 +684,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utilities/plot_conductance.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="482">
-          <caret line="53" column="23" selection-start-line="53" selection-start-column="23" selection-end-line="53" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/load_data/load_data_api.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="20" column="38" selection-start-line="20" selection-start-column="38" selection-end-line="20" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/network_analysis/plot_neo4j_stats.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="22">
           <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/load_data/load_data_sdk.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -807,13 +708,6 @@
     <entry file="file://$PROJECT_DIR$/src/stat_analysis/cve_cpe.py" />
     <entry file="file://$PROJECT_DIR$/src/time_series.py" />
     <entry file="file://$PROJECT_DIR$/src/time_series/nw_feature.py" />
-    <entry file="file://$PROJECT_DIR$/utilities/plot_bars.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/load_data/load_amEvent_data.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="589">
@@ -859,14 +753,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="704">
           <caret line="119" column="55" selection-start-line="119" selection-start-column="55" selection-end-line="119" selection-end-column="55" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/load_data/findCPEDesc_DW.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-506">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -919,14 +805,6 @@
             <element signature="e#154#2448#0" expanded="false" />
             <element signature="e#2497#3917#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="838">
-          <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -986,16 +864,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/load_data/load_dataDW.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="302">
-          <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#42#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/stat_analysis/cve_cpe_analysis.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="132">
@@ -1024,14 +892,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/time_series/regressionAttacks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Python34/Lib/site-packages/matplotlib/axis.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
@@ -1056,27 +916,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/time_series/preprocessData.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="107" column="17" selection-start-line="107" selection-start-column="17" selection-end-line="107" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#239#486#0" expanded="false" />
-            <element signature="e#538#1117#0" expanded="false" />
-            <element signature="e#1178#2686#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/time_series/cve_cpe_ts.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3">
-          <caret line="185" column="0" selection-start-line="185" selection-start-column="0" selection-end-line="207" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/time_series/forum_component_ts.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="184">
@@ -1094,10 +933,97 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/utilities/plot_conductance.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="113">
+          <caret line="53" column="23" selection-start-line="53" selection-start-column="23" selection-end-line="53" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utilities/plot_line.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="638">
+          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/time_series/cve_cpe_ts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="902">
+          <caret line="197" column="44" selection-start-line="197" selection-start-column="39" selection-end-line="197" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utilities/plot_bars.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="506">
+          <caret line="24" column="56" selection-start-line="20" selection-start-column="3" selection-end-line="24" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/load_data/load_dataDW.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="20" column="52" selection-start-line="20" selection-start-column="52" selection-end-line="20" selection-end-column="52" />
+          <folding>
+            <element signature="e#0#42#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3586">
+          <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/load_data/findCPEDesc_DW.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3212">
+          <caret line="146" column="41" selection-start-line="146" selection-start-column="41" selection-end-line="146" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/load_data/load_data_sdk.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="10" column="51" selection-start-line="10" selection-start-column="51" selection-end-line="10" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/load_data/load_data_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="34" column="80" selection-start-line="34" selection-start-column="80" selection-end-line="34" selection-end-column="80" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/time_series/preprocessData.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-836">
+          <caret line="107" column="17" selection-start-line="107" selection-start-column="17" selection-end-line="107" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#239#486#0" expanded="false" />
+            <element signature="e#538#1117#0" expanded="false" />
+            <element signature="e#1178#2686#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/time_series/computeFeat.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2606">
-          <caret line="314" column="76" selection-start-line="314" selection-start-column="76" selection-end-line="314" selection-end-column="76" />
+        <state relative-caret-position="-1948">
+          <caret line="34" column="33" selection-start-line="34" selection-start-column="33" selection-end-line="34" selection-end-column="33" />
           <folding>
             <element signature="e#31#50#0" expanded="true" />
             <element signature="e#1532#1761#0" expanded="false" />
@@ -1106,18 +1032,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/time_series/regressionAttacks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/time_series/anomalyDetect.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-198">
-          <caret line="189" column="34" selection-start-line="189" selection-start-column="34" selection-end-line="189" selection-end-column="34" />
+        <state relative-caret-position="-1300">
+          <caret line="362" column="4" selection-start-line="362" selection-start-column="4" selection-end-line="362" selection-end-column="4" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#246#475#0" expanded="false" />
-            <element signature="e#1339#2177#0" expanded="false" />
-            <element signature="e#2223#2766#0" expanded="false" />
-            <element signature="e#2840#3109#0" expanded="false" />
-            <element signature="e#3173#3511#0" expanded="false" />
-            <element signature="e#3589#5606#0" expanded="false" />
+            <element signature="e#321#550#0" expanded="false" />
+            <element signature="e#1404#2233#0" expanded="false" />
+            <element signature="e#2291#2748#0" expanded="false" />
+            <element signature="e#2822#3141#0" expanded="false" />
+            <element signature="e#3205#3543#0" expanded="false" />
+            <element signature="e#3598#4149#0" expanded="false" />
+            <element signature="e#4227#6244#0" expanded="false" />
+            <element signature="e#6302#7129#0" expanded="false" />
+            <element signature="e#7175#7631#0" expanded="false" />
+            <marker date="1510569767472" expanded="false" signature="585:1356" ph="..." />
           </folding>
         </state>
       </provider>
