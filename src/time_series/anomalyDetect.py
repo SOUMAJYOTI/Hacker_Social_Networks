@@ -11,7 +11,9 @@ import os
 from dateutil.relativedelta import relativedelta
 import sklearn.metrics
 import random
-
+from random import shuffle
+from sklearn import linear_model, ensemble
+from sklearn.naive_bayes import GaussianNB
 
 def dateToString(date):
     yearNum = str(date.year)
@@ -276,7 +278,7 @@ def predictAttacks_onAnomaly(input, output, thresholds):
     test_start_date = output.iloc[0, 0]
     test_end_date = output.iloc[-1, 0]
 
-    delta_prev_time = 5 # no of days to check before the week of current day
+    delta_prev_time = 3 # no of days to check before the week of current day
     maxPrec = -10
     maxRec = -10
     f1_score = -10
@@ -327,6 +329,45 @@ def predictAttacks_onAnomaly(input, output, thresholds):
     # plt.show()
 
 
+def anomalyVec(res_vec, ):
+    mean_rvec = np.mean(res_vec)
+
+    anomaly_vec = np.zeros(mean_rvec.shape)
+    for t in range(res_vec.shape[0]):
+        if res_vec[t] > mean_rvec:
+            anomaly_vec[t] = 1.
+
+    return anomaly_vec
+
+
+def prepareData(inputDf, outputDf, feat):
+    y_actual = outputDf['attackFlag']
+
+    print(inputDf)
+    train_start_date = outputDf.iloc[0, 0]
+    train_end_date = outputDf.iloc[-1, 0]
+
+    delta_prev_time = 1  # no of days to check before the week of current day
+
+    currDate = train_start_date
+    countDayIndx = 0
+
+    X = np.zeros((y_actual.shape[0], delta_prev_time))
+
+    while (currDate <= train_end_date):
+        ''' This loop checks values on either of delta days prior'''
+        for idx in range(delta_prev_time):
+            historical_day = currDate - datetime.timedelta(days=(7 - idx))
+            try:
+                X[countDayIndx, idx] = inputDf[inputDf['date'] == historical_day][feat]
+            except:
+                continue
+        countDayIndx += 1
+        currDate += datetime.timedelta(days=1)
+
+    return X, y_actual
+
+
 def main():
     forums = [35, 38, 60, 62, 71, 84, 88, 105, 133, 135, 146, 147, 150, 161, 173, 179, 197, ]
     amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
@@ -343,7 +384,6 @@ def main():
 
     trainOutput = prepareOutput(amEvents_malware, trainStart_date, trainEnd_date)
 
-
     testStart_date = datetime.datetime.strptime('2017-02-01', '%Y-%m-%d')
     testEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
 
@@ -354,13 +394,16 @@ def main():
     testOutput = prepareOutput(amEvents_malware, testStart_date + relativedelta(months=1),
                                testEnd_date)
 
-    y_random = np.array([random.choice([0, 1]) for _ in range(len(testOutput))])
-    y_actual = testOutput['attackFlag']
-    random_prec = sklearn.metrics.precision_score(y_actual, y_random)
-    random_recall = sklearn.metrics.recall_score(y_actual, y_random)
-    random_f1 = sklearn.metrics.f1_score(y_actual, y_random)
+    y_actual_test = list(testOutput['attackFlag'])
+    y_random = y_actual_test.copy()
+
+    shuffle(y_random)
+    random_prec = sklearn.metrics.precision_score(y_actual_test, y_random)
+    random_recall = sklearn.metrics.recall_score(y_actual_test, y_random)
+    random_f1 = sklearn.metrics.f1_score(y_actual_test, y_random)
     print('Random: ', random_prec, random_recall, random_f1)
-    
+
+
     ''' Plot the features forum wise '''
     features = ['conductance', 'conductanceExperts', 'pagerank', 'degree']
     for feat in features:
@@ -436,9 +479,26 @@ def main():
         # plt.show()
         # plt.close()
 
+        # anomaly_vector = anomalyVec(res_vec_test)
+
+        X_train, y_train = prepareData(state_vec, trainOutput, feat)
+        logreg = ensemble.RandomForestClassifier()
+        logreg.fit(X_train, y_train)
+
+        X_test, y_test = prepareData(state_vec_test, testOutput, feat)
+
+        y_pred = logreg.predict(X_test)
+
         # Attack prediction evaluation
-        prec, rec, f1_score = predictAttacks_onAnomaly(df_test_feat, testOutput, thresh)
+        prec, rec, f1_score = sklearn.metrics.precision_score(y_actual_test, y_pred), \
+                              sklearn.metrics.recall_score(y_actual_test, y_pred), \
+                              sklearn.metrics.f1_score(y_actual_test, y_pred),
+
         print(feat, prec, rec, f1_score)
+
+        # Attack prediction evaluation
+        # prec, rec, f1_score = predictAttacks_onAnomaly(df_test_feat, testOutput, thresh)
+        # print(feat, prec, rec, f1_score)
 
 if __name__ == "__main__":
     main()
