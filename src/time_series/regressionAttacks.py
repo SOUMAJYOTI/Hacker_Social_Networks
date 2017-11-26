@@ -59,7 +59,6 @@ def prepareOutput(eventsDf, start_date, end_date):
 
 def prepareData(inputDf, outputDf, feat):
     y_actual = outputDf['attackFlag']
-
     train_start_date = outputDf.iloc[0, 0]
     train_end_date = outputDf.iloc[-1, 0]
 
@@ -81,7 +80,7 @@ def prepareData(inputDf, outputDf, feat):
         countDayIndx += 1
         currDate += datetime.timedelta(days=1)
 
-    return X, y_actual
+    return X
 
 
 def anomalyVec(res_vec, ):
@@ -109,6 +108,7 @@ def main():
     trainDf = trainDf[trainDf['date'] < trainEnd_date.date()]
 
     trainOutput = prepareOutput(amEvents_malware, trainStart_date, trainEnd_date)
+    y_actual_train = trainOutput['attackFlag']
 
     testStart_date = datetime.datetime.strptime('2017-02-01', '%Y-%m-%d')
     testEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
@@ -133,6 +133,9 @@ def main():
 
     ''' Plot the features forum wise '''
     features = ['conductance', 'conductanceExperts', 'pagerank', 'degree']
+    X_all_train = []
+    X_all_test = []
+
     for feat in features:
         #     dir_save = '../../plots/dw_stats/feat_plot/' + str(feat) + '/'
         #     if not os.path.exists(dir_save):
@@ -152,21 +155,41 @@ def main():
         #         plt.savefig(file_save)
         #         plt.close()
 
-        X, y_actual_train = prepareData(trainDf, trainOutput, feat)
-        # logreg = linear_model.LogisticRegression(penalty='l2', C=10000.)
+        X = prepareData(trainDf, trainOutput, feat)
+        if X_all_train == []:
+            X_all_train = X
+        else:
+            X_all_train = np.concatenate((X_all_train, X), axis=1)
+        logreg = linear_model.LogisticRegression(penalty='l2')
         logreg = ensemble.RandomForestClassifier()
         logreg.fit(X, y_actual_train)
 
-        X_test, y_test = prepareData(testDf, testOutput, feat)
-
+        X_test = prepareData(testDf, testOutput, feat)
+        if X_all_test == []:
+            X_all_test = X_test
+        else:
+            X_all_test = np.concatenate((X_all_test, X_test), axis=1)
+        #
         y_pred = logreg.predict(X_test)
 
-        # Attack prediction evaluation
+        # # Attack prediction evaluation
         prec, rec, f1_score = sklearn.metrics.precision_score(y_actual_test, y_pred),\
                               sklearn.metrics.recall_score(y_actual_test, y_pred), \
                               sklearn.metrics.f1_score(y_actual_test, y_pred),
 
         print(feat, prec, rec, f1_score)
+
+    logreg = ensemble.RandomForestClassifier()
+    logreg.fit(X_all_train, y_actual_train)
+
+    y_pred = logreg.predict(X_all_test)
+
+    # Attack prediction evaluation
+    prec, rec, f1_score = sklearn.metrics.precision_score(y_actual_test, y_pred),\
+                          sklearn.metrics.recall_score(y_actual_test, y_pred), \
+                          sklearn.metrics.f1_score(y_actual_test, y_pred),
+
+    print(prec, rec, f1_score)
 
 if __name__ == "__main__":
     main()

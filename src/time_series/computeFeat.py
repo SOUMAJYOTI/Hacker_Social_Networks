@@ -1,20 +1,15 @@
-# import load_data_api as ldap
 import pandas as pd
 import networkx as nx
-import datetime as dt
 import operator
 import pickle
-from sqlalchemy import create_engine
 # import userAnalysis as usAn
 import numpy as np
 import networkx.algorithms.cuts as nxCut
 import datetime
 import src.network_analysis.createConnections as ccon
-import src.load_data.load_dataDW as ldDW
 import matplotlib.pyplot as plt
 from dateutil.relativedelta import relativedelta
 import multiprocessing
-import threading
 import gc
 
 # Global storage structures used over all pool processing
@@ -23,8 +18,10 @@ forums = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 2
                            218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
 
 # forums = [88, 40]
-# vulnInfo = pickle.load(open('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle', 'rb'))
-# cve_cpe_map = pd.read_csv('../../data/DW_data/cve_cpe_map.csv')
+vulnInfo = pickle.load(open('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle', 'rb'))
+cve_cpe_DF = pd.read_csv('../../data/DW_data/cve_cpe_mapDF.csv')
+cve_cpe_map = pickle.load(open('../../data/DW_data/cve_cpe_map.pickle', 'rb'))
+
 # Map of users with CVE to user and user to CVE
 users_CVEMap, CVE_usersMap = pickle.load(open('../../data/DW_data/users_CVE_map.pickle', 'rb'))
 
@@ -75,6 +72,49 @@ def centralities(network, arg, users):
     return cent_sum / len(users)
 
 
+def topCPEGroups(start_date, end_date, K):
+    '''
+
+    :param start_date:
+    :param end_date:
+    :param K: -1 if all CPEs to be returned, else the top K
+    :return: the top CPE groups
+    '''
+
+    # 1. List all the vulnerabilties within the time frame input
+    # 2. Then group all the CVE/vulnerab by their cluster tags
+    # 3. Return the top CPE/cluster tags
+
+    # 1.
+    vulCurr = vulnInfo[vulnInfo['postedDate'] >= start_date]
+    vulCurr = vulCurr[vulCurr['postedDate'] < end_date]
+
+    # 2.
+    vulnerab = vulCurr['vulnId']
+    cveCPE_curr = cve_cpe_DF[cve_cpe_DF['cve'].isin(vulnerab)]
+    topCPEs = {}
+    for idx, row in cveCPE_curr.iterrows():
+        clTag = row['cluster_tag']
+        if clTag not in topCPEs:
+            topCPEs[clTag] = 0
+
+        topCPEs[clTag] += 1
+
+    # 3.
+    # print(topCPEs)
+    if K==-1:
+        K = len(topCPEs)
+    topCPEs_sorted = sorted(topCPEs.items(), key=operator.itemgetter(1), reverse=True)[:K]
+    topCPEsList = []
+    for cpe, count in topCPEs_sorted:
+        topCPEsList.append(cpe)
+
+    # topCVE = cve_cpe_map[cve_cpe_map['cluster_tag'].isin(topCPEsList)]
+
+    # return list(topCVE['cve'])
+    return topCPEsList
+
+
 def getExperts(users):
     '''
 
@@ -91,6 +131,24 @@ def getExperts(users):
             experts.append(u)
 
     return experts
+
+
+def getExpertsCPE(users, CPE):
+    # 1. For each user, gather all his CVEs
+    # 2. For each of his CVEs, find whether the CPE of that CVE is in the input CPE group
+    # 3. If yes to 2, add those users
+
+    # 1.
+    usersCPE = []
+    for u in users:
+        currUserCVE = users_CVEMap[u]
+        # 2.
+        for cve in currUserCVE:
+            if CPE in cve_cpe_map[cve]:
+                usersCPE.append(u)
+                break
+
+    return usersCPE
 
 
 def computeFeatureTimeSeries(start_date, end_date,):
@@ -114,7 +172,7 @@ def computeFeatureTimeSeries(start_date, end_date,):
     KB_edges = KB_edges_DS[KBStartDate]
     KB_users = list(set(KB_edges['source']).intersection(set(KB_edges['target'])))
     KB_users = [str(int(i)) for i in KB_users]
-    experts = getExperts(KB_users)
+    experts = getExperts(KB_users) # Get the experts in the KB graphj
 
     currStartDate = start_date
     currEndDate = start_date + datetime.timedelta(days=1)
@@ -126,8 +184,8 @@ def computeFeatureTimeSeries(start_date, end_date,):
 
         # users_currDay_forum = users_currDay[users_currDay['forum'] == float(f)]
 
-        '''' Consider forums posts for current forum for current day'''
-        df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date() - datetime.timedelta(days=2))]
+        '''' Consider forums posts for current forum for current day or a delta T days frame '''
+        df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date() - datetime.timedelta(days=4))]
         df_currDay = df_currDay[df_currDay['posteddate'] < currEndDate.date()]
         threadidsCurrDay = list(set(df_currDay['topicid']))
         currDay_edges = ccon.storeEdges(df_currDay, threadidsCurrDay)
@@ -217,7 +275,7 @@ def computeFeatureTimeSeriesSeparateForums(start_date, end_date,):
             # users_currDay_forum = users_currDay[users_currDay['forum'] == float(f)]
 
             '''' Consider forums posts for current forum for current day'''
-            df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date() - datetime.timedelta(days=2))]
+            df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date() - datetime.timedelta(days=4))]
             df_currDay = df_currDay[df_currDay['posteddate'] < currEndDate.date()]
             df_currDay = df_currDay[df_currDay['forumsid'] == f]
             threadidsCurrDay = list(set(df_currDay['topicid']))
@@ -276,6 +334,126 @@ def computeFeatureTimeSeriesSeparateForums(start_date, end_date,):
     return featDF
 
 
+def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
+    condList = []
+    condExpertsList = {}
+    prList = []
+    degList = []
+
+    datesList = []
+    forumsList = []
+    featDF = pd.DataFrame()
+
+    # KB timeframe 3 months prior to start of daily training data
+    KBStartDate = start_date - relativedelta(months=3)
+
+    # while currEndDate < end_date:
+    KB_edges = KB_edges_DS[KBStartDate]
+    KB_users = list(set(KB_edges['source']).intersection(set(KB_edges['target'])))
+    KB_users = [str(int(i)) for i in KB_users]
+    experts = getExperts(KB_users)
+
+    topCPEs = topCPEGroups(KBStartDate, start_date, K=50)
+
+    for f in forums:
+        currStartDate = start_date
+        currEndDate = start_date + datetime.timedelta(days=1)
+        print("Forum:", f, " Month: ", currStartDate.date())
+
+        while currEndDate < end_date:
+            # users_currDay = postsDailyDf[postsDailyDf['date'] == currStartDate]
+            # Compute the feature for each forum separately
+
+            # users_currDay_forum = users_currDay[users_currDay['forum'] == float(f)]
+
+            '''' Consider forums posts for current forum for current day'''
+            df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date() - datetime.timedelta(days=4))]
+            df_currDay = df_currDay[df_currDay['posteddate'] < currEndDate.date()]
+            df_currDay = df_currDay[df_currDay['forumsid'] == f]
+            threadidsCurrDay = list(set(df_currDay['topicid']))
+            currDay_edges = ccon.storeEdges(df_currDay, threadidsCurrDay)
+
+            # If there are no edges, no feature computation
+            if len(currDay_edges) == 0:
+                # condList.append(0)
+                countCPE = 1
+                for cpe in topCPEs:
+                    key = 'CPE_R' + str(countCPE)
+                    if key not in condExpertsList:
+                        condExpertsList[key] = []
+                    condExpertsList[key].append(0)
+                    countCPE += 1
+
+                # prList.append(0)
+                # degList.append(0)
+                forumsList.append(f)
+                datesList.append(currStartDate)
+                currStartDate = currStartDate + datetime.timedelta(days=1)
+                currEndDate = currStartDate + datetime.timedelta(days=1)
+                continue
+
+            users_curr = list(set(currDay_edges['source']).intersection(set(currDay_edges['target'])))
+            # If there are no users, no feature computation
+            if len(users_curr) == 0:
+                # condList.append(0)
+                countCPE = 1
+                for cpe in topCPEs:
+                    key = 'CPE_R' + str(countCPE)
+                    if key not in condExpertsList:
+                        condExpertsList[key] = []
+                    condExpertsList[key].append(0)
+                    countCPE += 1
+                # prList.append(0)
+                # degList.append(0)
+                forumsList.append(f)
+                datesList.append(currStartDate)
+                currStartDate = currStartDate + datetime.timedelta(days=1)
+                currEndDate = currStartDate + datetime.timedelta(days=1)
+                continue
+
+            users_curr = [str(int(i)) for i in users_curr]
+
+            # print("Merging edges...")
+            mergeEgdes = ccon.network_merge(KB_edges.copy(), currDay_edges)  # Update the mergedEdges every day
+
+            G = nx.DiGraph()
+            G.add_edges_from(mergeEgdes)
+
+            countCPE = 1
+            for cpe in topCPEs:
+                expertUsersCPE = getExpertsCPE(experts, cpe)
+                key = 'CPE_R' + str(countCPE)
+                if key not in condExpertsList:
+                    condExpertsList[key] = []
+                condExpertsList[key].append(Conductance(G, expertUsersCPE, users_curr))
+                countCPE += 1
+                # condList.append(Conductance(G, KB_users, users_curr))
+                # condExpertsList.append(Conductance(G, experts, users_curr))
+                # prList.append(centralities(G, 'PageRank', users_curr))
+                # degList.append(centralities(G, 'OutDegree', users_curr))
+
+            forumsList.append(f)
+            datesList.append(currStartDate)
+
+            currStartDate = currStartDate + datetime.timedelta(days=1)
+            currEndDate = currStartDate + datetime.timedelta(days=1)
+
+    featDF['date'] = datesList
+    featDF['forum'] = forumsList
+
+    for k in range(50):
+        try:
+            featDF['CondExperts_CPE_R' + str(k+1)] = condExpertsList['CPE_R' + str(k+1)]
+        except:
+            
+    # featDF['conductance'] = condList
+    # featDF['conductanceExperts'] = condExpertsList
+    # featDF['pagerank'] = prList
+    # featDF['degree'] = degList
+
+    return featDF
+
+
 def main():
     gc.collect()
     posts = pickle.load(open('../../data/Dw_data/posts_days_forumsV1.0.pickle', 'rb'))
@@ -312,7 +490,7 @@ def main():
         df_list.append(df)
 
     feat_data_all = pd.concat(df_list)
-    pickle.dump(feat_data_all, open('../../data/DW_data/feature_df_combined_Sept16-Apr17.pickle', 'wb'))
+    pickle.dump(feat_data_all, open('../../data/DW_data/feature_df_combined_DeltaT_4_Sept16-Apr17.pickle', 'wb'))
     # feat_data_all = pickle.load(open('../../data/DW_data/feature_df_Sept16-Apr17.pickle', 'rb'))
     # feat_data_all = feat_data_all.reset_index(drop=True)
     # print(feat_data_all)

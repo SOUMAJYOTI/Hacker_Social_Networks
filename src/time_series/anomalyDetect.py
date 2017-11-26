@@ -332,7 +332,7 @@ def predictAttacks_onAnomaly(input, output, thresholds):
 def anomalyVec(res_vec, ):
     mean_rvec = np.mean(res_vec)
 
-    anomaly_vec = np.zeros(mean_rvec.shape)
+    anomaly_vec = np.zeros(res_vec.shape)
     for t in range(res_vec.shape[0]):
         if res_vec[t] > mean_rvec:
             anomaly_vec[t] = 1.
@@ -340,10 +340,12 @@ def anomalyVec(res_vec, ):
     return anomaly_vec
 
 
-def prepareData(inputDf, outputDf, feat):
+def prepareData(inputDf, outputDf):
     y_actual = outputDf['attackFlag']
+    w_1 = 0.5
+    w_2 = 0.5
 
-    print(inputDf)
+    # print(inputDf)
     train_start_date = outputDf.iloc[0, 0]
     train_end_date = outputDf.iloc[-1, 0]
 
@@ -359,7 +361,13 @@ def prepareData(inputDf, outputDf, feat):
         for idx in range(delta_prev_time):
             historical_day = currDate - datetime.timedelta(days=(7 - idx))
             try:
-                X[countDayIndx, idx] = inputDf[inputDf['date'] == historical_day][feat]
+                feat_vec = inputDf[inputDf['date'] == historical_day]
+                # X[countDayIndx, idx] = (0.5 * feat_vec['state_vec'].iloc[0]) + (0.5 * feat_vec['res_vec'].iloc[0])
+
+                if feat_vec['anomaly_vec'].iloc[0] == 1:
+                    X[countDayIndx, idx] = (feat_vec['state_vec'].iloc[0]) + (feat_vec['res_vec'].iloc[0])
+                else:
+                    X[countDayIndx, idx] = (feat_vec['state_vec'].iloc[0]) + (feat_vec['res_vec'].iloc[0])
             except:
                 continue
         countDayIndx += 1
@@ -379,7 +387,7 @@ def main():
     feat_df = pickle.load(open('../../data/DW_data/feature_df_Sept16-Apr17.pickle', 'rb'))
     feat_df = feat_df[feat_df['forum'].isin(forums)]
 
-    trainDf = feat_df[feat_df['date'] >=trainStart_date.date()]
+    trainDf = feat_df[feat_df['date'] >= trainStart_date.date()]
     trainDf = trainDf[trainDf['date'] < trainEnd_date.date()]
 
     trainOutput = prepareOutput(amEvents_malware, trainStart_date, trainEnd_date)
@@ -402,7 +410,6 @@ def main():
     random_recall = sklearn.metrics.recall_score(y_actual_test, y_random)
     random_f1 = sklearn.metrics.f1_score(y_actual_test, y_random)
     print('Random: ', random_prec, random_recall, random_f1)
-
 
     ''' Plot the features forum wise '''
     features = ['conductance', 'conductanceExperts', 'pagerank', 'degree']
@@ -431,6 +438,7 @@ def main():
         ''' Get the PCA components'''
         num_comp = 8
         top_comp, variance_comp = getTopComponents(forumTSMAtCent, num_comp)
+        # print(variance_comp)
         # print(top_comp.shape)
 
         ''' Find the normal and residual subspace '''
@@ -438,7 +446,7 @@ def main():
         normal_subspace, residual_subspace = projectSubspace(top_comp, forumTSMAtCent, 3)
 
         """ Check the q-value statistic --- some error !!! """
-        q_value = Q_statistic(top_comp, 3, forumTSMAtCent)
+        # q_value = Q_statistic(top_comp, 3, forumTSMAtCent)
 
         ''' Compute the separation matrix '''
         state_vec, res_vec = projectionSeparation(normal_subspace, residual_subspace, forumTSMAtCent)
@@ -452,23 +460,31 @@ def main():
         for i in range(numThresholds-1, 0, -1):
             thresh.append(minVal + (i*partitionRange))
 
+        df_train_feat = pd.DataFrame()
+        df_train_feat['date'] = trainDf[trainDf['forum'] == forums[0]]['date']
+        df_train_feat['state_vec'] = np.power(np.linalg.norm(state_vec, axis=0), 2)
+        df_train_feat['res_vec'] = np.power(np.linalg.norm(res_vec, axis=0), 2)
 
-        # df_temp = pd.DataFrame()
-        # df_temp['date'] = trainDf[trainDf['forum'] == forums[0]]['date']
-        # df_temp['state_vec'] = np.power(np.linalg.norm(state_vec, axis=0), 2)
-        # df_temp['res_vec'] = np.power(np.linalg.norm(res_vec, axis=0), 2)
+        anomaly_vector_train = anomalyVec(np.array(df_train_feat['res_vec']))
+
+        df_train_feat['anomaly_vec'] = anomaly_vector_train
 
         ''' The testing procedure begins'''
 
         forumTSMat_test, forumTSMAtCent_test = formTSMatrix(testDf, feat)
         state_vec_test, res_vec_test = projectionSeparation(normal_subspace, residual_subspace, forumTSMAtCent_test)
 
+
         df_test_feat = pd.DataFrame()
         df_test_feat['date'] = testDf[testDf['forum'] == forums[0]]['date']
         df_test_feat['state_vec'] = np.power(np.linalg.norm(state_vec_test, axis=0), 2)
         df_test_feat['res_vec'] = np.power(np.linalg.norm(res_vec_test, axis=0), 2)
 
-        # df_temp.plot(figsize=(12,8), x='date', y='res_vec', color='black', linewidth=2)
+        anomaly_vector_test = anomalyVec(np.array(df_test_feat['res_vec']))
+
+        df_test_feat['anomaly_vec'] = anomaly_vector_test
+
+        # df_train_feat.plot(figsize=(12,8), x='date', y='state_vec', color='black', linewidth=2)
         # plt.grid(True)
         # plt.xticks(size=20)
         # plt.yticks(size=20)
@@ -479,14 +495,14 @@ def main():
         # plt.show()
         # plt.close()
 
-        # anomaly_vector = anomalyVec(res_vec_test)
-
-        X_train, y_train = prepareData(state_vec, trainOutput, feat)
-        logreg = ensemble.RandomForestClassifier()
+        X_train, y_train = prepareData(df_train_feat, trainOutput)
+        # print(df_train_feat)
+        logreg = linear_model.LogisticRegression(penalty='l2')
+        # logreg = ensemble.RandomForestClassifier()
         logreg.fit(X_train, y_train)
 
-        X_test, y_test = prepareData(state_vec_test, testOutput, feat)
-
+        X_test, y_test = prepareData(df_test_feat, testOutput)
+        # print(list(y_test))
         y_pred = logreg.predict(X_test)
 
         # Attack prediction evaluation
@@ -497,8 +513,8 @@ def main():
         print(feat, prec, rec, f1_score)
 
         # Attack prediction evaluation
-        # prec, rec, f1_score = predictAttacks_onAnomaly(df_test_feat, testOutput, thresh)
-        # print(feat, prec, rec, f1_score)
+        prec, rec, f1_score = predictAttacks_onAnomaly(df_test_feat, testOutput, thresh)
+        print(feat, prec, rec, f1_score)
 
 if __name__ == "__main__":
     main()

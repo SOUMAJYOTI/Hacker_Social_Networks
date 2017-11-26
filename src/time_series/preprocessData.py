@@ -164,7 +164,9 @@ if __name__ == "__main__":
     cve_cpe_df =  pd.read_csv('../../data/DW_data/cve_cpe_map.csv')
     cve_cpe_map = store_cve_cpe_map(cve_cpe_df)
 
-    topCPEGroups(start_date, end_date, vulnInfo, cve_cpe_df, -1)
+    pickle.dump(cve_cpe_map, open('../../data/DW_data/cve_cpe_map.pickle', 'wb') )
+
+    # topCPEGroups(start_date, end_date, vulnInfo, cve_cpe_df, -1)
     exit()
 
     # users_CVEMap, CVE_usersMap = user_CVE_groups(cve_cpe_map, vulnInfo)
