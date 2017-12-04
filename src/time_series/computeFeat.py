@@ -11,13 +11,16 @@ import matplotlib.pyplot as plt
 from dateutil.relativedelta import relativedelta
 import multiprocessing
 import gc
-
+import re
+# df = pickle.load(open('../../data/DW_data/feature_df_combined_DeltaT_4_Sept16-Apr17_TP10.pickle', 'rb'))
+# print(df[400:1000])
+# exit()
 # Global storage structures used over all pool processing
 forums = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 220
         , 179, 219, 265, 98, 150, 121, 35, 214, 266, 89, 71, 146, 107, 64,
                            218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
 
-# forums = [88, 40]
+# forums = [88, ]
 vulnInfo = pickle.load(open('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle', 'rb'))
 cve_cpe_DF = pd.read_csv('../../data/DW_data/cve_cpe_mapDF.csv')
 cve_cpe_map = pickle.load(open('../../data/DW_data/cve_cpe_map.pickle', 'rb'))
@@ -72,6 +75,10 @@ def centralities(network, arg, users):
     return cent_sum / len(users)
 
 
+def hasVersion(inputString):
+    return re.findall(r'\.', inputString)
+
+
 def topCPEGroups(start_date, end_date, K):
     '''
 
@@ -93,18 +100,39 @@ def topCPEGroups(start_date, end_date, K):
     vulnerab = vulCurr['vulnId']
     cveCPE_curr = cve_cpe_DF[cve_cpe_DF['cve'].isin(vulnerab)]
     topCPEs = {}
+    # print(cveCPE_curr)
     for idx, row in cveCPE_curr.iterrows():
-        clTag = row['cluster_tag']
-        if clTag not in topCPEs:
-            topCPEs[clTag] = 0
+        ''' MOdify the cluster tags to remove versions '''
+        cluster_tags = str(row['cluster']).split(' | ')
+        cluster_custom = []
+        cluster_custom.append(cluster_tags[0])
+        # for idx_cl in range(1, min(2, len(cluster_tags))): #### Change this
+        #     ctag = cluster_tags[idx_cl]
+        #     if ctag in cluster_custom:
+        #         continue
+        #
+        #     ver = hasVersion(ctag)
+        #     if len(ver) >= 2:
+        #         continue
+        #
+        #     cluster_custom.append(ctag)
 
-        topCPEs[clTag] += 1
+        cluster_final = ''
+        for idx_cc in range(len(cluster_custom)):
+            cluster_final += cluster_custom[idx_cc] + ' '
+
+        cluster_final = " ".join(cluster_final.split())
+        if cluster_final not in topCPEs:
+            topCPEs[cluster_final] = 0
+
+        topCPEs[cluster_final] += 1
 
     # 3.
     # print(topCPEs)
     if K==-1:
         K = len(topCPEs)
     topCPEs_sorted = sorted(topCPEs.items(), key=operator.itemgetter(1), reverse=True)[:K]
+
     topCPEsList = []
     for cpe, count in topCPEs_sorted:
         topCPEsList.append(cpe)
@@ -353,7 +381,7 @@ def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
     KB_users = [str(int(i)) for i in KB_users]
     experts = getExperts(KB_users)
 
-    topCPEs = topCPEGroups(KBStartDate, start_date, K=50)
+    topCPEs = topCPEGroups(KBStartDate, start_date, K=10)
 
     for f in forums:
         currStartDate = start_date
@@ -361,12 +389,13 @@ def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
         print("Forum:", f, " Month: ", currStartDate.date())
 
         while currEndDate < end_date:
+            # print("Forum:", f, " Month: ", currStartDate.date(), )
             # users_currDay = postsDailyDf[postsDailyDf['date'] == currStartDate]
             # Compute the feature for each forum separately
 
             # users_currDay_forum = users_currDay[users_currDay['forum'] == float(f)]
 
-            '''' Consider forums posts for current forum for current day'''
+            '''' Consider forums posts for current forum for current day '''
             df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date() - datetime.timedelta(days=4))]
             df_currDay = df_currDay[df_currDay['posteddate'] < currEndDate.date()]
             df_currDay = df_currDay[df_currDay['forumsid'] == f]
@@ -376,13 +405,11 @@ def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
             # If there are no edges, no feature computation
             if len(currDay_edges) == 0:
                 # condList.append(0)
-                countCPE = 1
-                for cpe in topCPEs:
-                    key = 'CPE_R' + str(countCPE)
+                for cpe_count in range(len(topCPEs)):
+                    key = 'CPE_R' + str(cpe_count)
                     if key not in condExpertsList:
                         condExpertsList[key] = []
                     condExpertsList[key].append(0)
-                    countCPE += 1
 
                 # prList.append(0)
                 # degList.append(0)
@@ -396,13 +423,12 @@ def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
             # If there are no users, no feature computation
             if len(users_curr) == 0:
                 # condList.append(0)
-                countCPE = 1
-                for cpe in topCPEs:
-                    key = 'CPE_R' + str(countCPE)
+                for cpe_count in range(len(topCPEs)):
+                    key = 'CPE_R' + str(cpe_count)
                     if key not in condExpertsList:
                         condExpertsList[key] = []
                     condExpertsList[key].append(0)
-                    countCPE += 1
+
                 # prList.append(0)
                 # degList.append(0)
                 forumsList.append(f)
@@ -421,11 +447,16 @@ def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
 
             countCPE = 1
             for cpe in topCPEs:
+                # print("Forum:", f, " Month: ", currStartDate.date(), cpe)
                 expertUsersCPE = getExpertsCPE(experts, cpe)
                 key = 'CPE_R' + str(countCPE)
                 if key not in condExpertsList:
                     condExpertsList[key] = []
-                condExpertsList[key].append(Conductance(G, expertUsersCPE, users_curr))
+                try:
+                    condExpertsList[key].append(Conductance(G, expertUsersCPE, users_curr))
+                except:
+                    condExpertsList[key].append(0.0)
+                # print(Conductance(G, expertUsersCPE, users_curr))
                 countCPE += 1
                 # condList.append(Conductance(G, KB_users, users_curr))
                 # condExpertsList.append(Conductance(G, experts, users_curr))
@@ -441,11 +472,12 @@ def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
     featDF['date'] = datesList
     featDF['forum'] = forumsList
 
-    for k in range(50):
+    for k in range(10):
         try:
             featDF['CondExperts_CPE_R' + str(k+1)] = condExpertsList['CPE_R' + str(k+1)]
         except:
-            
+            featDF['CondExperts_CPE_R' + str(k + 1)] = 0.0
+    #
     # featDF['conductance'] = condList
     # featDF['conductanceExperts'] = condExpertsList
     # featDF['pagerank'] = prList
@@ -456,7 +488,7 @@ def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
 
 def main():
     gc.collect()
-    posts = pickle.load(open('../../data/Dw_data/posts_days_forumsV1.0.pickle', 'rb'))
+    # posts = pickle.load(open('../../data/Dw_data/posts_days_forumsV1.0.pickle', 'rb'))
 
     start_date = datetime.datetime.strptime('09-01-2016', '%m-%d-%Y')
     end_date = datetime.datetime.strptime('05-01-2017', '%m-%d-%Y')
@@ -466,7 +498,7 @@ def main():
 
     # featDf = computeFeatureTimeSeries(start_date, end_date)
 
-    numProcessors = 5
+    numProcessors = 4
     pool = multiprocessing.Pool(numProcessors)
 
     currEndDate = start_date + relativedelta(months=1)
@@ -479,7 +511,7 @@ def main():
         start_date += relativedelta(months=1)
         currEndDate = start_date + relativedelta(months=1)
 
-    results = pool.starmap_async(computeFeatureTimeSeries, tasks)
+    results = pool.starmap_async(computeFeatureTimeSeriesForumsCPE, tasks)
     pool.close()
     pool.join()
 
@@ -490,7 +522,8 @@ def main():
         df_list.append(df)
 
     feat_data_all = pd.concat(df_list)
-    pickle.dump(feat_data_all, open('../../data/DW_data/feature_df_combined_DeltaT_4_Sept16-Apr17.pickle', 'wb'))
+    # print(feat_data_all)
+    pickle.dump(feat_data_all, open('../../data/DW_data/feature_df_combined_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # feat_data_all = pickle.load(open('../../data/DW_data/feature_df_Sept16-Apr17.pickle', 'rb'))
     # feat_data_all = feat_data_all.reset_index(drop=True)
     # print(feat_data_all)

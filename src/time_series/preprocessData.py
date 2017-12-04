@@ -5,6 +5,7 @@ import datetime
 import src.network_analysis.createConnections as ccon
 import src.load_data.load_dataDW as ldDW
 import operator
+import re
 
 def dateToString(date):
     yearNum = str(date.year)
@@ -138,13 +139,51 @@ def computeKBnetwork(start_date, end_date, allPosts):
 
     return KB_edges_Data
 
+
+def hasNumbers(inputString):
+    return re.findall(r'\d', inputString)
+
+def hasVersion(inputString):
+    return re.findall(r'\.', inputString)
+
+def hasLetters(inputString):
+    return bool(re.search('[a-zA-Z]', inputString))
+    # return any(c.isalpha() for c in inputString)
+
 def store_cve_cpe_map(cve_cpe_df):
     cve_cpe_map = {}
+    clusters_id = []
     for idx, row in cve_cpe_df.iterrows():
+        ''' Filter the clusters '''
+        cluster_tags = str(row['cluster']).split(' | ')
+        cluster_custom = []
+        cluster_custom.append(cluster_tags[0])
+        for idx_cl in range(1, len(cluster_tags)):
+            ctag = cluster_tags[idx_cl]
+            if ctag in cluster_custom:
+                continue
+
+            ver = hasVersion(ctag)
+            if len(ver) >= 2:
+                continue
+
+            cluster_custom.append(ctag)
+
+        cluster_final = ''
+        for idx_cc in range(len(cluster_custom)):
+            cluster_final += cluster_custom[idx_cc] + ' '
+
+        cluster_final = " ".join(cluster_final.split())
+        if cluster_final not in clusters_id:
+            clusters_id.append(cluster_final)
+
         if row['cve'] not in cve_cpe_map:
             cve_cpe_map[row['cve']] = []
 
-        cve_cpe_map[row['cve']].append(row['cluster'])
+        cve_cpe_map[row['cve']].append(cluster_final)
+
+    # print(len(cve_cpe_df), len(list(set(list(cve_cpe_df['cluster'])))))
+    # exit()
     return cve_cpe_map
 
 if __name__ == "__main__":
@@ -161,7 +200,7 @@ if __name__ == "__main__":
 
     vulnInfo = pickle.load(open('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle', 'rb'))
 
-    cve_cpe_df =  pd.read_csv('../../data/DW_data/cve_cpe_map.csv')
+    cve_cpe_df =  pd.read_csv('../../data/DW_data/cve_cpe_mapDF.csv')
     cve_cpe_map = store_cve_cpe_map(cve_cpe_df)
 
     pickle.dump(cve_cpe_map, open('../../data/DW_data/cve_cpe_map.pickle', 'wb') )
