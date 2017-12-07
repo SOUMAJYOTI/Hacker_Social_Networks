@@ -12,15 +12,14 @@ from dateutil.relativedelta import relativedelta
 import multiprocessing
 import gc
 import re
-# df = pickle.load(open('../../data/DW_data/feature_df_combined_DeltaT_4_Sept16-Apr17_TP10.pickle', 'rb'))
-# print(df[400:1000])
-# exit()
-# Global storage structures used over all pool processing
-forums = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 220
-        , 179, 219, 265, 98, 150, 121, 35, 214, 266, 89, 71, 146, 107, 64,
-                           218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
+from src.network_analysis.features import *
 
-# forums = [88, ]
+# Global storage structures used over all pool processing
+# forums = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 220
+#         , 179, 219, 265, 98, 150, 121, 35, 214, 266, 89, 71, 146, 107, 64,
+#                            218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
+
+forums = [88, ]
 vulnInfo = pickle.load(open('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle', 'rb'))
 cve_cpe_DF = pd.read_csv('../../data/DW_data/cve_cpe_mapDF.csv')
 cve_cpe_map = pickle.load(open('../../data/DW_data/cve_cpe_map.pickle', 'rb'))
@@ -365,6 +364,10 @@ def computeFeatureTimeSeriesSeparateForums(start_date, end_date,):
 def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
     condList = []
     condExpertsList = {}
+    commThreadsList = {}
+    shortPathList = {}
+    commutePathList = {}
+    communityCountList = {}
     prList = []
     degList = []
 
@@ -409,7 +412,15 @@ def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
                     key = 'CPE_R' + str(cpe_count)
                     if key not in condExpertsList:
                         condExpertsList[key] = []
+                        commThreadsList[key] = []
+                        shortPathList[key] = []
+                        commutePathList[key] = []
+                        communityCountList[key] = []
                     condExpertsList[key].append(0)
+                    commThreadsList[key].append(0)
+                    shortPathList[key].append(0)
+                    commutePathList[key].append(0)
+                    communityCountList[key].append(0)
 
                 # prList.append(0)
                 # degList.append(0)
@@ -427,7 +438,15 @@ def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
                     key = 'CPE_R' + str(cpe_count)
                     if key not in condExpertsList:
                         condExpertsList[key] = []
+                        commThreadsList[key] = []
+                        shortPathList[key] = []
+                        commutePathList[key] = []
+                        communityCountList[key] = []
                     condExpertsList[key].append(0)
+                    commThreadsList[key].append(0)
+                    shortPathList[key].append(0)
+                    commutePathList[key].append(0)
+                    communityCountList[key].append(0)
 
                 # prList.append(0)
                 # degList.append(0)
@@ -445,6 +464,12 @@ def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
             G = nx.DiGraph()
             G.add_edges_from(mergeEgdes)
 
+            lapl_mat = (nx.laplacian_matrix(G.to_undirected())).todense()
+            # print(lapl_mat.shape)
+            # print('Computing pseudo lapl')
+            # pseudo_lapl_mat = np.linalg.pinv(lapl_mat)  # Compute the pseudo-inverse of the graph laplacian
+            # print('done..')
+
             countCPE = 1
             for cpe in topCPEs:
                 # print("Forum:", f, " Month: ", currStartDate.date(), cpe)
@@ -452,16 +477,20 @@ def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
                 key = 'CPE_R' + str(countCPE)
                 if key not in condExpertsList:
                     condExpertsList[key] = []
-                try:
-                    condExpertsList[key].append(Conductance(G, expertUsersCPE, users_curr))
-                except:
-                    condExpertsList[key].append(0.0)
-                # print(Conductance(G, expertUsersCPE, users_curr))
+                    commThreadsList[key] = []
+                    shortPathList[key] = []
+                    commutePathList[key] = []
+                    communityCountList[key] = []
+
+                ''' Store the computed features by CPE'''
+                # condExpertsList[key].append(Conductance(G, expertUsersCPE, users_curr))
+                # commThreadsList[key].append(threadCommon(df_currDay, expertUsersCPE))
+                # shortPathList[key].append(shortestPaths(G, expertUsersCPE, users_curr))
+                communityCountList[key].append(community_detect(G, expertUsersCPE, users_curr))
+                # commutePathList[key].append(commuteTime(G, pseudo_lapl_mat, expertUsersCPE, users_curr))
+                # print(commuteTime(G, expertUsersCPE, users_curr))
+
                 countCPE += 1
-                # condList.append(Conductance(G, KB_users, users_curr))
-                # condExpertsList.append(Conductance(G, experts, users_curr))
-                # prList.append(centralities(G, 'PageRank', users_curr))
-                # degList.append(centralities(G, 'OutDegree', users_curr))
 
             forumsList.append(f)
             datesList.append(currStartDate)
@@ -474,14 +503,18 @@ def computeFeatureTimeSeriesForumsCPE(start_date, end_date):
 
     for k in range(10):
         try:
-            featDF['CondExperts_CPE_R' + str(k+1)] = condExpertsList['CPE_R' + str(k+1)]
+            # featDF['shortestPaths_CPE_R' + str(k+1)] = shortPathList['CPE_R' + str(k+1)]
+            # featDF['commuteTime_CPE_R' + str(k+1)] = commutePathList['CPE_R' + str(k+1)]
+            featDF['communityCount_CPE_R' + str(k+1)] = communityCountList['CPE_R' + str(k+1)]
+            # featDF['expertsThreads_CPE_R' + str(k+1)] = commThreadsList['CPE_R' + str(k+1)]
+            # featDF['CondExperts_CPE_R' + str(k+1)] = condExpertsList['CPE_R' + str(k+1)]
         except:
-            featDF['CondExperts_CPE_R' + str(k + 1)] = 0.0
-    #
-    # featDF['conductance'] = condList
-    # featDF['conductanceExperts'] = condExpertsList
-    # featDF['pagerank'] = prList
-    # featDF['degree'] = degList
+            # featDF['shortestPaths_CPE_R' + str(k + 1)] = 0.0
+            featDF['communityCount_CPE_R' + str(k+1)] = 0.0
+            # featDF['commuteTime_CPE_R' + str(k+1)] = 0.0
+            # featDF['expertsThreads_CPE_R' + str(k + 1)] = 0.0
+            # featDF['CondExperts_CPE_R' + str(k + 1)] = 0.0
+
 
     return featDF
 
@@ -491,14 +524,14 @@ def main():
     # posts = pickle.load(open('../../data/Dw_data/posts_days_forumsV1.0.pickle', 'rb'))
 
     start_date = datetime.datetime.strptime('09-01-2016', '%m-%d-%Y')
-    end_date = datetime.datetime.strptime('05-01-2017', '%m-%d-%Y')
+    end_date = datetime.datetime.strptime('10-01-2016', '%m-%d-%Y')
 
     # df_posts = countConversations(start_date, end_date, forums_cve_mentions)
     # pickle.dump(df_posts, open('../../data/DW_data/posts_days_forumsV2.0.pickle', 'wb'))
 
     # featDf = computeFeatureTimeSeries(start_date, end_date)
 
-    numProcessors = 4
+    numProcessors = 1
     pool = multiprocessing.Pool(numProcessors)
 
     currEndDate = start_date + relativedelta(months=1)
@@ -523,7 +556,9 @@ def main():
 
     feat_data_all = pd.concat(df_list)
     # print(feat_data_all)
-    pickle.dump(feat_data_all, open('../../data/DW_data/feature_df_combined_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
+    # pickle.dump(feat_data_all, open('../../data/DW_data/shortestPaths_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
+    # pickle.dump(feat_data_all, open('../../data/DW_data/commuteTime_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
+    pickle.dump(feat_data_all, open('../../data/DW_data/communityCount_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # feat_data_all = pickle.load(open('../../data/DW_data/feature_df_Sept16-Apr17.pickle', 'rb'))
     # feat_data_all = feat_data_all.reset_index(drop=True)
     # print(feat_data_all)
