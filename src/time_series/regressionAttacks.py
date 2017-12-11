@@ -15,6 +15,9 @@ from sklearn import linear_model, ensemble
 from sklearn.naive_bayes import GaussianNB
 from random import shuffle
 
+from sklearn.svm import SVC
+from sklearn import tree
+
 
 def dateToString(date):
     yearNum = str(date.year)
@@ -57,30 +60,48 @@ def prepareOutput(eventsDf, start_date, end_date):
     return outputDf
 
 
-def prepareData(inputDf, outputDf, feat):
+def prepareData(inputDf, outputDf):
     y_actual = outputDf['attackFlag']
+
+    # print(outputDf)
     train_start_date = outputDf.iloc[0, 0]
     train_end_date = outputDf.iloc[-1, 0]
 
-    delta_prev_time = 1  # no of days to check before the week of current day
+    inputDf['date'] = pd.to_datetime(inputDf['date'])
+    inputDf['date'] = inputDf['date'].dt.date
+
+    outputDf['date'] = pd.to_datetime(outputDf['date'])
+    outputDf['date'] = outputDf['date'].dt.date
+
+    delta_prev_time = 7  # no of days to check before the week of current day
 
     currDate = train_start_date
     countDayIndx = 0
 
-    X = np.zeros((y_actual.shape[0], delta_prev_time))
+    num_features = len(inputDf.columns) - 1
+    X = np.zeros((y_actual.shape[0], delta_prev_time*num_features))
+    Y = np.zeros((y_actual.shape[0], 1))
 
     while (currDate <= train_end_date):
         ''' This loop checks values on either of delta days prior'''
         for idx in range(delta_prev_time):
-            historical_day = currDate - datetime.timedelta(days=(7 - idx))
+            historical_day = pd.to_datetime(currDate - datetime.timedelta(days=(14 - idx)))
             try:
-                X[countDayIndx, idx] = inputDf[inputDf['date'] == historical_day][feat]
+                X[countDayIndx, idx*num_features:(idx+1)*num_features] = (inputDf[inputDf['date'] == historical_day.date()].ix[:,1:]).values[0]
             except:
                 continue
+
+        # print(outputDf[outputDf['date'] == currDate.date()])
+        Y[countDayIndx] = [outputDf[outputDf['date'] == currDate.date()].ix[:, 1]]
+
         countDayIndx += 1
         currDate += datetime.timedelta(days=1)
 
-    return X
+    for col in range(X.shape[1]):
+        X[np.where(X[:, col] == 0)[0], col] = np.median(X[:, col])
+    # print(Y)
+    # print(Y.shape)
+    return X, Y
 
 
 def anomalyVec(res_vec, ):
@@ -99,26 +120,38 @@ def main():
     amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
     amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
 
-    trainStart_date = datetime.datetime.strptime('2016-9-01', '%Y-%m-%d')
+    trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-03-01', '%Y-%m-%d')
 
-    feat_df = pickle.load(open('../../data/DW_data/feature_df_combined_Sept16-Apr17.pickle', 'rb'))
+    ''' Concatenat the features into a singale dataframe'''
+    fileName_prefix = ['shortestPaths', 'conductance', 'commThreads']
+    feat_df = pd.DataFrame()
+    for fp in fileName_prefix:
+        if feat_df.empty:
+            feat_df = pd.read_pickle('../../data/DW_data/features/' + str(fp) + '_DeltaT_4_Sept16-Apr17_TP10.pickle')
+        else:
+            curr_df = pd.read_pickle('../../data/DW_data/features/' + str(fp) + '_DeltaT_4_Sept16-Apr17_TP10.pickle')
+            feat_df = pd.merge(feat_df, curr_df, on=['date', 'forum'])
 
-    trainDf = feat_df[feat_df['date'] >=trainStart_date.date()]
-    trainDf = trainDf[trainDf['date'] < trainEnd_date.date()]
+    feat_df = feat_df[feat_df['forum'].isin(forums)]
+
+    subspace_df = pickle.load(open('../../data/DW_data/features/subspace_df_v12_10.pickle', 'rb'))
+    instance_TrainStartDate = trainStart_date - relativedelta(months=1)
+    trainDf = subspace_df[subspace_df['date'] >= instance_TrainStartDate]
+    trainDf = trainDf[trainDf['date'] < trainEnd_date]
 
     trainOutput = prepareOutput(amEvents_malware, trainStart_date, trainEnd_date)
     y_actual_train = trainOutput['attackFlag']
 
-    testStart_date = datetime.datetime.strptime('2017-02-01', '%Y-%m-%d')
+    testStart_date = datetime.datetime.strptime('2017-03-01', '%Y-%m-%d')
     testEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
 
-    testDf = feat_df[feat_df['date'] >= testStart_date.date()]
-    testDf = testDf[testDf['date'] < testEnd_date.date()]
+    instance_TestStartDate = testStart_date - relativedelta(months=1)
+    testDf = subspace_df[subspace_df['date'] >= instance_TestStartDate]
+    testDf = testDf[testDf['date'] < testEnd_date]
 
     '''   THIS TIMEFRAME IS IMPORTANT  !!!! '''
-    testOutput = prepareOutput(amEvents_malware, testStart_date + relativedelta(months=1),
-                               testEnd_date)
+    testOutput = prepareOutput(amEvents_malware, testStart_date, testEnd_date)
 
     # y_random = np.array([random.choice([0, 1]) for _ in range(len(testOutput))])
     # print(testOutput)
@@ -132,62 +165,64 @@ def main():
     print('Random: ', random_prec, random_recall, random_f1)
 
     ''' Plot the features forum wise '''
-    features = ['conductance', 'conductanceExperts', 'pagerank', 'degree']
+    features = ['shortestPaths', 'CondExperts', 'expertsThreads']
     X_all_train = []
     X_all_test = []
 
-    for feat in features:
-        #     dir_save = '../../plots/dw_stats/feat_plot/' + str(feat) + '/'
-        #     if not os.path.exists(dir_save):
-        #         os.makedirs(dir_save)
-        #     for f in forums:
-        #         plotDf = trainDf[trainDf['forum'] == f]
-        #         plotDf.plot(figsize=(12,8), x='date', y=feat, color='black', linewidth=2)
-        #         plt.grid(True)
-        #         plt.xticks(size=20)
-        #         plt.yticks(size=20)
-        #         plt.xlabel('date', size=20)
-        #         plt.ylabel(feat, size=20)
-        #         plt.title('Forum=' + str(f))
-        #         plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
-        #         # plt.show()
-        #         file_save = dir_save + 'forum_' + str(f)
-        #         plt.savefig(file_save)
-        #         plt.close()
+    # for feat in features:
+    X_train, Y_train = prepareData(trainDf, trainOutput)
+    X_test, Y_test = prepareData(testDf, testOutput)
 
-        X = prepareData(trainDf, trainOutput, feat)
-        if X_all_train == []:
-            X_all_train = X
-        else:
-            X_all_train = np.concatenate((X_all_train, X), axis=1)
-        logreg = linear_model.LogisticRegression(penalty='l2')
-        logreg = ensemble.RandomForestClassifier()
-        logreg.fit(X, y_actual_train)
-
-        X_test = prepareData(testDf, testOutput, feat)
-        if X_all_test == []:
-            X_all_test = X_test
-        else:
-            X_all_test = np.concatenate((X_all_test, X_test), axis=1)
+    # df = pd.DataFrame(X)
+    #
+    # ## save to xlsx file
+    #
+    # filepath = '../../data/DW_data/features/feat_values_numpy/df_sp_ce_et_12_10_v1.csv'
+    #
+    # df.to_csv(filepath, index=False)
+    # exit()
+        # if X_all_train == []:
+        #     X_all_train = X
+        # else:
+        #     X_all_train = np.concatenate((X_all_train, X), axis=1)
         #
-        y_pred = logreg.predict(X_test)
+        # logreg = linear_model.LogisticRegression(penalty='l2')
+        # logreg = ensemble.RandomForestClassifier()
+        # logreg.fit(X, y_actual_train)
+        #
+        # X_test = prepareData(testDf, testOutput, feat)
+        # if X_all_test == []:
+        #     X_all_test = X_test
+        # else:
+        #     X_all_test = np.concatenate((X_all_test, X_test), axis=1)
+        # #
+        # y_pred = logreg.predict(X_test)
+        #
+        # # # Attack prediction evaluation
+        # prec, rec, f1_score = sklearn.metrics.precision_score(y_actual_test, y_pred),\
+        #                       sklearn.metrics.recall_score(y_actual_test, y_pred), \
+        #                       sklearn.metrics.f1_score(y_actual_test, y_pred),
+        #
+        # print(feat, prec, rec, f1_score)
 
-        # # Attack prediction evaluation
-        prec, rec, f1_score = sklearn.metrics.precision_score(y_actual_test, y_pred),\
-                              sklearn.metrics.recall_score(y_actual_test, y_pred), \
-                              sklearn.metrics.f1_score(y_actual_test, y_pred),
+    # clf = linear_model.LogisticRegression(penalty='l1')
+    # clf = tree.DecisionTreeClassifier()
+    clf = ensemble.RandomForestClassifier()
+    clf.fit(X_train, Y_train)
 
-        print(feat, prec, rec, f1_score)
+    # print(Y_train)
+    # y_pred = logreg.predict(X_train)
 
-    logreg = ensemble.RandomForestClassifier()
-    logreg.fit(X_all_train, y_actual_train)
+    # clf = SVC(kernel='rbf')
+    # clf.fit(X_train, Y_train)
 
-    y_pred = logreg.predict(X_all_test)
+    y_pred = clf.predict(X_test)
 
+    # print(y_pred)
     # Attack prediction evaluation
-    prec, rec, f1_score = sklearn.metrics.precision_score(y_actual_test, y_pred),\
-                          sklearn.metrics.recall_score(y_actual_test, y_pred), \
-                          sklearn.metrics.f1_score(y_actual_test, y_pred),
+    prec, rec, f1_score = sklearn.metrics.precision_score(Y_test, y_pred),\
+                          sklearn.metrics.recall_score(Y_test, y_pred), \
+                          sklearn.metrics.f1_score(Y_test, y_pred),
 
     print(prec, rec, f1_score)
 

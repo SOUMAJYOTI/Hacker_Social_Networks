@@ -524,7 +524,7 @@ def main():
     # posts = pickle.load(open('../../data/Dw_data/posts_days_forumsV1.0.pickle', 'rb'))
 
     start_date = datetime.datetime.strptime('09-01-2016', '%m-%d-%Y')
-    end_date = datetime.datetime.strptime('10-01-2016', '%m-%d-%Y')
+    end_date = datetime.datetime.strptime('05-01-2017', '%m-%d-%Y')
 
     # df_posts = countConversations(start_date, end_date, forums_cve_mentions)
     # pickle.dump(df_posts, open('../../data/DW_data/posts_days_forumsV2.0.pickle', 'wb'))

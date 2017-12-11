@@ -14,6 +14,7 @@ import random
 from random import shuffle
 from sklearn import linear_model, ensemble
 from sklearn.naive_bayes import GaussianNB
+pd.set_option("display.precision", 2)
 
 def dateToString(date):
     yearNum = str(date.year)
@@ -376,145 +377,204 @@ def prepareData(inputDf, outputDf):
     return X, y_actual
 
 
+def trainModel(trainDf, featStr, forums):
+    forumTSMat, forumTSMAtCent = formTSMatrix(trainDf, featStr)
+    # print(forumTSMat.shape)
+
+    ''' Get the PCA components'''
+    num_comp = 8
+    top_comp, variance_comp = getTopComponents(forumTSMAtCent, num_comp)
+    # print(variance_comp)
+    # print(top_comp.shape)
+
+    ''' Find the normal and residual subspace '''
+    # keep the first 3 components as normal subspace
+    normal_subspace, residual_subspace = projectSubspace(top_comp, forumTSMAtCent, 3)
+
+    """ Check the q-value statistic --- some error !!! """
+    # q_value = Q_statistic(top_comp, 3, forumTSMAtCent)
+
+    ''' Compute the separation matrix '''
+    state_vec, res_vec = projectionSeparation(normal_subspace, residual_subspace, forumTSMAtCent)
+    featValue = (np.power(np.linalg.norm(state_vec, axis=0), 2)).tolist()
+    minVal = min(featValue)
+    meanVal = 3 * np.mean(np.array(featValue))
+    numThresholds = 40
+    partitionRange = (meanVal - minVal) / numThresholds
+    thresh = []
+
+    for i in range(numThresholds - 1, 0, -1):
+        thresh.append(minVal + (i * partitionRange))
+
+    df_train_feat = pd.DataFrame()
+    df_train_feat['date'] = trainDf[trainDf['forum'] == forums[0]]['date']
+    df_train_feat[featStr + '_state_vec'] = np.power(np.linalg.norm(state_vec, axis=0), 2)
+    # df_train_feat[featStr + '_res_vec'] = np.power(np.linalg.norm(res_vec, axis=0), 2)
+
+    # anomaly_vector_train = anomalyVec(np.array(df_train_feat['res_vec']))
+    #
+    # df_train_feat['anomaly_vec'] = anomaly_vector_train
+    #
+    # ''' The testing procedure begins'''
+    #
+    # forumTSMat_test, forumTSMAtCent_test = formTSMatrix(testDf, feat)
+    # state_vec_test, res_vec_test = projectionSeparation(normal_subspace, residual_subspace, forumTSMAtCent_test)
+    #
+    # df_test_feat = pd.DataFrame()
+    # df_test_feat['date'] = testDf[testDf['forum'] == forums[0]]['date']
+    # df_test_feat['state_vec'] = np.power(np.linalg.norm(state_vec_test, axis=0), 2)
+    # df_test_feat['res_vec'] = np.power(np.linalg.norm(res_vec_test, axis=0), 2)
+    #
+    # anomaly_vector_test = anomalyVec(np.array(df_test_feat['res_vec']))
+    #
+    # df_test_feat['anomaly_vec'] = anomaly_vector_test
+
+    # df_train_feat.plot(figsize=(12,8), x='date', y='state_vec', color='black', linewidth=2)
+    # plt.grid(True)
+    # plt.xticks(size=20)
+    # plt.yticks(size=20)
+    # plt.xlabel('date', size=20)
+    # plt.ylabel(feat, size=20)
+    # plt.title('Residual Vector')
+    # plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
+    # plt.show()
+    # plt.close()
+
+    # X_train, y_train = prepareData(df_train_feat, trainOutput)
+    # # print(df_train_feat)
+    # logreg = linear_model.LogisticRegression(penalty='l2')
+    # # logreg = ensemble.RandomForestClassifier()
+    # logreg.fit(X_train, y_train)
+    #
+    # X_test, y_test = prepareData(df_test_feat, testOutput)
+    # # print(list(y_test))
+    # y_pred = logreg.predict(X_test)
+    #
+    # # Attack prediction evaluation
+    # prec, rec, f1_score = sklearn.metrics.precision_score(y_actual_test, y_pred), \
+    #                       sklearn.metrics.recall_score(y_actual_test, y_pred), \
+    #                       sklearn.metrics.f1_score(y_actual_test, y_pred),
+    #
+    # print(feat, prec, rec, f1_score)
+    #
+    # # Attack prediction evaluation
+    # prec, rec, f1_score = predictAttacks_onAnomaly(df_test_feat, testOutput, thresh)
+    # print(feat, prec, rec, f1_score)
+    return df_train_feat
+
 def main():
     forums = [35, 38, 60, 62, 71, 84, 88, 105, 133, 135, 146, 147, 150, 161, 173, 179, 197, ]
+    # forums = [35,]
+
     amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
     amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
 
     trainStart_date = datetime.datetime.strptime('2016-9-01', '%Y-%m-%d')
-    trainEnd_date = datetime.datetime.strptime('2017-03-01', '%Y-%m-%d')
+    trainEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
 
-    feat_df = pickle.load(open('../../data/DW_data/feature_df_Sept16-Apr17.pickle', 'rb'))
+
+    #
+    # trainOutput = prepareOutput(amEvents_malware, trainStart_date, trainEnd_date)
+    #
+    # testStart_date = datetime.datetime.strptime('2017-02-01', '%Y-%m-%d')
+    # testEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
+    #
+    # testDf = feat_df[feat_df['date'] >= testStart_date.date()]
+    # testDf = testDf[testDf['date'] < testEnd_date.date()]
+    #
+    # '''   THIS TIMEFRAME IS IMPORTANT  !!!! '''
+    # testOutput = prepareOutput(amEvents_malware, testStart_date + relativedelta(months=1),
+    #                            testEnd_date)
+    #
+    # y_actual_test = list(testOutput['attackFlag'])
+    # y_random = y_actual_test.copy()
+    #
+    # shuffle(y_random)
+    # random_prec = sklearn.metrics.precision_score(y_actual_test, y_random)
+    # random_recall = sklearn.metrics.recall_score(y_actual_test, y_random)
+    # random_f1 = sklearn.metrics.f1_score(y_actual_test, y_random)
+    # print('Random: ', random_prec, random_recall, random_f1)
+
+
+    ''' Concatenat the features into a single dataframe'''
+    fileName_prefix = ['shortestPaths', 'conductance', 'commThreads']
+    feat_df = pd.DataFrame()
+    for fp in fileName_prefix:
+        if feat_df.empty:
+            feat_df = pd.read_pickle('../../data/DW_data/features/' + str(fp) + '_DeltaT_4_Sept16-Apr17_TP10.pickle')
+        else:
+            curr_df = pd.read_pickle('../../data/DW_data/features/' + str(fp) + '_DeltaT_4_Sept16-Apr17_TP10.pickle')
+            feat_df = pd.merge(feat_df, curr_df, on=['date', 'forum'])
+
     feat_df = feat_df[feat_df['forum'].isin(forums)]
-
-    trainDf = feat_df[feat_df['date'] >= trainStart_date.date()]
-    trainDf = trainDf[trainDf['date'] < trainEnd_date.date()]
-
-    trainOutput = prepareOutput(amEvents_malware, trainStart_date, trainEnd_date)
-
-    testStart_date = datetime.datetime.strptime('2017-02-01', '%Y-%m-%d')
-    testEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
-
-    testDf = feat_df[feat_df['date'] >= testStart_date.date()]
-    testDf = testDf[testDf['date'] < testEnd_date.date()]
-
-    '''   THIS TIMEFRAME IS IMPORTANT  !!!! '''
-    testOutput = prepareOutput(amEvents_malware, testStart_date + relativedelta(months=1),
-                               testEnd_date)
-
-    y_actual_test = list(testOutput['attackFlag'])
-    y_random = y_actual_test.copy()
-
-    shuffle(y_random)
-    random_prec = sklearn.metrics.precision_score(y_actual_test, y_random)
-    random_recall = sklearn.metrics.recall_score(y_actual_test, y_random)
-    random_f1 = sklearn.metrics.f1_score(y_actual_test, y_random)
-    print('Random: ', random_prec, random_recall, random_f1)
+    trainDf = feat_df[feat_df['date'] >= trainStart_date]
+    trainDf = trainDf[trainDf['date'] < trainEnd_date]
 
     ''' Plot the features forum wise '''
-    features = ['conductance', 'conductanceExperts', 'pagerank', 'degree']
+    features = ['shortestPaths', 'CondExperts', 'expertsThreads']
+
     for feat in features:
-        #     dir_save = '../../plots/dw_stats/feat_plot/' + str(feat) + '/'
-        #     if not os.path.exists(dir_save):
-        #         os.makedirs(dir_save)
-        #     for f in forums:
-        #         plotDf = trainDf[trainDf['forum'] == f]
-        #         plotDf.plot(figsize=(12,8), x='date', y=feat, color='black', linewidth=2)
-        #         plt.grid(True)
-        #         plt.xticks(size=20)
-        #         plt.yticks(size=20)
-        #         plt.xlabel('date', size=20)
-        #         plt.ylabel(feat, size=20)
-        #         plt.title('Forum=' + str(f))
-        #         plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
-        #         # plt.show()
-        #         file_save = dir_save + 'forum_' + str(f)
-        #         plt.savefig(file_save)
-        #         plt.close()
+        for f in forums:
+            plotDf_forum = trainDf[trainDf['forum'] == f]
+            for idx_cpe in range(10):
+                dir_save = '../../plots/dw_stats/feat_plot/' + str(feat) + '/'
+                if not os.path.exists(dir_save):
+                    os.makedirs(dir_save)
+                featStr = feat+'_CPE_R' + str(idx_cpe+1)
+                plotDf_forumCPE = plotDf_forum[(plotDf_forum[featStr] != -1.) & (plotDf_forum[featStr] != 0.)][featStr]
+                median_value = np.median(np.array(list(plotDf_forumCPE)))
+                if np.isnan(median_value):
+                    median_value = 0.
+                trainDf.ix[trainDf.forum==f, featStr] = trainDf[trainDf['forum'] == f][featStr].replace([-1.00, 0.0, 0.00], median_value)
+                # plotDf_forumCPE = trainDf[trainDf['forum'] == f]
+                #
+                # # print(plotDf_forumCPE[featStr])
+                # plotDf_forumCPE.plot(figsize=(12,8), x='date', y=featStr, color='black', linewidth=2)
+                # plt.grid(True)
+                # plt.xticks(size=20)
+                # plt.yticks(size=20)
+                # plt.xlabel('date', size=20)
+                # plt.ylabel(feat, size=20)
+                # plt.title('Forum=' + str(f))
+                # plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
+                # # plt.show()
+                # file_save = dir_save + 'forum_' + str(f) +  '_CPE_R' + str(idx_cpe+1)
+                # plt.savefig(file_save)
+                # plt.close()
 
-        forumTSMat, forumTSMAtCent = formTSMatrix(trainDf, feat)
-        # print(forumTSMat.shape)
+    ''' Form the residual and normal time series for each feaure, for each CPE'''
+    subspace_df = pd.DataFrame()
+    for feat in features:
+        for idx_cpe in range(5):
+            featStr = feat + '_CPE_R' + str(idx_cpe + 1)
+            trainDf_subspace  = trainModel(trainDf, featStr, forums)
+            if subspace_df.empty:
+                subspace_df = trainDf_subspace
+            else:
+                subspace_df = pd.merge(subspace_df, trainDf_subspace, on=['date'])
 
-        ''' Get the PCA components'''
-        num_comp = 8
-        top_comp, variance_comp = getTopComponents(forumTSMAtCent, num_comp)
-        # print(variance_comp)
-        # print(top_comp.shape)
+    pickle.dump(subspace_df, open('../../data/DW_data/features/subspace_df_v12_10.pickle', 'wb'))
 
-        ''' Find the normal and residual subspace '''
-        # keep the first 3 components as normal subspace
-        normal_subspace, residual_subspace = projectSubspace(top_comp, forumTSMAtCent, 3)
-
-        """ Check the q-value statistic --- some error !!! """
-        # q_value = Q_statistic(top_comp, 3, forumTSMAtCent)
-
-        ''' Compute the separation matrix '''
-        state_vec, res_vec = projectionSeparation(normal_subspace, residual_subspace, forumTSMAtCent)
-        featValue = (np.power(np.linalg.norm(state_vec, axis=0), 2)).tolist()
-        minVal = min(featValue)
-        meanVal = 3*np.mean(np.array(featValue))
-        numThresholds = 40
-        partitionRange = (meanVal - minVal)/numThresholds
-        thresh = []
-
-        for i in range(numThresholds-1, 0, -1):
-            thresh.append(minVal + (i*partitionRange))
-
-        df_train_feat = pd.DataFrame()
-        df_train_feat['date'] = trainDf[trainDf['forum'] == forums[0]]['date']
-        df_train_feat['state_vec'] = np.power(np.linalg.norm(state_vec, axis=0), 2)
-        df_train_feat['res_vec'] = np.power(np.linalg.norm(res_vec, axis=0), 2)
-
-        anomaly_vector_train = anomalyVec(np.array(df_train_feat['res_vec']))
-
-        df_train_feat['anomaly_vec'] = anomaly_vector_train
-
-        ''' The testing procedure begins'''
-
-        forumTSMat_test, forumTSMAtCent_test = formTSMatrix(testDf, feat)
-        state_vec_test, res_vec_test = projectionSeparation(normal_subspace, residual_subspace, forumTSMAtCent_test)
-
-
-        df_test_feat = pd.DataFrame()
-        df_test_feat['date'] = testDf[testDf['forum'] == forums[0]]['date']
-        df_test_feat['state_vec'] = np.power(np.linalg.norm(state_vec_test, axis=0), 2)
-        df_test_feat['res_vec'] = np.power(np.linalg.norm(res_vec_test, axis=0), 2)
-
-        anomaly_vector_test = anomalyVec(np.array(df_test_feat['res_vec']))
-
-        df_test_feat['anomaly_vec'] = anomaly_vector_test
-
-        # df_train_feat.plot(figsize=(12,8), x='date', y='state_vec', color='black', linewidth=2)
-        # plt.grid(True)
-        # plt.xticks(size=20)
-        # plt.yticks(size=20)
-        # plt.xlabel('date', size=20)
-        # plt.ylabel(feat, size=20)
-        # plt.title('Residual Vector')
-        # plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
-        # plt.show()
-        # plt.close()
-
-        X_train, y_train = prepareData(df_train_feat, trainOutput)
-        # print(df_train_feat)
-        logreg = linear_model.LogisticRegression(penalty='l2')
-        # logreg = ensemble.RandomForestClassifier()
-        logreg.fit(X_train, y_train)
-
-        X_test, y_test = prepareData(df_test_feat, testOutput)
-        # print(list(y_test))
-        y_pred = logreg.predict(X_test)
-
-        # Attack prediction evaluation
-        prec, rec, f1_score = sklearn.metrics.precision_score(y_actual_test, y_pred), \
-                              sklearn.metrics.recall_score(y_actual_test, y_pred), \
-                              sklearn.metrics.f1_score(y_actual_test, y_pred),
-
-        print(feat, prec, rec, f1_score)
-
-        # Attack prediction evaluation
-        prec, rec, f1_score = predictAttacks_onAnomaly(df_test_feat, testOutput, thresh)
-        print(feat, prec, rec, f1_score)
+    # print(subspace_df)
+    # for column in subspace_df:
+    #     if column == 'date':
+    #         continue
+    #     dir_save = '../../plots/dw_stats/subspace_plot/'
+    #     if not os.path.exists(dir_save):
+    #         os.makedirs(dir_save)
+    #
+    #     subspace_df.plot(figsize=(12,8), x='date', y=column, color='black', linewidth=2)
+    #     plt.grid(True)
+    #     plt.xticks(size=20)
+    #     plt.yticks(size=20)
+    #     plt.xlabel('date', size=20)
+    #     plt.ylabel(column, size=20)
+    #     # plt.title('Forum=' + str(f))
+    #     plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
+    #     # plt.show()
+    #     file_save = dir_save + column
+    #     plt.savefig(file_save)
+    #     plt.close()
 
 if __name__ == "__main__":
     main()
