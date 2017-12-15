@@ -7,6 +7,7 @@ import src.load_data.load_dataDW as ldDW
 import operator
 import re
 
+
 def dateToString(date):
     yearNum = str(date.year)
     monthNum = str(date.month)
@@ -190,7 +191,7 @@ if __name__ == "__main__":
     forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 220
         , 179, 219, 265, 98, 150, 121, 35, 214, 266, 89, 71, 146, 107, 64,
                            218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
-    posts = pickle.load(open('../../data/Dw_data/posts_days_forumsV1.0.pickle', 'rb'))
+    # posts = pd.read_pickle('../../data/Dw_data/posts_days_forumsV1.0.pickle')
 
     start_date = datetime.datetime.strptime('01-01-2016', '%m-%d-%Y')
     end_date = datetime.datetime.strptime('07-01-2017', '%m-%d-%Y')
@@ -198,15 +199,16 @@ if __name__ == "__main__":
     # df_posts = countConversations(start_date, end_date, forums_cve_mentions)
     # pickle.dump(df_posts, open('../../data/DW_data/posts_days_forumsV2.0.pickle', 'wb'))
 
-    vulnInfo = pickle.load(open('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle', 'rb'))
+    vulnInfo = pd.read_pickle('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle')
+    print(vulnInfo[:10])
+    exit()
 
-    cve_cpe_df =  pd.read_csv('../../data/DW_data/cve_cpe_mapDF.csv')
-    cve_cpe_map = store_cve_cpe_map(cve_cpe_df)
-
-    pickle.dump(cve_cpe_map, open('../../data/DW_data/cve_cpe_map.pickle', 'wb') )
+    # cve_cpe_df =  pd.read_csv('../../data/DW_data/cve_cpe_mapDF.csv')
+    # cve_cpe_map = store_cve_cpe_map(cve_cpe_df)
+    #
+    # pickle.dump(cve_cpe_map, open('../../data/DW_data/cve_cpe_map.pickle', 'wb') )
 
     # topCPEGroups(start_date, end_date, vulnInfo, cve_cpe_df, -1)
-    exit()
 
     # users_CVEMap, CVE_usersMap = user_CVE_groups(cve_cpe_map, vulnInfo)
 
@@ -218,7 +220,9 @@ if __name__ == "__main__":
     #
     # pickle.dump((users_CVEMap, CVE_usersMap_filtered), open('../../data/DW_data/users_CVE_map.pickle', 'wb'))
 
-    df_posts = pickle.load(open('../../data/DW_data/dw_database_data_2016-17.pickle', 'rb'))
+    df_posts = pd.read_pickle('../../data/DW_data/dw_database_data_2016-17.pickle')
+    print(df_posts[:10])
+    exit()
     # df_posts = ldDW.getDW_data_postgres(forums_list=forums_cve_mentions, start_date=start_date.strftime("%Y-%m-%d"),
     #                                        end_date=end_date.strftime("%Y-%m-%d"))
     # pickle.dump(df_posts, open('../../data/DW_data/dw_database_data_2016-17.pickle', 'wb'))

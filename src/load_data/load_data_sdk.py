@@ -42,3 +42,17 @@ def getHackingPosts_Content(searchContent, limit=10000):
             start_ptr += 10000
 
     return result
+
+
+def detailedVulnInfo(start_date, end_date, limit=1000):
+    api = pycyr3con.Api(userId='Soumajyoti', apiKey='FuXB4lL74N(')
+    start_ptr = 0
+    result = []
+    while start_ptr < limit:
+        if limit < 1000:
+            result.append(api.getDetailedVulnerabilityInfo(limit=limit))
+        else:
+            result.append(api.getDetailedVulnerabilityInfo(limit=limit))
+            start_ptr += 1000
+
+    return result

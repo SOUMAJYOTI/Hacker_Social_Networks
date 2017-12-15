@@ -73,6 +73,7 @@ def getDW_data_postgres(forums_list, start_date, end_date):
     results_final = pd.concat(cumulative)
     return results_final
 
+
 if __name__ == "__main__":
     forums_cve_mentions = [40]
 

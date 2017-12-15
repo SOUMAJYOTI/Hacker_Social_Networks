@@ -159,7 +159,7 @@ def storeEdges(nwData, topics):
         threads['DateTime'] = threads['posteddate'].map(str) + ' ' + threads['postedtime'].map(str)
         threads['DateTime'] = threads['DateTime'].apply(lambda x:
                                                         datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
-        threads = threads.sort('DateTime', ascending=True)
+        threads = threads.sort_values(['DateTime'], ascending=True)
 
         userWindow = [] # keeps track of the previous users in the dynamic window
         lastTime  = 0 # keeps track of the previous post time for the current user

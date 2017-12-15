@@ -47,7 +47,7 @@ def threadCommon(df_posts, experts):
         threads['DateTime'] = threads['posteddate'].map(str) + ' ' + threads['postedtime'].map(str)
         threads['DateTime'] = threads['DateTime'].apply(lambda x:
                                                         datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
-        threads = threads.sort('DateTime', ascending=True)
+        threads = threads.sort_values(['DateTime'], ascending=True)
         threadUsers = list(threads['uid'].astype(str))
 
         # print(type(threadUsers[0]), type(experts[0]), threadUsers[0], experts[0])
@@ -168,6 +168,11 @@ def commuteTime(G, pseudo_lapl_G, experts, users):
     # Form the Laplacian of the graph
     # print('Computing laplacian...')
 
+    nodeList = list(G.nodes())
+    nodeIndexMap = {}
+    for idx_n in range(len(nodeList)):
+        nodeIndexMap[nodeList[idx_n]] = idx_n
+
     volume = computeDegreeMatrix(G)
     avg_dist = 0.
     count_user_paths = 0
@@ -180,11 +185,11 @@ def commuteTime(G, pseudo_lapl_G, experts, users):
             # try:
             if u == e:
                 continue
-            l_ii = pseudo_lapl_G[u, u]
-            l_jj = pseudo_lapl_G[e, e]
-            l_ij = pseudo_lapl_G[u, e]
+            l_ii = pseudo_lapl_G[nodeIndexMap[u], nodeIndexMap[u]]
+            l_jj = pseudo_lapl_G[nodeIndexMap[e], nodeIndexMap[e]]
+            l_ij = pseudo_lapl_G[nodeIndexMap[u], nodeIndexMap[e]]
             sum_dist += (volume * (l_ii + l_jj - 2*l_ij))
-            print(sum_dist)
+            # print(sum_dist)
             count_paths += 1
             # except:
             #     continue
@@ -197,7 +202,7 @@ def commuteTime(G, pseudo_lapl_G, experts, users):
     if count_user_paths == 0:
         return -1
     else:
-        return avg_dist/ count_user_paths
+        return np.log(avg_dist/ count_user_paths)
 
 
 def commuteTime_singleSource(G, experts, users):
@@ -233,7 +238,36 @@ def commuteTime_singleSource(G, experts, users):
     return avg_dist / count_user_paths
 
 
-#
+def Conductance(network, userG1, userG2):
+    try:
+        conductanceVal = nxCut.conductance(network, userG1, userG2)
+    except:
+        conductanceVal = 0.
+
+    return conductanceVal
+
+
+def centralities(network, arg, users):
+    cent = {}
+    if arg == "InDegree":
+        cent = nx.in_degree_centrality(network)
+
+    if arg == "OutDegree":
+        cent = nx.out_degree_centrality(network)
+
+    if arg == "PageRank":
+        cent = nx.pagerank(network)
+
+    if arg == "Core":
+        cent = nx.core_number(network)
+
+    cent_sum = 0.
+    for u in users:
+        cent_sum += cent[u]
+
+    return cent_sum / len(users)
+
+
 #
 # if __name__ == "__main__":
 #     G = nx.erdos_renyi_graph(10, 0.01)

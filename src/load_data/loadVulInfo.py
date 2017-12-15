@@ -108,7 +108,7 @@ def getDetailedVulInfo():
     while countData < 2000:
         print("Count_Data: ", countData)
         # try:
-        results = ldap.getVulnerabilityInfo(start=countData, limNum=1000)
+        results = ldap.getVulnerabilityInfo(start=countData, limNum=500)
 
         if len(results) == 0:
             break
@@ -167,7 +167,7 @@ def getDetailedVulInfo():
                 else:
                     forums.append('')
 
-        countData += 1000
+        countData += 500
 
     df = pd.DataFrame()
     df["postedDate"] = pDates
@@ -180,13 +180,13 @@ def getDetailedVulInfo():
     df['softwareTags'] = softwareTags
     df['financialTags'] = financialTags
     df['numUsers'] = numUsers
-    df['cveFlag'] = containsCVE
+    # df['cveFlag'] = containsCVE
     df['users'] = users
 
     return df
 
 if __name__ == "__main__":
-    getDetailedVulInfo()
+    # getDetailedVulInfo()
 
     # startDate = dt.datetime.strptime('2010-01-01', '%Y-%m-%d')
     # endDate = dt.datetime.strptime('2017-01-01', '%Y-%m-%d')
@@ -194,5 +194,5 @@ if __name__ == "__main__":
     # pickle.dump(df, open("../../data/DW_data/08_29/Vulnerabilities-sample_v2+.pickle", 'wb'))
     #
     # print(df)
-    print(getDetailedVulInfo())
-    pickle.dump(getDetailedVulInfo(), open("../../data/DW_data/Vulnerabilities-sample_v3+.pickle", 'wb'))
+    # print(getDetailedVulInfo())
+    pickle.dump(getDetailedVulInfo(), open("../../data/DW_data/Vulnerabilities-sample_v4+.pickle", 'wb'))
