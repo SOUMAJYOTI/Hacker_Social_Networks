@@ -13,15 +13,16 @@ import multiprocessing
 import gc
 import re
 from src.network_analysis.features import *
+import time
 
-# data = pd.read_pickle('../../data/DW_data/features/feat_combine/shortestPaths_DeltaT_4_Sept16-Apr17_TP10.pickle')
+# data = pd.read_pickle('../../data/DW_data/user_interStats_DeltaT_4_Sept16-Apr17_TP10.pickle')
 # print(data)
 # exit()
 
 # Global storage structures used over all pool processing
-# forums = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 220
-#         , 179, 219, 265, 98, 150, 121, 35, 214, 266, 89, 71, 146, 107, 64,
-#                            218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
+forums = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 220
+        , 179, 219, 265, 98, 150, 121, 35, 214, 266, 89, 71, 146, 107, 64,
+                           218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
 
 # forums = [88, ]
 vulnInfo = pd.read_pickle('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle')
@@ -125,7 +126,7 @@ def getExperts(users):
     :param users:
     :return:
 
-    This has to be corrected - experts should have CVEs in the KB timeframe - not have CVEs in any time frame
+    This has to be corrected - experts should have CVEs in/history of the KB timeframe - not have CVEs in any time frame
 
     '''
     experts = []
@@ -155,7 +156,157 @@ def getExpertsCPE(users, CPE):
     return usersCPE
 
 
-def computeFeatureTimeSeries(start_date, end_date,):
+def computeExpertsTime(df, experts):
+    expertsLastTime = {}
+    for idx, row in df.iterrows():
+        src = str(int(row['source']))
+        tgt = str(int(row['target']))
+
+        if src in experts:
+            if src not in expertsLastTime:
+                expertsLastTime[src] = row['diffTime']
+
+        if tgt in experts:
+            if tgt not in expertsLastTime:
+                expertsLastTime[tgt] = 0.
+
+            expertsLastTime[tgt] = row['diffTime']
+
+    return expertsLastTime
+
+
+def computeFeatureTimeSeries_Users(start_date, end_date):
+    numUsersList = []
+    numThreadsList = []
+    numNewUsersList = []
+    numNewInterExp_ExpList = []
+    numNewInterExp_NonExpList = []
+    numInterExp_ExpList = []
+    numInterExp_NonExpList = []
+    timeDiff_expList = []
+
+    datesList = []
+
+    # KB timeframe 3 months prior to start of daily training data
+    KBStartDate = start_date - relativedelta(months=3)
+
+    KB_edges = KB_edges_DS[KBStartDate]
+    KB_users = list(set(KB_edges['source']).intersection(set(KB_edges['target'])))
+    KB_users = [str(int(i)) for i in KB_users]
+    experts = getExperts(KB_users)
+
+    expertsLastTime = computeExpertsTime(KB_edges, experts)
+
+    currStartDate = start_date
+    currEndDate = start_date + datetime.timedelta(days=1)
+    # print(" Month: ", currStartDate.date())
+
+    # Store the KB pairs - edges
+    KB_pairs = []
+    for idx_KB, row_KB in KB_edges.iterrows():
+        src = str(int(row_KB['source']))
+        tgt = str(int(row_KB['target']))
+        if (src, tgt) not in KB_pairs:
+            KB_pairs.append((src, tgt))
+
+    ''' Feature computation starts '''
+    while currEndDate < end_date:
+        print("Date ", currStartDate.date(), )
+
+        '''' Consider forums posts for current day '''
+        df_currDay = allPosts[allPosts['posteddate'] > (currStartDate.date() - datetime.timedelta(days=2))]
+        df_currDay = df_currDay[df_currDay['posteddate'] <= currEndDate.date()]
+        df_currDay = df_currDay[df_currDay['forumsid'].isin(forums)]
+        threadidsCurrDay = list(set(df_currDay['topicid']))
+        currDay_edges = ccon.storeEdges(df_currDay, threadidsCurrDay)
+
+        numInterExp_Exp = 0
+        numNewInterExp_Exp = 0
+        numInterExp_NonExp = 0
+        numNewInterExp_NonExp = 0
+        timeDiff = 0
+        countInst = 0
+        maxTimeDiff = 0
+        for idx_curr, row_curr in currDay_edges.iterrows():
+            src = str(int(row_curr['source']))
+            tgt = str(int(row_curr['target']))
+
+            if src in experts and tgt in experts:
+                numInterExp_Exp += 1
+                if (src, tgt) not in KB_pairs:
+                    numNewInterExp_Exp += 1
+
+            if (src in experts and tgt not in experts) or (src not in experts and tgt in experts):
+                numInterExp_NonExp += 1
+                if (src, tgt) not in KB_pairs:
+                    numNewInterExp_NonExp += 1
+
+            # Time difference between the experts and the user
+            t_user = row_curr['diffTime']
+            d1_ts = time.mktime(t_user.timetuple())
+            if src in experts and src in expertsLastTime:
+                t_exp = expertsLastTime[src]
+                d2_ts = time.mktime(t_exp.timetuple())
+
+                diff = (d1_ts - d2_ts)
+
+                if diff > 0:
+                    timeDiff += diff
+                    countInst += 1
+
+                if diff > maxTimeDiff:
+                    maxTimeDiff = diff
+
+        if countInst == 0:
+            timeDiff = 0
+        else:
+            timeDiff /= countInst
+
+        ''' Normalize it '''
+        if maxTimeDiff != 0:
+            timeDiff /= maxTimeDiff
+
+        ''' Update te last seen time for experts '''
+        # The update should be done only after \Delta t days,
+        # for idx_curr, row_curr in currDay_edges.iterrows():
+        #     tgt = str(int(row_curr['target']))
+        #
+        #     if tgt in experts:
+        #         expertsLastTime[tgt] = row_curr['diffTime']
+
+        numInterExp_ExpList.append(numInterExp_Exp)
+        numNewInterExp_ExpList.append(numNewInterExp_Exp)
+        numInterExp_NonExpList.append(numInterExp_NonExp)
+        numNewInterExp_NonExpList.append(numNewInterExp_NonExp)
+        timeDiff_expList.append(timeDiff)
+        numThreadsList.append(len(threadidsCurrDay))
+
+        users_curr = list(set(currDay_edges['source']).intersection(set(currDay_edges['target'])))
+        numUsersList.append(len(users_curr))
+
+        users_curr = [str(int(i)) for i in users_curr]
+        numNewUsersList.append(len(list(set(users_curr).difference(set(KB_users)))))
+
+        datesList.append(currStartDate)
+        currStartDate = currStartDate + datetime.timedelta(days=1)
+        currEndDate = currStartDate + datetime.timedelta(days=1)
+
+    ''' Put the data into a dataframe '''
+    feat_df = pd.DataFrame()
+    feat_df['date'] = datesList
+    feat_df['numThreads'] = numThreadsList
+    feat_df['numUsers'] = numUsersList
+    feat_df['numNewUsers'] = numNewUsersList
+    feat_df['expertsInteractions'] = numInterExp_ExpList
+    feat_df['expertsNewInteractions'] = numNewInterExp_ExpList
+    feat_df['expert_NonInteractions'] = numInterExp_NonExpList
+    feat_df['expert_NonNewInteractions'] = numNewInterExp_NonExpList
+    feat_df['expertReplyTimeDiff'] = timeDiff_expList
+
+    return feat_df
+
+
+def computeFeatureTimeSeries_Graph(start_date, end_date,):
     condList = []
     condExpertsList = {}
     commThreadsList = {}
@@ -164,6 +315,7 @@ def computeFeatureTimeSeries(start_date, end_date,):
     communityCountList = {}
     prList = []
     degList = []
+
 
     datesList = []
     featDF = pd.DataFrame()
@@ -183,6 +335,14 @@ def computeFeatureTimeSeries(start_date, end_date,):
     currEndDate = start_date + datetime.timedelta(days=1)
     # print(" Month: ", currStartDate.date())
 
+    # Store the KB pairs
+    KB_pairs = []
+    for idx_KB, row_KB in KB_edges.iterrows():
+        src = str(row_KB['source'])
+        tgt = str(row_KB['target'])
+        if(src, tgt) not in KB_pairs:
+            KB_pairs.append((src, tgt))
+
     while currEndDate < end_date:
         print("Date ", currStartDate.date(), )
         # users_currDay = postsDailyDf[postsDailyDf['date'] == currStartDate]
@@ -191,8 +351,9 @@ def computeFeatureTimeSeries(start_date, end_date,):
         # users_currDay_forum = users_currDay[users_currDay['forum'] == float(f)]
 
         '''' Consider forums posts for current day '''
-        df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date() - datetime.timedelta(days=3))]
-        df_currDay = df_currDay[df_currDay['posteddate'] < currEndDate.date()]
+        df_currDay = allPosts[allPosts['posteddate'] > (currStartDate.date() - datetime.timedelta(days=2))]
+        df_currDay = df_currDay[df_currDay['posteddate'] <= currEndDate.date()]
+        df_currDay = df_currDay[df_currDay['forumsid'].isin(forums)]
         threadidsCurrDay = list(set(df_currDay['topicid']))
         currDay_edges = ccon.storeEdges(df_currDay, threadidsCurrDay)
 
@@ -221,6 +382,7 @@ def computeFeatureTimeSeries(start_date, end_date,):
             continue
 
         users_curr = list(set(currDay_edges['source']).intersection(set(currDay_edges['target'])))
+
         # If there are no users, no feature computation
         if len(users_curr) == 0:
             # condList.append(0)
@@ -250,13 +412,14 @@ def computeFeatureTimeSeries(start_date, end_date,):
         # print("Merging edges...")
         mergeEgdes = ccon.network_merge(KB_edges.copy(), currDay_edges)  # Update the mergedEdges every day
 
+
         G = nx.DiGraph()
         G.add_edges_from(mergeEgdes)
 
         lapl_mat = (nx.laplacian_matrix(G.to_undirected())).todense()
         # print(lapl_mat.shape)
         # print('Computing pseudo lapl')
-        pseudo_lapl_mat = np.linalg.pinv(lapl_mat)  # Compute the pseudo-inverse of the graph laplacian
+        # pseudo_lapl_mat = np.linalg.pinv(lapl_mat)  # Compute the pseudo-inverse of the graph laplacian
         # print('done..')
 
         countCPE = 1
@@ -275,8 +438,8 @@ def computeFeatureTimeSeries(start_date, end_date,):
             # condExpertsList[key].append(Conductance(G, expertUsersCPE, users_curr))
             # commThreadsList[key].append(threadCommon(df_currDay, expertUsersCPE))
             # shortPathList[key].append(shortestPaths(G, expertUsersCPE, users_curr))
-            # communityCountList[key].append(community_detect(G, expertUsersCPE, users_curr))
-            commutePathList[key].append(commuteTime(G, pseudo_lapl_mat, expertUsersCPE, users_curr))
+            communityCountList[key].append(community_detect(G, expertUsersCPE, users_curr))
+            # commutePathList[key].append(commuteTime(G, pseudo_lapl_mat, expertUsersCPE, users_curr))
             # print(commuteTime(G, expertUsersCPE, users_curr))
 
             countCPE += 1
@@ -291,14 +454,14 @@ def computeFeatureTimeSeries(start_date, end_date,):
     for k in range(10):
         try:
             # featDF['shortestPaths_CPE_R' + str(k+1)] = shortPathList['CPE_R' + str(k+1)]
-            featDF['commuteTime_CPE_R' + str(k+1)] = commutePathList['CPE_R' + str(k+1)]
-            # featDF['communityCount_CPE_R' + str(k + 1)] = communityCountList['CPE_R' + str(k + 1)]
+            # featDF['commuteTime_CPE_R' + str(k+1)] = commutePathList['CPE_R' + str(k+1)]
+            featDF['communityCount_CPE_R' + str(k + 1)] = communityCountList['CPE_R' + str(k + 1)]
             # featDF['expertsThreads_CPE_R' + str(k+1)] = commThreadsList['CPE_R' + str(k+1)]
             # featDF['CondExperts_CPE_R' + str(k+1)] = condExpertsList['CPE_R' + str(k+1)]
         except:
             # featDF['shortestPaths_CPE_R' + str(k + 1)] = 0.0
-            # featDF['communityCount_CPE_R' + str(k + 1)] = 0.0
-            featDF['commuteTime_CPE_R' + str(k+1)] = 0.0
+            featDF['communityCount_CPE_R' + str(k + 1)] = 0.0
+            # featDF['commuteTime_CPE_R' + str(k+1)] = 0.0
             # featDF['expertsThreads_CPE_R' + str(k + 1)] = 0.0
             # featDF['CondExperts_CPE_R' + str(k + 1)] = 0.0
 
@@ -583,7 +746,7 @@ def main():
         start_date += relativedelta(months=1)
         currEndDate = start_date + relativedelta(months=1)
 
-    results = pool.starmap_async(computeFeatureTimeSeries, tasks)
+    results = pool.starmap_async(computeFeatureTimeSeries_Graph, tasks)
     pool.close()
     pool.join()
 
@@ -597,11 +760,12 @@ def main():
     # print(feat_data_all)
     # pickle.dump(feat_data_all, open('../../data/DW_data/conductance_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/commThreads_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
-    pickle.dump(feat_data_all, open('../../data/DW_data/commuteTime_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
-    # pickle.dump(feat_data_all, open('../../data/DW_data/feat_combine/communityCount_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
+    # pickle.dump(feat_data_all, open('../../data/DW_data/commuteTime_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
+    pickle.dump(feat_data_all, open('../../data/DW_data/feat_combine/communityCount_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # feat_data_all = pickle.load(open('../../data/DW_data/feature_df_Sept16-Apr17.pickle', 'rb'))
     # feat_data_all = feat_data_all.reset_index(drop=True)
-    # print(feat_data_all)
+    # pickle.dump(feat_data_all, open('../../data/DW_data/user_interStats_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
+
 
 if __name__ == "__main__":
    main()

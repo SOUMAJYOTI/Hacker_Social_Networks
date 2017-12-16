@@ -1,12 +1,9 @@
-import pandas as pd
 import operator
-import pickle
 import numpy as np
 import networkx.algorithms.cuts as nxCut
 import datetime
 import community
 import networkx as nx
-# import networkx.laplacian
 
 
 def convert_graph_single_source(G, experts):
@@ -22,15 +19,17 @@ def convert_graph_single_source(G, experts):
         src, tgt = e
 
         # Ignore edges between the experts
-        if src in e and tgt in e:
-            continue
+        # if src in experts and tgt in experts:
+        #     continue
 
         if src in experts:
             edge_list_new.append(('super_source', tgt))
-
-        if tgt in experts:
+        elif tgt in experts:
             edge_list_new.append((src, 'super_source'))
-
+        elif src not in experts and tgt not in experts:
+            edge_list_new.append((src, tgt))
+        else:
+            continue
     G_new = nx.DiGraph()
     G_new.add_edges_from(edge_list_new)
 
@@ -65,25 +64,25 @@ def threadCommon(df_posts, experts):
 def community_detect(nw, experts, users):
     G_new = convert_graph_single_source(nw, experts)
     partition = community.best_partition(G_new.to_undirected())
-
+    # print("Super source: ", partition['super_source'])
     # comm_experts = [] # communities experts belong to
     # for e in experts:
     #     comm_experts.append(partition[e])
-
+    #
     # comm_experts = list(set(comm_experts))
     # print(comm_experts, list(set(list(partition.values()))))
     ''' Check how many users in the current day share communities with the experts '''
     user_count = 0
     for u in users:
         if u in experts:
-            user_count += 1
+            continue
         else:
-            print(partition[u])
+            # print(partition[u])
             if partition[u] == partition['super_source']:# in comm_experts:
                 user_count += 1
 
-    print(user_count , len(users))
-    return user_count / len(users) # normalized feature values
+    # print(user_count, len(users))
+    return user_count # TODO: normalized feature values
 
 
 def shortestPaths_singleSource(network, experts, users):
@@ -168,6 +167,7 @@ def commuteTime(G, pseudo_lapl_G, experts, users):
     # Form the Laplacian of the graph
     # print('Computing laplacian...')
 
+    avg_mooreInv = np.mean(pseudo_lapl_G.diagonal())
     nodeList = list(G.nodes())
     nodeIndexMap = {}
     for idx_n in range(len(nodeList)):
@@ -177,22 +177,23 @@ def commuteTime(G, pseudo_lapl_G, experts, users):
     avg_dist = 0.
     count_user_paths = 0
     for u in users:
-        u = str(u)
+        u = str(int(u))
         sum_dist = 0
         count_paths = 0
         for e in experts:
-            e = str(e)
-            # try:
+            e = str(int(e))
             if u == e:
                 continue
-            l_ii = pseudo_lapl_G[nodeIndexMap[u], nodeIndexMap[u]]
+            if u not in nodeList:
+                l_ii = avg_mooreInv
+                l_ij = np.mean(pseudo_lapl_G[:, nodeIndexMap[e]])
+            else:
+                l_ii = pseudo_lapl_G[nodeIndexMap[u], nodeIndexMap[u]]
+                l_ij = pseudo_lapl_G[nodeIndexMap[u], nodeIndexMap[e]]
             l_jj = pseudo_lapl_G[nodeIndexMap[e], nodeIndexMap[e]]
-            l_ij = pseudo_lapl_G[nodeIndexMap[u], nodeIndexMap[e]]
             sum_dist += (volume * (l_ii + l_jj - 2*l_ij))
             # print(sum_dist)
             count_paths += 1
-            # except:
-            #     continue
 
         if count_paths > 0:
             avg_dist += (sum_dist / count_paths)
@@ -266,13 +267,6 @@ def centralities(network, arg, users):
         cent_sum += cent[u]
 
     return cent_sum / len(users)
-
-
-#
-# if __name__ == "__main__":
-#     G = nx.erdos_renyi_graph(10, 0.01)
-#     community_detect(G, [], [])
-
 
 
 
