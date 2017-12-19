@@ -64,6 +64,11 @@ def threadCommon(df_posts, experts):
 def community_detect(nw, experts, users):
     G_new = convert_graph_single_source(nw, experts)
     partition = community.best_partition(G_new.to_undirected())
+
+    ''' If super source not in the communities just return 0 '''
+    if "super_source" not in partition:
+        return 0
+
     # print("Super source: ", partition['super_source'])
     # comm_experts = [] # communities experts belong to
     # for e in experts:
@@ -190,6 +195,7 @@ def commuteTime(G, pseudo_lapl_G, experts, users):
             else:
                 l_ii = pseudo_lapl_G[nodeIndexMap[u], nodeIndexMap[u]]
                 l_ij = pseudo_lapl_G[nodeIndexMap[u], nodeIndexMap[e]]
+
             l_jj = pseudo_lapl_G[nodeIndexMap[e], nodeIndexMap[e]]
             sum_dist += (volume * (l_ii + l_jj - 2*l_ij))
             # print(sum_dist)

@@ -307,15 +307,11 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
 
 
 def computeFeatureTimeSeries_Graph(start_date, end_date,):
-    condList = []
     condExpertsList = {}
     commThreadsList = {}
     shortPathList = {}
     commutePathList = {}
     communityCountList = {}
-    prList = []
-    degList = []
-
 
     datesList = []
     featDF = pd.DataFrame()
@@ -334,6 +330,14 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
     currStartDate = start_date
     currEndDate = start_date + datetime.timedelta(days=1)
     # print(" Month: ", currStartDate.date())
+
+    G_KB = nx.DiGraph()
+    G_KB.add_edges_from(KB_edges)
+
+    lapl_mat = (nx.laplacian_matrix(G_KB.to_undirected())).todense()
+    # print(lapl_mat.shape)
+    print('Computing pseudo lapl')
+    pseudo_lapl_mat = np.linalg.pinv(lapl_mat)  # Compute the pseudo-inverse of the graph laplacian
 
     # Store the KB pairs
     KB_pairs = []
@@ -416,12 +420,6 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
         G = nx.DiGraph()
         G.add_edges_from(mergeEgdes)
 
-        lapl_mat = (nx.laplacian_matrix(G.to_undirected())).todense()
-        # print(lapl_mat.shape)
-        # print('Computing pseudo lapl')
-        # pseudo_lapl_mat = np.linalg.pinv(lapl_mat)  # Compute the pseudo-inverse of the graph laplacian
-        # print('done..')
-
         countCPE = 1
         for cpe in topCPEs:
             # print("Forum:", f, " Month: ", currStartDate.date(), cpe)
@@ -438,8 +436,8 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
             # condExpertsList[key].append(Conductance(G, expertUsersCPE, users_curr))
             # commThreadsList[key].append(threadCommon(df_currDay, expertUsersCPE))
             # shortPathList[key].append(shortestPaths(G, expertUsersCPE, users_curr))
-            communityCountList[key].append(community_detect(G, expertUsersCPE, users_curr))
-            # commutePathList[key].append(commuteTime(G, pseudo_lapl_mat, expertUsersCPE, users_curr))
+            # communityCountList[key].append(community_detect(G, expertUsersCPE, users_curr))
+            commutePathList[key].append(commuteTime(G, pseudo_lapl_mat, expertUsersCPE, users_curr))
             # print(commuteTime(G, expertUsersCPE, users_curr))
 
             countCPE += 1
@@ -454,8 +452,8 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
     for k in range(10):
         try:
             # featDF['shortestPaths_CPE_R' + str(k+1)] = shortPathList['CPE_R' + str(k+1)]
-            # featDF['commuteTime_CPE_R' + str(k+1)] = commutePathList['CPE_R' + str(k+1)]
-            featDF['communityCount_CPE_R' + str(k + 1)] = communityCountList['CPE_R' + str(k + 1)]
+            featDF['commuteTime_CPE_R' + str(k+1)] = commutePathList['CPE_R' + str(k+1)]
+            # featDF['communityCount_CPE_R' + str(k + 1)] = communityCountList['CPE_R' + str(k + 1)]
             # featDF['expertsThreads_CPE_R' + str(k+1)] = commThreadsList['CPE_R' + str(k+1)]
             # featDF['CondExperts_CPE_R' + str(k+1)] = condExpertsList['CPE_R' + str(k+1)]
         except:
@@ -761,7 +759,7 @@ def main():
     # pickle.dump(feat_data_all, open('../../data/DW_data/conductance_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/commThreads_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/commuteTime_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
-    pickle.dump(feat_data_all, open('../../data/DW_data/feat_combine/communityCount_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
+    pickle.dump(feat_data_all, open('../../data/DW_data/communityCount_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # feat_data_all = pickle.load(open('../../data/DW_data/feature_df_Sept16-Apr17.pickle', 'rb'))
     # feat_data_all = feat_data_all.reset_index(drop=True)
     # pickle.dump(feat_data_all, open('../../data/DW_data/user_interStats_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
