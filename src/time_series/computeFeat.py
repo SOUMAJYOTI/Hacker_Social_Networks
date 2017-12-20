@@ -216,6 +216,7 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
         '''' Consider forums posts for current day '''
         df_currDay = allPosts[allPosts['posteddate'] > (currStartDate.date() - datetime.timedelta(days=2))]
         df_currDay = df_currDay[df_currDay['posteddate'] <= currEndDate.date()]
+
         df_currDay = df_currDay[df_currDay['forumsid'].isin(forums)]
         threadidsCurrDay = list(set(df_currDay['topicid']))
         currDay_edges = ccon.storeEdges(df_currDay, threadidsCurrDay)
@@ -290,6 +291,139 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
         datesList.append(currStartDate)
         currStartDate = currStartDate + datetime.timedelta(days=1)
         currEndDate = currStartDate + datetime.timedelta(days=1)
+
+    ''' Put the data into a dataframe '''
+    feat_df = pd.DataFrame()
+    feat_df['date'] = datesList
+    feat_df['numThreads'] = numThreadsList
+    feat_df['numUsers'] = numUsersList
+    feat_df['numNewUsers'] = numNewUsersList
+    feat_df['expertsInteractions'] = numInterExp_ExpList
+    feat_df['expertsNewInteractions'] = numNewInterExp_ExpList
+    feat_df['expert_NonInteractions'] = numInterExp_NonExpList
+    feat_df['expert_NonNewInteractions'] = numNewInterExp_NonExpList
+    feat_df['expertReplyTimeDiff'] = timeDiff_expList
+
+    return feat_df
+
+
+def computeFeatureTimeSeries_Users_Forums(start_date, end_date):
+    numUsersList = []
+    numThreadsList = []
+    numNewUsersList = []
+    numNewInterExp_ExpList = []
+    numNewInterExp_NonExpList = []
+    numInterExp_ExpList = []
+    numInterExp_NonExpList = []
+    timeDiff_expList = []
+
+    datesList = []
+
+    # KB timeframe 3 months prior to start of daily training data
+    KBStartDate = start_date - relativedelta(months=3)
+
+    KB_edges = KB_edges_DS[KBStartDate]
+    KB_users = list(set(KB_edges['source']).intersection(set(KB_edges['target'])))
+    KB_users = [str(int(i)) for i in KB_users]
+    experts = getExperts(KB_users)
+
+    expertsLastTime = computeExpertsTime(KB_edges, experts)
+
+    currStartDate = start_date
+    currEndDate = start_date + datetime.timedelta(days=1)
+    # print(" Month: ", currStartDate.date())
+
+    # Store the KB pairs - edges
+    KB_pairs = []
+    for idx_KB, row_KB in KB_edges.iterrows():
+        src = str(int(row_KB['source']))
+        tgt = str(int(row_KB['target']))
+        if (src, tgt) not in KB_pairs:
+            KB_pairs.append((src, tgt))
+
+    ''' Feature computation starts '''
+    while currEndDate < end_date:
+        print("Date ", currStartDate.date(), )
+
+        '''' Consider forums posts for current day '''
+        df_currDay = allPosts[allPosts['posteddate'] > (currStartDate.date() - datetime.timedelta(days=2))]
+        df_currDay = df_currDay[df_currDay['posteddate'] <= currEndDate.date()]
+
+        for f in forums:
+            df_currDay = df_currDay[df_currDay['forumsid'] == f]
+            threadidsCurrDay = list(set(df_currDay['topicid']))
+            currDay_edges = ccon.storeEdges(df_currDay, threadidsCurrDay)
+
+            numInterExp_Exp = 0
+            numNewInterExp_Exp = 0
+            numInterExp_NonExp = 0
+            numNewInterExp_NonExp = 0
+            timeDiff = 0
+            countInst = 0
+            maxTimeDiff = 0
+            for idx_curr, row_curr in currDay_edges.iterrows():
+                src = str(int(row_curr['source']))
+                tgt = str(int(row_curr['target']))
+
+                if src in experts and tgt in experts:
+                    numInterExp_Exp += 1
+                    if (src, tgt) not in KB_pairs:
+                        numNewInterExp_Exp += 1
+
+                if (src in experts and tgt not in experts) or (src not in experts and tgt in experts):
+                    numInterExp_NonExp += 1
+                    if (src, tgt) not in KB_pairs:
+                        numNewInterExp_NonExp += 1
+
+                # Time difference between the experts and the user
+                t_user = row_curr['diffTime']
+                d1_ts = time.mktime(t_user.timetuple())
+                if src in experts and src in expertsLastTime:
+                    t_exp = expertsLastTime[src]
+                    d2_ts = time.mktime(t_exp.timetuple())
+
+                    diff = (d1_ts - d2_ts)
+
+                    if diff > 0:
+                        timeDiff += diff
+                        countInst += 1
+
+                    if diff > maxTimeDiff:
+                        maxTimeDiff = diff
+
+            if countInst == 0:
+                timeDiff = 0
+            else:
+                timeDiff /= countInst
+
+            ''' Normalize it '''
+            if maxTimeDiff != 0:
+                timeDiff /= maxTimeDiff
+
+            ''' Update te last seen time for experts '''
+            # The update should be done only after \Delta t days,
+            # for idx_curr, row_curr in currDay_edges.iterrows():
+            #     tgt = str(int(row_curr['target']))
+            #
+            #     if tgt in experts:
+            #         expertsLastTime[tgt] = row_curr['diffTime']
+
+            numInterExp_ExpList.append(numInterExp_Exp)
+            numNewInterExp_ExpList.append(numNewInterExp_Exp)
+            numInterExp_NonExpList.append(numInterExp_NonExp)
+            numNewInterExp_NonExpList.append(numNewInterExp_NonExp)
+            timeDiff_expList.append(timeDiff)
+            numThreadsList.append(len(threadidsCurrDay))
+
+            users_curr = list(set(currDay_edges['source']).intersection(set(currDay_edges['target'])))
+            numUsersList.append(len(users_curr))
+
+            users_curr = [str(int(i)) for i in users_curr]
+            numNewUsersList.append(len(list(set(users_curr).difference(set(KB_users)))))
+
+            datesList.append(currStartDate)
+            currStartDate = currStartDate + datetime.timedelta(days=1)
+            currEndDate = currStartDate + datetime.timedelta(days=1)
 
     ''' Put the data into a dataframe '''
     feat_df = pd.DataFrame()
