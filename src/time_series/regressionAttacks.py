@@ -125,7 +125,6 @@ def main():
 
     subspace_df = pickle.load(open('../../data/DW_data/features/feat_combine/user_interStats_DeltaT_4_Sept16-Apr17_TP10.pickle', 'rb'))
 
-
     # subspace_df = subspace_df.ix[:, :6]
     instance_TrainStartDate = trainStart_date - relativedelta(months=1) # the previous month is needed for features
     trainDf = subspace_df[subspace_df['date'] >= instance_TrainStartDate]

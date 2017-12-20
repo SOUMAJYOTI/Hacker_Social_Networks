@@ -307,11 +307,11 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
 
 
 def computeFeatureTimeSeries_Graph(start_date, end_date,):
-    condExpertsList = {}
-    commThreadsList = {}
-    shortPathList = {}
-    commutePathList = {}
-    communityCountList = {}
+    condExpertsList = []
+    commThreadsList = []
+    shortPathList = []
+    commutePathList = []
+    communityCountList = []
 
     datesList = []
     featDF = pd.DataFrame()
@@ -325,19 +325,16 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
     KB_users = [str(int(i)) for i in KB_users]
     experts = getExperts(KB_users)
 
-    topCPEs = topCPEGroups(KBStartDate, start_date, K=10)
-
     currStartDate = start_date
     currEndDate = start_date + datetime.timedelta(days=1)
-    # print(" Month: ", currStartDate.date())
 
     G_KB = nx.DiGraph()
     G_KB.add_edges_from(KB_edges)
 
-    lapl_mat = (nx.laplacian_matrix(G_KB.to_undirected())).todense()
+    # lapl_mat = (nx.laplacian_matrix(G_KB.to_undirected())).todense()
     # print(lapl_mat.shape)
-    print('Computing pseudo lapl')
-    pseudo_lapl_mat = np.linalg.pinv(lapl_mat)  # Compute the pseudo-inverse of the graph laplacian
+    # print('Computing pseudo lapl')
+    # pseudo_lapl_mat = np.linalg.pinv(lapl_mat)  # Compute the pseudo-inverse of the graph laplacian
 
     # Store the KB pairs
     KB_pairs = []
@@ -364,22 +361,12 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
         # If there are no edges, no feature computation
         if len(currDay_edges) == 0:
             # condList.append(0)
-            for cpe_count in range(len(topCPEs)):
-                key = 'CPE_R' + str(cpe_count)
-                if key not in condExpertsList:
-                    condExpertsList[key] = []
-                    commThreadsList[key] = []
-                    shortPathList[key] = []
-                    commutePathList[key] = []
-                    communityCountList[key] = []
-                condExpertsList[key].append(0)
-                commThreadsList[key].append(0)
-                shortPathList[key].append(0)
-                commutePathList[key].append(0)
-                communityCountList[key].append(0)
+            condExpertsList.append(0)
+            commThreadsList.append(0)
+            shortPathList.append(0)
+            commutePathList.append(0)
+            communityCountList.append(0)
 
-            # prList.append(0)
-            # degList.append(0)
             datesList.append(currStartDate)
             currStartDate = currStartDate + datetime.timedelta(days=1)
             currEndDate = currStartDate + datetime.timedelta(days=1)
@@ -389,23 +376,12 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
 
         # If there are no users, no feature computation
         if len(users_curr) == 0:
-            # condList.append(0)
-            for cpe_count in range(len(topCPEs)):
-                key = 'CPE_R' + str(cpe_count)
-                if key not in condExpertsList:
-                    condExpertsList[key] = []
-                    commThreadsList[key] = []
-                    shortPathList[key] = []
-                    commutePathList[key] = []
-                    communityCountList[key] = []
-                condExpertsList[key].append(0)
-                commThreadsList[key].append(0)
-                shortPathList[key].append(0)
-                commutePathList[key].append(0)
-                communityCountList[key].append(0)
+            condExpertsList.append(0)
+            commThreadsList.append(0)
+            shortPathList.append(0)
+            commutePathList.append(0)
+            communityCountList.append(0)
 
-            # prList.append(0)
-            # degList.append(0)
             datesList.append(currStartDate)
             currStartDate = currStartDate + datetime.timedelta(days=1)
             currEndDate = currStartDate + datetime.timedelta(days=1)
@@ -416,52 +392,27 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
         # print("Merging edges...")
         mergeEgdes = ccon.network_merge(KB_edges.copy(), currDay_edges)  # Update the mergedEdges every day
 
-
         G = nx.DiGraph()
         G.add_edges_from(mergeEgdes)
 
-        countCPE = 1
-        for cpe in topCPEs:
-            # print("Forum:", f, " Month: ", currStartDate.date(), cpe)
-            expertUsersCPE = getExpertsCPE(experts, cpe)
-            key = 'CPE_R' + str(countCPE)
-            if key not in condExpertsList:
-                condExpertsList[key] = []
-                commThreadsList[key] = []
-                shortPathList[key] = []
-                commutePathList[key] = []
-                communityCountList[key] = []
-
-            ''' Store the computed features by CPE'''
-            # condExpertsList[key].append(Conductance(G, expertUsersCPE, users_curr))
-            # commThreadsList[key].append(threadCommon(df_currDay, expertUsersCPE))
-            # shortPathList[key].append(shortestPaths(G, expertUsersCPE, users_curr))
-            # communityCountList[key].append(community_detect(G, expertUsersCPE, users_curr))
-            commutePathList[key].append(commuteTime(G, pseudo_lapl_mat, expertUsersCPE, users_curr))
-            # print(commuteTime(G, expertUsersCPE, users_curr))
-
-            countCPE += 1
+        ''' Store the computed features '''
+        condExpertsList.append(Conductance(G, experts, users_curr))
+        commThreadsList.append(threadCommon(df_currDay, experts))
+        shortPathList.append(shortestPaths(G, experts, users_curr))
+        communityCountList.append(community_detect(G, experts, users_curr))
+        # commutePathList[key].append(commuteTime(G, pseudo_lapl_mat, expertUsersCPE, users_curr))
+        # print(commuteTime(G, expertUsersCPE, users_curr))
 
         datesList.append(currStartDate)
-
         currStartDate = currStartDate + datetime.timedelta(days=1)
         currEndDate = currStartDate + datetime.timedelta(days=1)
 
     featDF['date'] = datesList
-
-    for k in range(10):
-        try:
-            # featDF['shortestPaths_CPE_R' + str(k+1)] = shortPathList['CPE_R' + str(k+1)]
-            featDF['commuteTime_CPE_R' + str(k+1)] = commutePathList['CPE_R' + str(k+1)]
-            # featDF['communityCount_CPE_R' + str(k + 1)] = communityCountList['CPE_R' + str(k + 1)]
-            # featDF['expertsThreads_CPE_R' + str(k+1)] = commThreadsList['CPE_R' + str(k+1)]
-            # featDF['CondExperts_CPE_R' + str(k+1)] = condExpertsList['CPE_R' + str(k+1)]
-        except:
-            # featDF['shortestPaths_CPE_R' + str(k + 1)] = 0.0
-            featDF['communityCount_CPE_R' + str(k + 1)] = 0.0
-            # featDF['commuteTime_CPE_R' + str(k+1)] = 0.0
-            # featDF['expertsThreads_CPE_R' + str(k + 1)] = 0.0
-            # featDF['CondExperts_CPE_R' + str(k + 1)] = 0.0
+    featDF['shortestPaths'] = shortPathList
+    # featDF['commuteTime'] = commutePathList[
+    featDF['communityCount'] = communityCountList
+    featDF['expertsThreads'] = commThreadsList
+    featDF['CondExperts'] = condExpertsList
 
     return featDF
 
@@ -759,11 +710,11 @@ def main():
     # pickle.dump(feat_data_all, open('../../data/DW_data/conductance_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/commThreads_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/commuteTime_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
-    pickle.dump(feat_data_all, open('../../data/DW_data/communityCount_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
+    # pickle.dump(feat_data_all, open('../../data/DW_data/communityCount_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # feat_data_all = pickle.load(open('../../data/DW_data/feature_df_Sept16-Apr17.pickle', 'rb'))
     # feat_data_all = feat_data_all.reset_index(drop=True)
     # pickle.dump(feat_data_all, open('../../data/DW_data/user_interStats_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
-
+    pickle.dump(feat_data_all, open('../../data/DW_data/graph_stats_DeltaT_2_Sept16-Apr17_TP10.pickle', 'wb'))
 
 if __name__ == "__main__":
    main()

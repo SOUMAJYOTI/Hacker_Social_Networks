@@ -16,14 +16,18 @@ from sklearn import linear_model, ensemble
 from sklearn.naive_bayes import GaussianNB
 pd.set_option("display.precision", 2)
 
+
+
+def featureAnalysis():
+
 def main():
     trainStart_date = datetime.datetime.strptime('2016-9-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
 
 
     ''' Concatenate the features into a single dataframe'''
-    # fileName_prefix = ['shortestPaths', 'conductance', 'commThreads']
-    fileName_prefix = ['commThreads',]
+    fileName_prefix = ['shortestPaths', 'conductance', 'commThreads', ]
+    # fileName_prefix = ['commThreads',]
 
     feat_df = pd.DataFrame()
     for fp in fileName_prefix:
