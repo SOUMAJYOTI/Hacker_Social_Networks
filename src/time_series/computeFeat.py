@@ -318,6 +318,7 @@ def computeFeatureTimeSeries_Users_Forums(start_date, end_date):
     timeDiff_expList = []
 
     datesList = []
+    forumsList = []
 
     # KB timeframe 3 months prior to start of daily training data
     KBStartDate = start_date - relativedelta(months=3)
@@ -329,8 +330,6 @@ def computeFeatureTimeSeries_Users_Forums(start_date, end_date):
 
     expertsLastTime = computeExpertsTime(KB_edges, experts)
 
-    currStartDate = start_date
-    currEndDate = start_date + datetime.timedelta(days=1)
     # print(" Month: ", currStartDate.date())
 
     # Store the KB pairs - edges
@@ -342,14 +341,17 @@ def computeFeatureTimeSeries_Users_Forums(start_date, end_date):
             KB_pairs.append((src, tgt))
 
     ''' Feature computation starts '''
-    while currEndDate < end_date:
-        print("Date ", currStartDate.date(), )
+    for f in forums:
+        currStartDate = start_date
+        currEndDate = start_date + datetime.timedelta(days=1)
 
-        '''' Consider forums posts for current day '''
-        df_currDay = allPosts[allPosts['posteddate'] > (currStartDate.date() - datetime.timedelta(days=2))]
-        df_currDay = df_currDay[df_currDay['posteddate'] <= currEndDate.date()]
+        while currEndDate <= end_date:
+            print("Forum: ", f, " Date: ", currStartDate.date(), )
 
-        for f in forums:
+            '''' Consider forums posts for current day '''
+            df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date())]
+            df_currDay = df_currDay[df_currDay['posteddate'] < currEndDate.date()]
+
             df_currDay = df_currDay[df_currDay['forumsid'] == f]
             threadidsCurrDay = list(set(df_currDay['topicid']))
             currDay_edges = ccon.storeEdges(df_currDay, threadidsCurrDay)
@@ -421,13 +423,16 @@ def computeFeatureTimeSeries_Users_Forums(start_date, end_date):
             users_curr = [str(int(i)) for i in users_curr]
             numNewUsersList.append(len(list(set(users_curr).difference(set(KB_users)))))
 
+            forumsList.append(f)
             datesList.append(currStartDate)
+
             currStartDate = currStartDate + datetime.timedelta(days=1)
             currEndDate = currStartDate + datetime.timedelta(days=1)
 
     ''' Put the data into a dataframe '''
     feat_df = pd.DataFrame()
     feat_df['date'] = datesList
+    feat_df['forum'] = forumsList
     feat_df['numThreads'] = numThreadsList
     feat_df['numUsers'] = numUsersList
     feat_df['numNewUsers'] = numNewUsersList
@@ -438,6 +443,122 @@ def computeFeatureTimeSeries_Users_Forums(start_date, end_date):
     feat_df['expertReplyTimeDiff'] = timeDiff_expList
 
     return feat_df
+
+
+def computeFeatureTimeSeries_Graph_Forums(start_date, end_date,):
+    condExpertsList = []
+    commThreadsList = []
+    shortPathList = []
+    commutePathList = []
+    communityCountList = []
+
+    datesList = []
+    forumsList = []
+    featDF = pd.DataFrame()
+
+    # KB timeframe 3 months prior to start of daily training data
+    KBStartDate = start_date - relativedelta(months=3)
+
+    # while currEndDate < end_date:
+    KB_edges = KB_edges_DS[KBStartDate]
+    KB_users = list(set(KB_edges['source']).intersection(set(KB_edges['target'])))
+    KB_users = [str(int(i)) for i in KB_users]
+    experts = getExperts(KB_users)
+
+    # G_KB = nx.DiGraph()
+    # G_KB.add_edges_from(KB_edges)
+
+    # lapl_mat = (nx.laplacian_matrix(G_KB.to_undirected())).todense()
+    # print(lapl_mat.shape)
+    # print('Computing pseudo lapl')
+    # pseudo_lapl_mat = np.linalg.pinv(lapl_mat)  # Compute the pseudo-inverse of the graph laplacian
+
+    # Store the KB pairs
+    KB_pairs = []
+    for idx_KB, row_KB in KB_edges.iterrows():
+        src = str(row_KB['source'])
+        tgt = str(row_KB['target'])
+        if(src, tgt) not in KB_pairs:
+            KB_pairs.append((src, tgt))
+
+    for f in forums:
+        currStartDate = start_date
+        currEndDate = start_date + datetime.timedelta(days=1)
+        print("Forum:", f, " Month: ", currStartDate.date())
+
+        while currEndDate <= end_date:
+            print("Date ", currStartDate.date(), )
+            # users_currDay = postsDailyDf[postsDailyDf['date'] == currStartDate]
+            # Compute the feature for each forum separately
+
+            # users_currDay_forum = users_currDay[users_currDay['forum'] == float(f)]
+
+            '''' Consider forums posts for current day '''
+            df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date())]
+            df_currDay = df_currDay[df_currDay['posteddate'] < currEndDate.date()]
+            df_currDay = df_currDay[df_currDay['forumsid'] == f]
+            threadidsCurrDay = list(set(df_currDay['topicid']))
+            currDay_edges = ccon.storeEdges(df_currDay, threadidsCurrDay)
+
+            # If there are no edges, no feature computation
+            if len(currDay_edges) == 0:
+                # condList.append(0)
+                condExpertsList.append(0)
+                commThreadsList.append(0)
+                shortPathList.append(0)
+                commutePathList.append(0)
+                communityCountList.append(0)
+
+                datesList.append(currStartDate)
+                currStartDate = currStartDate + datetime.timedelta(days=1)
+                currEndDate = currStartDate + datetime.timedelta(days=1)
+                continue
+
+            users_curr = list(set(currDay_edges['source']).intersection(set(currDay_edges['target'])))
+
+            # If there are no users, no feature computation
+            if len(users_curr) == 0:
+                condExpertsList.append(0)
+                commThreadsList.append(0)
+                shortPathList.append(0)
+                commutePathList.append(0)
+                communityCountList.append(0)
+
+                datesList.append(currStartDate)
+                currStartDate = currStartDate + datetime.timedelta(days=1)
+                currEndDate = currStartDate + datetime.timedelta(days=1)
+                continue
+
+            users_curr = [str(int(i)) for i in users_curr]
+
+            # print("Merging edges...")
+            mergeEgdes = ccon.network_merge(KB_edges.copy(), currDay_edges)  # Update the mergedEdges every day
+
+            G = nx.DiGraph()
+            G.add_edges_from(mergeEgdes)
+
+            ''' Store the computed features '''
+            condExpertsList.append(Conductance(G, experts, users_curr))
+            commThreadsList.append(threadCommon(df_currDay, experts))
+            shortPathList.append(shortestPaths(G, experts, users_curr))
+            # communityCountList.append(community_detect(G, experts, users_curr))
+            # commutePathList[key].append(commuteTime(G, pseudo_lapl_mat, expertUsersCPE, users_curr))
+            # print(commuteTime(G, expertUsersCPE, users_curr))
+
+            datesList.append(currStartDate)
+            forumsList.append(f)
+            currStartDate = currStartDate + datetime.timedelta(days=1)
+            currEndDate = currStartDate + datetime.timedelta(days=1)
+
+    featDF['date'] = datesList
+    featDF['forum'] = forumsList
+    featDF['shortestPaths'] = shortPathList
+    # featDF['commuteTime'] = commutePathList[
+    # featDF['communityCount'] = communityCountList
+    featDF['expertsThreads'] = commThreadsList
+    featDF['CondExperts'] = condExpertsList
+
+    return featDF
 
 
 def computeFeatureTimeSeries_Graph(start_date, end_date,):
@@ -478,7 +599,7 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
         if(src, tgt) not in KB_pairs:
             KB_pairs.append((src, tgt))
 
-    while currEndDate < end_date:
+    while currEndDate <= end_date:
         print("Date ", currStartDate.date(), )
         # users_currDay = postsDailyDf[postsDailyDf['date'] == currStartDate]
         # Compute the feature for each forum separately
@@ -486,8 +607,8 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
         # users_currDay_forum = users_currDay[users_currDay['forum'] == float(f)]
 
         '''' Consider forums posts for current day '''
-        df_currDay = allPosts[allPosts['posteddate'] > (currStartDate.date() - datetime.timedelta(days=2))]
-        df_currDay = df_currDay[df_currDay['posteddate'] <= currEndDate.date()]
+        df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date())]
+        df_currDay = df_currDay[df_currDay['posteddate'] < currEndDate.date()]
         df_currDay = df_currDay[df_currDay['forumsid'].isin(forums)]
         threadidsCurrDay = list(set(df_currDay['topicid']))
         currDay_edges = ccon.storeEdges(df_currDay, threadidsCurrDay)
@@ -547,101 +668,6 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
     featDF['communityCount'] = communityCountList
     featDF['expertsThreads'] = commThreadsList
     featDF['CondExperts'] = condExpertsList
-
-    return featDF
-
-
-def computeFeatureTimeSeriesSeparateForums(start_date, end_date,):
-    # titlesList = []
-    # feat_topUsers = []
-    # feat_experts = []
-    # newUsersWeeklyPercList = []
-
-    condList = []
-    condExpertsList = []
-    prList = []
-    degList = []
-
-    datesList = []
-    forumsList = []
-    featDF = pd.DataFrame()
-
-    # KB timeframe 3 months prior to start of daily training data
-    KBStartDate = start_date - relativedelta(months=3)
-
-    # while currEndDate < end_date:
-    KB_edges = KB_edges_DS[KBStartDate]
-    KB_users = list(set(KB_edges['source']).intersection(set(KB_edges['target'])))
-    KB_users = [str(int(i)) for i in KB_users]
-    experts = getExperts(KB_users)
-
-    for f in forums:
-        currStartDate = start_date
-        currEndDate = start_date + datetime.timedelta(days=1)
-        print("Forum:", f, " Month: ", currStartDate.date())
-
-        while currEndDate < end_date:
-            # users_currDay = postsDailyDf[postsDailyDf['date'] == currStartDate]
-            # Compute the feature for each forum separately
-
-            # users_currDay_forum = users_currDay[users_currDay['forum'] == float(f)]
-
-            '''' Consider forums posts for current forum for current day'''
-            df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date() - datetime.timedelta(days=4))]
-            df_currDay = df_currDay[df_currDay['posteddate'] < currEndDate.date()]
-            df_currDay = df_currDay[df_currDay['forumsid'] == f]
-            threadidsCurrDay = list(set(df_currDay['topicid']))
-            currDay_edges = ccon.storeEdges(df_currDay, threadidsCurrDay)
-
-            # If there are no edges, no feature computation
-            if len(currDay_edges) == 0:
-                condList.append(0)
-                condExpertsList.append(0)
-                prList.append(0)
-                degList.append(0)
-                forumsList.append(f)
-                datesList.append(currStartDate)
-                currStartDate = currStartDate + datetime.timedelta(days=1)
-                currEndDate = currStartDate + datetime.timedelta(days=1)
-                continue
-
-            users_curr = list(set(currDay_edges['source']).intersection(set(currDay_edges['target'])))
-            # If there are no users, no feature computation
-            if len(users_curr) == 0:
-                condList.append(0)
-                condExpertsList.append(0)
-                prList.append(0)
-                degList.append(0)
-                forumsList.append(f)
-                datesList.append(currStartDate)
-                currStartDate = currStartDate + datetime.timedelta(days=1)
-                currEndDate = currStartDate + datetime.timedelta(days=1)
-                continue
-
-            users_curr = [str(int(i)) for i in users_curr]
-
-            # print("Merging edges...")
-            mergeEgdes = ccon.network_merge(KB_edges.copy(), currDay_edges)  # Update the mergedEdges every day
-
-            G = nx.DiGraph()
-            G.add_edges_from(mergeEgdes)
-
-            condList.append(Conductance(G, KB_users, users_curr))
-            condExpertsList.append(Conductance(G, experts, users_curr))
-            prList.append(centralities(G, 'PageRank', users_curr))
-            degList.append(centralities(G, 'OutDegree', users_curr))
-            forumsList.append(f)
-            datesList.append(currStartDate)
-
-            currStartDate = currStartDate + datetime.timedelta(days=1)
-            currEndDate = currStartDate + datetime.timedelta(days=1)
-
-    featDF['date'] = datesList
-    featDF['forum'] = forumsList
-    featDF['conductance'] = condList
-    featDF['conductanceExperts'] = condExpertsList
-    featDF['pagerank'] = prList
-    featDF['degree'] = degList
 
     return featDF
 
@@ -816,7 +842,7 @@ def main():
 
     # featDf = computeFeatureTimeSeries(start_date, end_date)
 
-    numProcessors = 4
+    numProcessors = 5
     pool = multiprocessing.Pool(numProcessors)
 
     currEndDate = start_date + relativedelta(months=1)
@@ -829,7 +855,7 @@ def main():
         start_date += relativedelta(months=1)
         currEndDate = start_date + relativedelta(months=1)
 
-    results = pool.starmap_async(computeFeatureTimeSeries_Graph, tasks)
+    results = pool.starmap_async(computeFeatureTimeSeries_Graph_Forums, tasks)
     pool.close()
     pool.join()
 
@@ -847,8 +873,9 @@ def main():
     # pickle.dump(feat_data_all, open('../../data/DW_data/communityCount_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # feat_data_all = pickle.load(open('../../data/DW_data/feature_df_Sept16-Apr17.pickle', 'rb'))
     # feat_data_all = feat_data_all.reset_index(drop=True)
-    # pickle.dump(feat_data_all, open('../../data/DW_data/user_interStats_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
-    pickle.dump(feat_data_all, open('../../data/DW_data/graph_stats_DeltaT_2_Sept16-Apr17_TP10.pickle', 'wb'))
+    # pickle.dump(feat_data_all, open('../../data/DW_data/user_interStats_Forums_Delta_T0_Sept16-Apr17.pickle', 'wb'))
+    pickle.dump(feat_data_all, open('../../data/DW_data/graph_stats_Forums_Delta_T0_Sept16-Apr17.pickle', 'wb'))
+    # pickle.dump(feat_data_all, open('../../data/DW_data/graph_stats_DeltaT_2_Sept16-Apr17_TP10.pickle', 'wb'))
 
 if __name__ == "__main__":
    main()
