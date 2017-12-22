@@ -18,6 +18,16 @@ pd.set_option("display.precision", 2)
 from pylab import plot, show, savefig, xlim, figure, \
                 hold, ylim, legend, boxplot, setp, axes
 
+forumsList = [35, 38, 133, 135, 146,  150, 161, 197, ]
+
+class ArgsStruct:
+    name = ''
+    feat_concat = False
+    forumsSplit = False
+    plot_data = False
+    plot_time_series = False
+    plot_subspace = False
+
 
 def prepareOutput(eventsDf, start_date, end_date):
     eventsDf['date'] = pd.to_datetime(eventsDf['date'])
@@ -49,11 +59,10 @@ def prepareOutput(eventsDf, start_date, end_date):
     return outputDf
 
 
-def featureAnalysis(feat_df, output_df, trainStart_date):
+def featureAnalysis(feat_df, output_df, trainStart_date, delta_time_prev):
 
     ''' For the attacks history'''
     attacks_df = output_df[output_df['attackFlag'] == 1]
-    delta_time_prev = 7
 
     feat_hist_attacks_array = {}
 
@@ -84,8 +93,6 @@ def featureAnalysis(feat_df, output_df, trainStart_date):
     ''' For the non attacks history '''
     non_attacks_df = output_df[output_df['attackFlag'] == 0]
     non_attacks_df = non_attacks_df[non_attacks_df['date'] >= trainStart_date]
-
-    delta_time_prev = 7
 
     feat_hist_non_attacks_array = {}
 
@@ -118,6 +125,71 @@ def featureAnalysis(feat_df, output_df, trainStart_date):
     return feat_hist_attacks_array, feat_hist_non_attacks_array
 
 
+def featureAnalysis_forums(feat_df, output_df, trainStart_date, forum, delta_time_prev):
+
+    ''' For the attacks history'''
+    attacks_df = output_df[output_df['attackFlag'] == 1]
+    non_attacks_df = output_df[output_df['attackFlag'] == 0]
+    non_attacks_df = non_attacks_df[non_attacks_df['date'] >= trainStart_date]
+
+
+    feat_hist_attacks_array = {}
+    feat_hist_non_attacks_array = {}
+
+    feat_forum = feat_df[feat_df['forum'] == forum]
+
+    for idx, row in attacks_df.iterrows():
+        attack_date = row['date']
+        time_hist = attack_date
+
+        for idx_time in range(1, delta_time_prev+1):
+            time_hist = pd.to_datetime(time_hist - datetime.timedelta(days=1))
+
+            feat_vals = feat_forum[feat_forum['date'] == time_hist]
+            while feat_vals.empty == True:
+                # print(time_hist)
+                time_hist = time_hist - datetime.timedelta(days=1)
+                feat_vals = feat_forum[feat_forum['date'] == time_hist]
+                # print(feat_vals)
+
+            features = list(feat_vals.columns.values)
+
+            for idx_f in range(2, len(features)): # exclude date and forum
+                if features[idx_f] not in feat_hist_attacks_array:
+                    feat_hist_attacks_array[features[idx_f]] = [[] for _ in range(delta_time_prev)]
+
+                # print(feat_vals)
+                feat_hist_attacks_array[features[idx_f]][idx_time-1].append(feat_vals.iloc[0, idx_f])
+
+    ''' For the non attacks history '''
+    for idx, row in non_attacks_df.iterrows():
+        non_attack_date = row['date']
+        time_hist = non_attack_date
+
+        # print(non_attack_date)
+        for idx_time in range(1, delta_time_prev + 1):
+            time_hist = pd.to_datetime(time_hist - datetime.timedelta(days=1))
+            # print(time_hist)
+
+            feat_vals = feat_forum[feat_forum['date'] == time_hist]
+            while feat_vals.empty == True:
+                # print(time_hist)
+                time_hist = time_hist - datetime.timedelta(days=1)
+                feat_vals = feat_forum[feat_forum['date'] == time_hist]
+                # print(feat_vals)
+
+            features = list(feat_vals.columns.values)
+
+            for idx_f in range(2, len(features)):  # exclude date anf forum
+                if features[idx_f] not in feat_hist_non_attacks_array:
+                    feat_hist_non_attacks_array[features[idx_f]] = [[] for _ in range(delta_time_prev)]
+
+                # print(feat_vals)
+                feat_hist_non_attacks_array[features[idx_f]][idx_time - 1].append(feat_vals.iloc[0, idx_f])
+
+    return feat_hist_attacks_array, feat_hist_non_attacks_array
+
+
 def set_box_color(bp, color):
     plt.setp(bp['boxes'], color=color)
     plt.setp(bp['whiskers'], color=color)
@@ -125,16 +197,14 @@ def set_box_color(bp, color):
     plt.setp(bp['medians'], color=color)
 
 
-def plot_box_dist(attack_hist, non_attack_hist):
-    delta_time_prev = 7
+def plot_box_dist(attack_hist, non_attack_hist, title, dir, delta_time_prev):
     x_labels = range(1, delta_time_prev+1)
 
-    plot_dir = '../../plots/dw_stats/feat_plot/feat_combine/user_interStats/'
-
-    if not os.path.exists(plot_dir):
-        os.makedirs(plot_dir)
-
     for feat in attack_hist:
+        plot_dir = dir + feat + '/'
+
+        if not os.path.exists(plot_dir):
+            os.makedirs(plot_dir)
         fig = plt.figure(1, figsize=(20, 16))
 
         # Create an axes instance
@@ -163,7 +233,7 @@ def plot_box_dist(attack_hist, non_attack_hist):
         # draw temporary red and blue lines and use them to create a legend
         plt.plot([], c='red', label='Attacks')
         plt.plot([], c='blue', label='Non attacks')
-        plt.legend(fontsize=30)
+        plt.legend(fontsize=30, loc='upper right')
 
         # set axes limits and labels
         # xlim(0, pos_index)
@@ -175,112 +245,127 @@ def plot_box_dist(attack_hist, non_attack_hist):
         plt.tick_params('y', labelsize=20)
         plt.tick_params('x', labelsize=20)
         # ax.set_yticks(fontsize=15)
+        plt.title(title, size=25)
 
         plt.grid(True)
         plt.xlabel('Number of days prior to date of event', fontsize=30)
         plt.ylabel(feat, fontsize=30)
         # plt.show()
-        plt.savefig(plot_dir + feat + '.png')
+        plt.savefig(plot_dir + feat + '_' + title + '.png')
+        plt.close()
+
+
+def concatenateDf(featList):
+    '''
+    Concatenate the features into a single dataframe
+
+    :param df_list:
+    :param featList:
+    :return:
+    '''
+
+    feat_df = pd.DataFrame()
+    for fp in featList:
+        if feat_df.empty:
+            feat_df = pd.read_pickle('../../data/DW_data/features/feat_forums/'
+                                     + str(fp) + '_DeltaT_2_Sept16-Apr17.pickle')
+        else:
+            curr_df = pd.read_pickle('../../data/DW_data/features/feat_forums/'
+                                     + str(fp) + '_DeltaT_2_Sept16-Apr17.pickle')
+            feat_df = pd.merge(feat_df, curr_df, on=['date'])
+
+    return feat_df
+
+
+# def time_to_event():
+
+
+
+def plot_ts(df, plot_dir, title):
+    if not os.path.exists(plot_dir):
+        os.makedirs(plot_dir)
+
+    for feat in df.columns.values:
+        if feat == 'date' or feat == 'forum':
+            continue
+
+        df.plot(figsize=(12,8), x='date', y=feat, color='black', linewidth=2)
+        plt.grid(True)
+        plt.xticks(size=20)
+        plt.yticks(size=20)
+        plt.title(title, size=20)
+        plt.xlabel('date', size=20)
+        plt.ylabel(feat, size=20)
+        plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
+        file_save = plot_dir + feat + title + '.png'
+        plt.savefig(file_save)
         plt.close()
 
 
 def main():
+    ''' Set the arguments for the data preprocessing here '''
+    args = ArgsStruct()
+    args.feat_concat = False
+    args.forumsSplit = True
+    args.plot_data = False
+    args.plot_time_series = False
+    args.plot_subspace = True
+
     trainStart_date = datetime.datetime.strptime('2016-9-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
 
     trainInst_start = trainStart_date + relativedelta(months=1)
 
+
+    ''' Load the organization attack data '''
     amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
     amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
-
     trainOutput = prepareOutput(amEvents_malware, trainStart_date, trainEnd_date)
 
-    ''' Concatenate the features into a single dataframe'''
-    # fileName_prefix = ['shortestPaths', 'conductance', 'commThreads', ]
-    # # fileName_prefix = ['commThreads',]
-    #
-    # feat_df = pd.DataFrame()
-    # for fp in fileName_prefix:
-    #     if feat_df.empty:
-    #         feat_df = pd.read_pickle('../../data/DW_data/features/feat_combine/' + str(fp) + '_DeltaT_4_Sept16-Apr17_TP10.pickle')
-    #     else:
-    #         curr_df = pd.read_pickle('../../data/DW_data/features/feat_combine/' + str(fp) + '_DeltaT_4_Sept16-Apr17_TP10.pickle')
-    #         feat_df = pd.merge(feat_df, curr_df, on=['date'])
+    if args.feat_concat == False:
+        feat_df_graph = pd.read_pickle(
+            '../../data/DW_data/features/feat_forums/graph_stats_Forums_Delta_T0_Sept16-Apr17.pickle')
+        feat_df_users = pd.read_pickle(
+            '../../data/DW_data/features/feat_forums/user_interStats_Forums_Delta_T0_Sept16-Apr17.pickle')
 
-    feat_df = pd.read_pickle(
-        '../../data/DW_data/features/feat_combine/user_interStats_DeltaT_2_Sept16-Apr17_TP10.pickle')
+        feat_df_users = feat_df_users.filter(items=['date', 'forum', 'expert_NonInteractions', 'expertsInteractions', 'numUsers'])
+        feat_df = pd.merge(feat_df_users, feat_df_graph, on=['date', 'forum'])
+        pickle.dump(feat_df, open('../../data/DW_data/features/feat_forums/user_graph_Delta_T0_Sept16-Apr17.pickle', 'wb'))
+        # print(feat_df)
+    else:
+        features = ['shortestPaths', 'conductance', 'commThreads']
+        feat_df = concatenateDf(features)
 
     train_featDf = feat_df[feat_df['date'] >= trainStart_date]
     train_featDf = train_featDf[train_featDf['date'] < trainEnd_date]
 
-    attack_hist, non_attack_hist = featureAnalysis(train_featDf, trainOutput,  trainInst_start)
-    plot_box_dist(attack_hist, non_attack_hist)
-    exit()
-    ''' Plot the features forum wise '''
-    # features = ['shortestPaths', 'CondExperts', 'expertsThreads'
-    features = ['expertsThreads', ]
+    ''' Some plot functionalities '''
+    delta_time_prev = 14
+    if args.plot_data == True:
+        if args.forumsSplit == False:
+            attack_hist, non_attack_hist = featureAnalysis(train_featDf, trainOutput, trainInst_start, delta_time_prev)
+            title = ''
+            plot_dir = '../../plots/dw_stats/feat_plot/feat_combine/feature_distribution/graph_stats/'
+            plot_box_dist(attack_hist, non_attack_hist, title, plot_dir, delta_time_prev)
+        else:
+            for f in forumsList:
+                attack_hist, non_attack_hist = featureAnalysis_forums(train_featDf, trainOutput,  trainInst_start, f, delta_time_prev)
+                title = 'Forum_' + str(f)
+                plot_dir = '../../plots/dw_stats/feat_plot/feat_forums/feature_distribution/user_stats/'
+                plot_box_dist(attack_hist, non_attack_hist, title, plot_dir, delta_time_prev)
 
-    for feat in features:
-        for idx_cpe in range(5):
-            dir_save = '../../plots/dw_stats/feat_plot/feat_combine/' + str(feat) + '/'
-            if not os.path.exists(dir_save):
-                os.makedirs(dir_save)
-            featStr = feat+'_CPE_R' + str(idx_cpe+1)
-            plotDf_CPE = trainDf[(trainDf[featStr] != -1.) & (trainDf[featStr] != 0.)][featStr]
-            # print(plotDf_CPE)
-            median_value = np.median(np.array(list(plotDf_CPE)))
-            if np.isnan(median_value):
-                median_value = 0.
-            trainDf[featStr] = trainDf[featStr].replace([-1.00, 0.0, 0.00], median_value)
-            # plotDf_forumCPE = trainDf[trainDf['forum'] == f]
-            #
-            # # print(plotDf_forumCPE[featStr])
-            # trainDf.plot(figsize=(12,8), x='date', y=featStr, color='black', linewidth=2)
-            # plt.grid(True)
-            # plt.xticks(size=20)
-            # plt.yticks(size=20)
-            # plt.xlabel('date', size=20)
-            # plt.ylabel(feat, size=20)
-            # plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
-            # # plt.show()
-            # file_save = dir_save + 'CPE_R' + str(idx_cpe+1)
-            # plt.savefig(file_save)
-            # plt.close()
 
-    pickle.dump(trainDf, open('../../data/DW_data/features/feat_combine/train_df_et_v12_12.pickle', 'wb'))
-    # ''' Form the residual and normal time series for each feaure, for each CPE'''
-    # subspace_df = pd.DataFrame()
-    # for feat in features:
-    #     for idx_cpe in range(5):
-    #         featStr = feat + '_CPE_R' + str(idx_cpe + 1)
-    #         trainDf_subspace  = trainModel(trainDf, featStr, forums)
-    #         if subspace_df.empty:
-    #             subspace_df = trainDf_subspace
-    #         else:
-    #             subspace_df = pd.merge(subspace_df, trainDf_subspace, on=['date'])
-    #
-    # pickle.dump(subspace_df, open('../../data/DW_data/features/subspace_df_v12_10.pickle', 'wb'))
+    if args.plot_time_series == True:
+        if args.forumsSplit == False:
+            plot_dir = '../../plots/dw_stats/feat_plot/feat_combine/time_series/graph_stats/'
+            plot_ts(train_featDf, plot_dir)
+        else:
+            for f in forumsList:
+                forum_feat_df = train_featDf[train_featDf['forum'] == f]
+                plot_dir = '../../plots/dw_stats/feat_plot/feat_forums/time_series/graph_stats/'
+                title = 'Forum_' + str(f)
+                plot_ts(forum_feat_df, plot_dir, title)
 
-    # print(subspace_df)
-    # for column in subspace_df:
-    #     if column == 'date':
-    #         continue
-    #     dir_save = '../../plots/dw_stats/subspace_plot/'
-    #     if not os.path.exists(dir_save):
-    #         os.makedirs(dir_save)
-    #
-    #     subspace_df.plot(figsize=(12,8), x='date', y=column, color='black', linewidth=2)
-    #     plt.grid(True)
-    #     plt.xticks(size=20)
-    #     plt.yticks(size=20)
-    #     plt.xlabel('date', size=20)
-    #     plt.ylabel(column, size=20)
-    #     # plt.title('Forum=' + str(f))
-    #     plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
-    #     # plt.show()
-    #     file_save = dir_save + column
-    #     plt.savefig(file_save)
-    #     plt.close()
 
 if __name__ == "__main__":
     main()
