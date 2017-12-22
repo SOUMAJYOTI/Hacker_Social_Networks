@@ -367,6 +367,12 @@ def main():
                 plot_ts(forum_feat_df, plot_dir, title)
 
 
+    if args.plot_subspace == True:
+        subspace_df = pd.read_pickle('../../data/DW_data/features/subspace_df_v12_22.pickle')
+        title = ''
+        plot_dir = '../../plots/dw_stats/feat_plot/feat_combine/time_series/subspace/'
+        plot_ts(subspace_df, plot_dir, title)
+
 if __name__ == "__main__":
     main()
 

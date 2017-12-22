@@ -2,7 +2,467 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b3af467-004d-4a29-a6fe-96d8d390283e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/time_series/computeFeat.py" afterPath="$PROJECT_DIR$/src/time_series/computeFeat.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_105_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_105_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_105_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_105_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_105_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_105_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_105_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_105_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_105_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_133_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_133_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_133_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_133_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_133_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_133_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_133_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_133_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_133_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_135_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_135_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_135_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_135_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_135_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_135_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_135_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_135_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_135_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_146_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_146_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_146_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_146_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_146_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_146_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_146_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_146_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_146_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_147_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_147_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_147_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_147_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_147_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_147_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_147_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_147_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_147_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_150_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_150_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_150_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_150_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_150_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_150_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_150_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_150_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_150_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_161_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_161_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_161_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_161_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_161_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_161_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_161_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_161_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_161_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_173_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_173_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_173_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_173_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_173_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_173_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_173_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_173_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_173_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_179_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_179_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_179_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_179_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_179_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_179_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_179_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_179_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_179_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_197_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_197_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_197_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_197_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_197_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_197_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_197_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_197_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_197_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_35_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_35_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_35_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_35_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_35_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_35_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_35_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_35_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_35_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_38_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_38_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_38_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_38_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_38_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_38_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_38_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_38_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_38_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_60_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_60_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_60_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_60_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_60_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_60_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_60_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_60_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_60_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_62_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_62_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_62_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_62_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_62_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_62_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_62_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_62_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_62_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_71_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_71_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_71_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_71_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_71_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_71_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_71_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_71_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_71_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_84_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_84_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_84_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_84_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_84_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_84_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_84_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_84_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_84_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_88_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_88_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_88_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_88_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_88_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_88_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_88_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_88_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/CondExperts/forum_88_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_105_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_105_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_105_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_105_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_105_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_105_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_105_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_105_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_105_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_133_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_133_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_133_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_133_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_133_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_133_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_133_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_133_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_133_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_135_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_135_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_135_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_135_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_135_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_135_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_135_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_135_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_135_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_146_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_146_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_146_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_146_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_146_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_146_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_146_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_146_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_146_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_147_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_147_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_147_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_147_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_147_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_147_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_147_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_147_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_147_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_150_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_150_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_150_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_150_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_150_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_150_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_150_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_150_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_150_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_161_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_161_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_161_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_161_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_161_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_161_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_161_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_161_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_161_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_173_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_173_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_173_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_173_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_173_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_173_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_173_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_173_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_173_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_179_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_179_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_179_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_179_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_179_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_179_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_179_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_179_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_179_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_197_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_197_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_197_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_197_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_197_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_197_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_197_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_197_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_197_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_35_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_35_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_35_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_35_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_35_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_35_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_35_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_35_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_35_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_38_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_38_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_38_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_38_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_38_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_38_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_38_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_38_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_38_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_60_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_60_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_60_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_60_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_60_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_60_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_60_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_60_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_60_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_62_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_62_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_62_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_62_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_62_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_62_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_62_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_62_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_62_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_71_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_71_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_71_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_71_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_71_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_71_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_71_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_71_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_71_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_84_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_84_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_84_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_84_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_84_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_84_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_84_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_84_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_84_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_88_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_88_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_88_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_88_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_88_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_88_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_88_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_88_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/expertsThreads/forum_88_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_105_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_105_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_105_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_105_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_105_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_105_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_105_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_105_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_105_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_133_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_133_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_133_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_133_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_133_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_133_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_133_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_133_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_133_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_135_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_135_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_135_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_135_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_135_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_135_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_135_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_135_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_135_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_146_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_146_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_146_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_146_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_146_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_146_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_146_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_146_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_146_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_147_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_147_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_147_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_147_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_147_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_147_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_147_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_147_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_147_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_150_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_150_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_150_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_150_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_150_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_150_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_150_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_150_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_150_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_161_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_161_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_161_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_161_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_161_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_161_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_161_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_161_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_161_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_173_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_173_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_173_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_173_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_173_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_173_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_173_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_173_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_173_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_179_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_179_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_179_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_179_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_179_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_179_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_179_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_179_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_179_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_197_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_197_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_197_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_197_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_197_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_197_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_197_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_197_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_197_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_35_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_35_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_35_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_35_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_35_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_35_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_35_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_35_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_35_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_38_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_38_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_38_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_38_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_38_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_38_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_38_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_38_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_38_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_60_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_60_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_60_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_60_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_60_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_60_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_60_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_60_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_60_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_62_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_62_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_62_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_62_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_62_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_62_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_62_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_62_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_62_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_71_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_71_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_71_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_71_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_71_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_71_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_71_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_71_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_71_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_84_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_84_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_84_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_84_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_84_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_84_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_84_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_84_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_84_CPE_R9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_88_CPE_R1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_88_CPE_R2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_88_CPE_R3.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_88_CPE_R4.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_88_CPE_R5.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_88_CPE_R6.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_88_CPE_R7.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_88_CPE_R8.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_forums/shortestPaths/forum_88_CPE_R9.png" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/time_series/feature_ts.py" afterPath="$PROJECT_DIR$/src/time_series/feature_ts.py" />
     </list>
     <ignored path="Hacker_Social_Networks.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -22,15 +482,40 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="regressionAttacks.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="regressionAttacks.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/time_series/regressionAttacks.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="317">
-              <caret line="128" column="71" selection-start-line="128" selection-start-column="4" selection-end-line="128" selection-end-column="71" />
+            <state relative-caret-position="360">
+              <caret line="86" column="44" selection-start-line="86" selection-start-column="44" selection-end-line="86" selection-end-column="44" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
                 <element signature="e#520#749#0" expanded="false" />
                 <element signature="e#3252#3592#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="anomalyDetect.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/time_series/anomalyDetect.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="453">
+              <caret line="476" column="92" selection-start-line="476" selection-start-column="39" selection-end-line="476" selection-end-column="92" />
+              <folding>
+                <element signature="e#466#566#0" expanded="false" />
+                <element signature="e#597#826#0" expanded="false" />
+                <element signature="e#1680#1874#0" expanded="false" />
+                <element signature="e#1932#2389#0" expanded="false" />
+                <element signature="e#2463#2782#0" expanded="false" />
+                <element signature="e#2846#3184#0" expanded="false" />
+                <element signature="e#3239#3790#0" expanded="false" />
+                <element signature="e#3868#5885#0" expanded="false" />
+                <element signature="e#5931#6387#0" expanded="false" />
+                <element signature="e#6451#8466#0" expanded="false" />
+                <element signature="e#8500#8700#0" expanded="false" />
+                <element signature="e#8743#9968#0" expanded="false" />
+                <element signature="e#11378#11449#0" expanded="false" />
+                <element signature="e#15883#16791#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -60,7 +545,7 @@
       <file leaf-file-name="preprocessData.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/time_series/preprocessData.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="543">
+            <state relative-caret-position="1731">
               <caret line="203" column="10" selection-start-line="203" selection-start-column="10" selection-end-line="203" selection-end-column="10" />
               <folding>
                 <element signature="e#250#497#0" expanded="false" />
@@ -71,11 +556,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="computeFeat.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="computeFeat.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/time_series/computeFeat.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="426">
-              <caret line="876" column="63" selection-start-line="876" selection-start-column="63" selection-end-line="876" selection-end-column="63" />
+            <state relative-caret-position="-171">
+              <caret line="447" column="65" selection-start-line="447" selection-start-column="65" selection-end-line="447" selection-end-column="65" />
               <folding>
                 <element signature="e#1618#1847#0" expanded="false" />
                 <element signature="e#1883#1920#0" expanded="false" />
@@ -85,6 +570,7 @@
                 <element signature="e#4699#5149#0" expanded="false" />
                 <element signature="e#5214#9972#0" expanded="false" />
                 <element signature="e#10044#15160#0" expanded="false" />
+                <element signature="e#15233#19797#0" expanded="false" />
                 <element signature="e#19863#24051#0" expanded="false" />
                 <element signature="e#24119#30993#0" expanded="false" />
               </folding>
@@ -95,12 +581,17 @@
       <file leaf-file-name="feature_ts.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/time_series/feature_ts.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1416">
-              <caret line="76" column="54" selection-start-line="76" selection-start-column="54" selection-end-line="76" selection-end-column="54" />
+            <state relative-caret-position="398">
+              <caret line="372" column="85" selection-start-line="372" selection-start-column="85" selection-end-line="372" selection-end-column="85" />
               <folding>
-                <element signature="e#610#1437#0" expanded="false" />
-                <element signature="e#4095#4250#0" expanded="false" />
-                <element signature="e#4306#6361#0" expanded="false" />
+                <element signature="e#824#1651#0" expanded="false" />
+                <element signature="e#6924#7079#0" expanded="false" />
+                <element signature="e#7164#9227#0" expanded="false" />
+                <element signature="e#9263#9882#0" expanded="false" />
+                <element signature="e#9949#10541#0" expanded="false" />
+                <element signature="e#12320#13108#0" expanded="false" />
+                <marker date="1513954469827" expanded="false" signature="1728:4240" ph="..." />
+                <marker date="1513954469827" expanded="false" signature="4331:6887" ph="..." />
               </folding>
             </state>
           </provider>
@@ -165,7 +656,6 @@
         <option value="$PROJECT_DIR$/src/time_series/features.py" />
         <option value="$PROJECT_DIR$/src/learning/weightedLR.py" />
         <option value="$PROJECT_DIR$/src/learning/RandomForests.py" />
-        <option value="$PROJECT_DIR$/src/time_series/anomalyDetect.py" />
         <option value="$PROJECT_DIR$/src/network_analysis/createConnections.py" />
         <option value="$PROJECT_DIR$/src/learning/GLModel.py" />
         <option value="$PROJECT_DIR$/src/load_data/load_dataDW.py" />
@@ -180,16 +670,17 @@
         <option value="$PROJECT_DIR$/src/time_series/cve_event.py" />
         <option value="$PROJECT_DIR$/src/network_analysis/features.py" />
         <option value="$PROJECT_DIR$/src/time_series/regressionAttacks.py" />
-        <option value="$PROJECT_DIR$/src/time_series/feature_ts.py" />
         <option value="$PROJECT_DIR$/src/time_series/computeFeat.py" />
+        <option value="$PROJECT_DIR$/src/time_series/anomalyDetect.py" />
+        <option value="$PROJECT_DIR$/src/time_series/feature_ts.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-1689" />
-    <option name="y" value="17" />
-    <option name="width" value="1698" />
-    <option name="height" value="1018" />
+    <option name="x" value="-9" />
+    <option name="y" value="-9" />
+    <option name="width" value="1938" />
+    <option name="height" value="1048" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -246,20 +737,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="utilities" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -282,140 +759,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="stat_analysis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="network_analysis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="load_data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plots" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plots" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dw_stats" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plots" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dw_stats" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="feat_plot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plots" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dw_stats" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="feat_plot" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="feat_combine" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -432,7 +775,7 @@
       <recent name="F:\Github\Hacker_Social_Networks\src\load_data" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.computeFeat">
+  <component name="RunManager" selected="Python.feature_ts">
     <configuration default="false" name="computeFeat" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -484,23 +827,6 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="stream_plot" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/utilities" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Hacker_Social_Networks" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/utilities/stream_plot.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
     <configuration default="false" name="feature_ts" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -514,6 +840,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Hacker_Social_Networks" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/time_series/feature_ts.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="anomalyDetect" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/time_series" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Hacker_Social_Networks" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/time_series/anomalyDetect.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -656,16 +999,16 @@
       <item index="0" class="java.lang.String" itemvalue="Python.computeFeat" />
       <item index="1" class="java.lang.String" itemvalue="Python.regressionAttacks" />
       <item index="2" class="java.lang.String" itemvalue="Python.cve_event" />
-      <item index="3" class="java.lang.String" itemvalue="Python.stream_plot" />
-      <item index="4" class="java.lang.String" itemvalue="Python.feature_ts" />
+      <item index="3" class="java.lang.String" itemvalue="Python.feature_ts" />
+      <item index="4" class="java.lang.String" itemvalue="Python.anomalyDetect" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.computeFeat" />
-        <item index="1" class="java.lang.String" itemvalue="Python.feature_ts" />
-        <item index="2" class="java.lang.String" itemvalue="Python.regressionAttacks" />
-        <item index="3" class="java.lang.String" itemvalue="Python.cve_event" />
-        <item index="4" class="java.lang.String" itemvalue="Python.stream_plot" />
+        <item index="0" class="java.lang.String" itemvalue="Python.feature_ts" />
+        <item index="1" class="java.lang.String" itemvalue="Python.anomalyDetect" />
+        <item index="2" class="java.lang.String" itemvalue="Python.computeFeat" />
+        <item index="3" class="java.lang.String" itemvalue="Python.regressionAttacks" />
+        <item index="4" class="java.lang.String" itemvalue="Python.cve_event" />
       </list>
     </recent_temporary>
   </component>
@@ -686,18 +1029,18 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1689" y="17" width="1698" height="1018" extended-state="6" />
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16353725" sideWeight="0.7400568" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1427816" sideWeight="0.7413074" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17467761" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18573046" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16353725" sideWeight="0.2599432" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1427816" sideWeight="0.25869262" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3272933" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -714,7 +1057,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="20" />
+      <option name="time" value="22" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -925,13 +1268,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/time_series/anomalyDetect.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-8583">
-          <caret line="32" column="19" selection-start-line="32" selection-start-column="19" selection-end-line="32" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/network_analysis/plot_neo4j_stats.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1045,7 +1381,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/time_series/preprocessData.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="543">
+        <state relative-caret-position="1731">
           <caret line="203" column="10" selection-start-line="203" selection-start-column="10" selection-end-line="203" selection-end-column="10" />
           <folding>
             <element signature="e#250#497#0" expanded="false" />
@@ -1055,34 +1391,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/time_series/regressionAttacks.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="128" column="71" selection-start-line="128" selection-start-column="4" selection-end-line="128" selection-end-column="71" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#520#749#0" expanded="false" />
-            <element signature="e#3252#3592#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/time_series/feature_ts.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1416">
-          <caret line="76" column="54" selection-start-line="76" selection-start-column="54" selection-end-line="76" selection-end-column="54" />
-          <folding>
-            <element signature="e#610#1437#0" expanded="false" />
-            <element signature="e#4095#4250#0" expanded="false" />
-            <element signature="e#4306#6361#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/time_series/computeFeat.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="426">
-          <caret line="876" column="63" selection-start-line="876" selection-start-column="63" selection-end-line="876" selection-end-column="63" />
+        <state relative-caret-position="-171">
+          <caret line="447" column="65" selection-start-line="447" selection-start-column="65" selection-end-line="447" selection-end-column="65" />
           <folding>
             <element signature="e#1618#1847#0" expanded="false" />
             <element signature="e#1883#1920#0" expanded="false" />
@@ -1092,8 +1404,61 @@
             <element signature="e#4699#5149#0" expanded="false" />
             <element signature="e#5214#9972#0" expanded="false" />
             <element signature="e#10044#15160#0" expanded="false" />
+            <element signature="e#15233#19797#0" expanded="false" />
             <element signature="e#19863#24051#0" expanded="false" />
             <element signature="e#24119#30993#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/time_series/anomalyDetect.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="453">
+          <caret line="476" column="92" selection-start-line="476" selection-start-column="39" selection-end-line="476" selection-end-column="92" />
+          <folding>
+            <element signature="e#466#566#0" expanded="false" />
+            <element signature="e#597#826#0" expanded="false" />
+            <element signature="e#1680#1874#0" expanded="false" />
+            <element signature="e#1932#2389#0" expanded="false" />
+            <element signature="e#2463#2782#0" expanded="false" />
+            <element signature="e#2846#3184#0" expanded="false" />
+            <element signature="e#3239#3790#0" expanded="false" />
+            <element signature="e#3868#5885#0" expanded="false" />
+            <element signature="e#5931#6387#0" expanded="false" />
+            <element signature="e#6451#8466#0" expanded="false" />
+            <element signature="e#8500#8700#0" expanded="false" />
+            <element signature="e#8743#9968#0" expanded="false" />
+            <element signature="e#11378#11449#0" expanded="false" />
+            <element signature="e#15883#16791#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/time_series/feature_ts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="398">
+          <caret line="372" column="85" selection-start-line="372" selection-start-column="85" selection-end-line="372" selection-end-column="85" />
+          <folding>
+            <element signature="e#824#1651#0" expanded="false" />
+            <element signature="e#6924#7079#0" expanded="false" />
+            <element signature="e#7164#9227#0" expanded="false" />
+            <element signature="e#9263#9882#0" expanded="false" />
+            <element signature="e#9949#10541#0" expanded="false" />
+            <element signature="e#12320#13108#0" expanded="false" />
+            <marker date="1513954469827" expanded="false" signature="1728:4240" ph="..." />
+            <marker date="1513954469827" expanded="false" signature="4331:6887" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/time_series/regressionAttacks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="86" column="44" selection-start-line="86" selection-start-column="44" selection-end-line="86" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#520#749#0" expanded="false" />
+            <element signature="e#3252#3592#0" expanded="false" />
           </folding>
         </state>
       </provider>
