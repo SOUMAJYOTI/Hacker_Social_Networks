@@ -435,7 +435,7 @@ def main():
     # amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
 
     trainStart_date = datetime.datetime.strptime('2016-9-01', '%Y-%m-%d')
-    trainEnd_date = datetime.datetime.strptime('2017-03-01', '%Y-%m-%d')
+    trainEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
 
     feat_df = pd.read_pickle('../../data/DW_data/features/feat_forums/user_graph_Delta_T0_Sept16-Apr17.pickle')
     feat_df = feat_df[feat_df['forum'].isin(forums)]

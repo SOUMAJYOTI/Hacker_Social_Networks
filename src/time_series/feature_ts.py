@@ -255,7 +255,7 @@ def plot_box_dist(attack_hist, non_attack_hist, title, dir, delta_time_prev):
         plt.close()
 
 
-def concatenateDf(featList):
+def concatenateDf(featList, featDir):
     '''
     Concatenate the features into a single dataframe
 
@@ -267,10 +267,10 @@ def concatenateDf(featList):
     feat_df = pd.DataFrame()
     for fp in featList:
         if feat_df.empty:
-            feat_df = pd.read_pickle('../../data/DW_data/features/feat_forums/'
+            feat_df = pd.read_pickle(featDir
                                      + str(fp) + '_DeltaT_2_Sept16-Apr17.pickle')
         else:
-            curr_df = pd.read_pickle('../../data/DW_data/features/feat_forums/'
+            curr_df = pd.read_pickle(featDir
                                      + str(fp) + '_DeltaT_2_Sept16-Apr17.pickle')
             feat_df = pd.merge(feat_df, curr_df, on=['date'])
 
@@ -278,7 +278,6 @@ def concatenateDf(featList):
 
 
 # def time_to_event():
-
 
 
 def plot_ts(df, plot_dir, title):
@@ -302,14 +301,53 @@ def plot_ts(df, plot_dir, title):
         plt.close()
 
 
+def computeAnomalyCount(subspace_df):
+    subspace_anomalies = pd.DataFrame()
+    subspace_anomalies['date'] = subspace_df['date']
+    for feat in subspace_df.columns.values:
+        feat_name = feat.split('_')[0]
+        if feat == 'date':
+            continue
+
+        ''' First,  the residual vectors'''
+        if 'res' in feat:
+            mean_feat = subspace_df[feat].mean()
+            thresh = 3*mean_feat
+
+            anomaly_flag = []
+            for idx, row in subspace_df[feat].iteritems():
+                if row > thresh:
+                    anomaly_flag.append(1)
+                else:
+                    anomaly_flag.append(0)
+
+            subspace_anomalies[feat_name + '_res_flag'] = anomaly_flag
+
+        ''' Then,  the state vectors'''
+        if 'state' in feat:
+            mean_feat = subspace_df[feat].mean()
+            thresh = 3 * mean_feat
+
+            anomaly_flag = []
+            for idx, row in subspace_df[feat].iteritems():
+                if row > thresh:
+                    anomaly_flag.append(1)
+                else:
+                    anomaly_flag.append(0)
+
+            subspace_anomalies[feat_name + '_state_flag'] = anomaly_flag
+
+    return subspace_anomalies
+
+
 def main():
     ''' Set the arguments for the data preprocessing here '''
     args = ArgsStruct()
-    args.feat_concat = False
+    args.feat_concat = True
     args.forumsSplit = True
     args.plot_data = False
     args.plot_time_series = False
-    args.plot_subspace = True
+    args.plot_subspace = False
 
     trainStart_date = datetime.datetime.strptime('2016-9-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
@@ -321,6 +359,9 @@ def main():
     amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
     amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
     trainOutput = prepareOutput(amEvents_malware, trainStart_date, trainEnd_date)
+    plot_dir = '../../plots/dw_stats/output/'
+    plot_ts(trainOutput, plot_dir, '')
+
 
     if args.feat_concat == False:
         feat_df_graph = pd.read_pickle(
@@ -330,11 +371,27 @@ def main():
 
         feat_df_users = feat_df_users.filter(items=['date', 'forum', 'expert_NonInteractions', 'expertsInteractions', 'numUsers'])
         feat_df = pd.merge(feat_df_users, feat_df_graph, on=['date', 'forum'])
-        pickle.dump(feat_df, open('../../data/DW_data/features/feat_forums/user_graph_Delta_T0_Sept16-Apr17.pickle', 'wb'))
-        # print(feat_df)
+        # pickle.dump(feat_df, open('../../data/DW_data/features/feat_forums/user_graph_Delta_T0_Sept16-Apr17.pickle', 'wb'))
+
     else:
         features = ['shortestPaths', 'conductance', 'commThreads']
-        feat_df = concatenateDf(features)
+        featDir = '../../data/DW_data/features/feat_combine/'
+        feat_df_graph = concatenateDf(features, featDir)
+
+        feat_df_users = pd.read_pickle(
+            '../../data/DW_data/features/feat_combine/user_interStats_DeltaT_2_Sept16-Apr17_TP10.pickle')
+        feat_df_users = feat_df_users.filter(
+            items=['date', 'forum', 'expert_NonInteractions', 'expertsInteractions', 'numUsers'])
+
+        feat_df = pd.merge(feat_df_users, feat_df_graph, on=['date'])
+
+        feat_anomalies = pd.read_pickle(
+            '../../data/DW_data/features/subspace_anomalies_v12_22.pickle')
+
+        feat_df = pd.merge(feat_df, feat_anomalies, on=['date'])
+        pickle.dump(feat_df,
+                    open('../../data/DW_data/features/feat_combine/user_graph_Delta_T0_Sept16-Apr17.pickle', 'wb'))
+
 
     train_featDf = feat_df[feat_df['date'] >= trainStart_date]
     train_featDf = train_featDf[train_featDf['date'] < trainEnd_date]
@@ -370,8 +427,16 @@ def main():
     if args.plot_subspace == True:
         subspace_df = pd.read_pickle('../../data/DW_data/features/subspace_df_v12_22.pickle')
         title = ''
-        plot_dir = '../../plots/dw_stats/feat_plot/feat_combine/time_series/subspace/'
-        plot_ts(subspace_df, plot_dir, title)
+        plot_dir = '../../plots/dw_stats/feat_plot/feat_combine/time_series/subspace/anomalies/'
+        # plot_ts(subspace_df, plot_dir, title)
+
+        subspace_anomalies = computeAnomalyCount(subspace_df)
+        # plot_ts(subspace_anomalies, plot_dir, title)
+        # print(subspace_anomalies)
+
+        pickle.dump(subspace_anomalies, open('../../data/DW_data/features/subspace_anomalies_v12_22.pickle', 'wb'))
+
+        ''' Merge subspace anomaly feature and the other features '''
 
 if __name__ == "__main__":
     main()
