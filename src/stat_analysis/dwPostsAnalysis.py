@@ -42,19 +42,6 @@ def plot_bar(data, xTicks, xLabels='', yLabels=''):
     plt.close()
 
 
-# def getThreads(forumList, startDate, endDate):
-#     engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cve')
-#     results_df = pd.DataFrame()
-#     for f in forumList:
-#         query = "select forumsid, language,  postcontent, posteddate, topicid, topicsname, uid from " \
-#                 " dw_posts where posteddate::date > '" \
-#                     + startDate + "' and posteddate::date < '" + endDate + "' and forumsid=" + str(f)
-#
-#         df = pd.read_sql_query(query, con=engine)
-#         results_df = results_df.append(df)
-#
-#     return results_df
-
 def segmentPostsWeek(posts):
     posts['DateTime'] = posts['posteddate'].map(str) + ' ' + posts['postedtime'].map(str)
     posts['DateTime'] = posts['DateTime'].apply(lambda x:
@@ -205,17 +192,4 @@ if __name__ == "__main__":
     plot_bar(numPosts, titles, 'Time frame(start of week)', 'Number of posts')
 
 
-    # topicsId_list = list(set(posts_df['topicid'].tolist()))
-    # threadLength_list = threadsLenDist(posts_df, topicsId_list)
-
-    # print(threadLength_list)
-    # plot_hist(threadLength_list, 20)
-    # data_to_plot = []
-    # threadLength_list = sorted(threadLength_list.items(), key=operator.itemgetter(0))
-    # for k, v in threadLength_list:
-    #     data_to_plot.append(v)
-    #     xLabels = ['< 10', '10 and 20', '20 and 50', '50 and 100', '100 and 1000', '> 1000']
-    # plot_bar(data_to_plot, xLabels)
-
-
-
+  
