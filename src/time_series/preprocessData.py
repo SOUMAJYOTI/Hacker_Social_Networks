@@ -6,6 +6,22 @@ import src.network_analysis.createConnections as ccon
 import src.load_data.load_dataDW as ldDW
 import operator
 import re
+import csv
+import numpy as np
+import sys
+maxInt = sys.maxsize
+decrement = True
+
+while decrement:
+    # decrease the maxInt value by factor 10
+    # as long as the OverflowError occurs.
+
+    decrement = False
+    try:
+        csv.field_size_limit(maxInt)
+    except OverflowError:
+        maxInt = int(maxInt/10)
+        decrement = True
 
 
 def dateToString(date):
@@ -19,26 +35,21 @@ def dateToString(date):
     return yearNum + "-" + monthNum + "-" + dayNum
 
 
-def user_CVE_groups(cve_cpe_data, vul_data):
+def user_CVE_groups(vul_data):
     users_CVEMap = {}
     CVE_usersMap = {}
-    for cve in cve_cpe_data['cve']:
-        vulnItems = vul_data[vul_data['vulnId'] == cve]
-        users = vulnItems['users'].tolist()
-        if cve not in CVE_usersMap:
-            CVE_usersMap[cve] = []
+    for idx, row in vul_data.iterrows():
+        if row['vulnId'] not in CVE_usersMap:
+            CVE_usersMap[row['vulnId']] = []
+        for uid in row['users']:
+            if uid not in users_CVEMap:
+                users_CVEMap[uid] = []
 
-        if len(users) == 0:
-            continue
-
-        CVE_usersMap[cve].extend(users[0])
-        usersList = users[0]  ##
-        for u in usersList:
-            # print(u)
-            if u not in users_CVEMap:
-                users_CVEMap[u] = []
-
-            users_CVEMap[u].append(cve)
+            if type(uid) is float and np.isnan(uid):
+                continue
+            # print(uid, row['vulnId'])
+            users_CVEMap[uid].append(row['vulnId'])
+            CVE_usersMap[row['vulnId']].append(uid)
 
     return users_CVEMap, CVE_usersMap
 
@@ -187,47 +198,122 @@ def store_cve_cpe_map(cve_cpe_df):
     # exit()
     return cve_cpe_map
 
+
+def processVulnInfo(vuln_df, start_date, end_date):
+    '''
+    This function processes and filters relevant columns from the SDK/API information
+    obtained from getdetailedVulnInfo()
+
+    The start_date and end_date is to filter the vulnerabilities within the Armstrong event range
+    :param vuln_df:
+    :return:
+    '''
+
+    postedDateList = []
+    vulnIdList = []
+    indicatorList = []
+    marketIdList = []
+    forumIdList = []
+    numForumsList = []
+    itemNameList = []
+    numUsersList = []
+    usersList = []
+
+    for cve, g in vuln_df.groupby(by='vulnerabilityid'):
+        postedDates = []
+        forums = []
+        indicators = []
+        marketiDs = []
+        itemNames = []
+        users = []
+        for idx, row in g.iterrows():
+            pDate = pd.to_datetime(row['posteddate'])
+
+            if pDate >= start_date and pDate < end_date:
+                postedDates.append(row['posteddate'])
+                forums.append(row['forumsid'])
+                indicators.append(row['indicator'])
+                marketiDs.append(row['marketplaceid'])
+                itemNames.append(row['itemdescription'])
+                users.append(row['uid'])
+
+        if len(postedDates) == 0: # empty df
+            continue
+        vulnIdList.append(cve)
+        postedDateList.append(postedDates)
+        indicatorList.append(indicators)
+        marketIdList.append(marketiDs)
+        forumIdList.append(forums)
+        numForumsList.append(len(list(set(forums))))
+        itemNameList.append(itemNames)
+        numUsersList.append(len(list(set(users))))
+        usersList.append(users)
+
+    vuln_df_filtered = pd.DataFrame()
+    vuln_df_filtered['postedDate'] = postedDateList
+    vuln_df_filtered['vulnId'] = vulnIdList
+    vuln_df_filtered['indicator'] = indicatorList
+    vuln_df_filtered['marketId'] = marketIdList
+    vuln_df_filtered['forumID'] = forumIdList
+    vuln_df_filtered['numForums'] = numForumsList
+    vuln_df_filtered['itemName'] = itemNameList
+    vuln_df_filtered['users'] = usersList
+    vuln_df_filtered['numUsers'] = numUsersList
+
+    return vuln_df_filtered
+
+
 if __name__ == "__main__":
-    forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 220
-        , 179, 219, 265, 98, 150, 121, 35, 214, 266, 89, 71, 146, 107, 64,
-                           218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
+    # forums_cve_mentions = [88, 248, 133, 49, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197, 220
+    #     , 179, 219, 265, 98, 150, 121, 35, 214, 266, 89, 71, 146, 107, 64,
+    #                        218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
     # posts = pd.read_pickle('../../data/Dw_data/posts_days_forumsV1.0.pickle')
 
-    start_date = datetime.datetime.strptime('01-01-2016', '%m-%d-%Y')
-    end_date = datetime.datetime.strptime('07-01-2017', '%m-%d-%Y')
+    start_date = datetime.datetime.strptime('04-01-2016', '%m-%d-%Y')
+    end_date = datetime.datetime.strptime('09-01-2017', '%m-%d-%Y')
 
     # df_posts = countConversations(start_date, end_date, forums_cve_mentions)
     # pickle.dump(df_posts, open('../../data/DW_data/posts_days_forumsV2.0.pickle', 'wb'))
+    # vuln_old = pd.read_pickle('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle')
+    # print(vuln_old[:10])
+    # exit()
+    vuln_df = pd.read_csv('../../data/DW_data/VulnInfo_11_17.csv', encoding='ISO-8859-1', engine='python')
 
-    vulnInfo = pd.read_pickle('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle')
-    print(vulnInfo[:10])
-    exit()
+    # print(vulnInfo[:10])
+    # vuln_df_filter = processVulnInfo(vuln_df, start_date, end_date)
+    # print(vuln_df_filter)
+    # pickle.dump(vuln_df_filter, open('../../data/DW_data/Vulnerabilities_Armstrong.pickle', 'wb'))
+    # exit()
 
-    # cve_cpe_df =  pd.read_csv('../../data/DW_data/cve_cpe_mapDF.csv')
-    # cve_cpe_map = store_cve_cpe_map(cve_cpe_df)
-    #
-    # pickle.dump(cve_cpe_map, open('../../data/DW_data/cve_cpe_map.pickle', 'wb') )
+    cve_cpe_df =  pd.read_csv('../../data/DW_data/new_DW/cve_cpe_mapDF_new.csv')
+    cve_cpe_map = store_cve_cpe_map(cve_cpe_df)
+
+    pickle.dump(cve_cpe_map, open('../../data/DW_data/new_DW/cve_cpe_map_new.pickle', 'wb') )
 
     # topCPEGroups(start_date, end_date, vulnInfo, cve_cpe_df, -1)
-
-    # users_CVEMap, CVE_usersMap = user_CVE_groups(cve_cpe_map, vulnInfo)
-
+    # cve_cpe_map = pd.read_csv('../../data/DW_data/cve_cpe_mapDF.csv')
+    # print(cve_cpe_map[:10])
+    # vulnInfo = pd.read_pickle('../../data/DW_data/Vulnerabilities_Armstrong.pickle')
+    # print(vulnInfo[:10])
+    # users_CVEMap, CVE_usersMap = user_CVE_groups(vulnInfo)
+    #
     # CVE_usersMap_filtered = {}
     # for cve in CVE_usersMap:
     #     if CVE_usersMap[cve] == 0:
     #         continue
     #     CVE_usersMap_filtered[cve] = CVE_usersMap[cve]
     #
-    # pickle.dump((users_CVEMap, CVE_usersMap_filtered), open('../../data/DW_data/users_CVE_map.pickle', 'wb'))
+    # # print(CVE_usersMap_filtered)
+    # pickle.dump((users_CVEMap, CVE_usersMap), open('../../data/DW_data/new_DW/users_CVE_map_new.pickle', 'wb'))
 
-    df_posts = pd.read_pickle('../../data/DW_data/dw_database_data_2016-17.pickle')
-    print(df_posts[:10])
-    exit()
+    # df_posts = pd.read_pickle('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle')
+    # print(df_posts[:10])
+    # exit()
     # df_posts = ldDW.getDW_data_postgres(forums_list=forums_cve_mentions, start_date=start_date.strftime("%Y-%m-%d"),
     #                                        end_date=end_date.strftime("%Y-%m-%d"))
     # pickle.dump(df_posts, open('../../data/DW_data/dw_database_data_2016-17.pickle', 'wb'))
-    KB_edgesDf = computeKBnetwork(start_date, end_date, df_posts)
-    pickle.dump(KB_edgesDf, open('../../data/DW_data/KB_edges_df.pickle', 'wb'))
+    # KB_edgesDf = computeKBnetwork(start_date, end_date, df_posts)
+    # pickle.dump(KB_edgesDf, open('../../data/DW_data/new_DW/KB_edges_df_new.pickle', 'wb'))
 
     # print(KB_edgesDf)
 

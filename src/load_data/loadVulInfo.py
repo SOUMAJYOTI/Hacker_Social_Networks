@@ -7,6 +7,7 @@ import datetime as dt
 import pandas as pd
 import re
 
+
 def getVulnInfo():
     dataLim = 30000
     countData = 0
@@ -88,6 +89,7 @@ def getVulnInfo():
     df['financialTags'] = financialTags
     df['numUsers'] = numUsers
     df['users'] = users
+
 
 def getDetailedVulInfo():
     dataLim = 30000

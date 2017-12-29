@@ -156,9 +156,15 @@ def storeEdges(nwData, topics):
     for topicid in topics:
         threads = nwData[nwData['topicid'] == topicid]
         threads.is_copy=False
-        threads['DateTime'] = threads['posteddate'].map(str) + ' ' + threads['postedtime'].map(str)
-        threads['DateTime'] = threads['DateTime'].apply(lambda x:
-                                                        datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
+        # print(threads.iloc[0]['postedtime'])
+        if threads.iloc[0]['postedtime'] == '':
+            threads['DateTime'] = threads['posteddate'].map(str)
+            threads['DateTime'] = threads['DateTime'].apply(lambda x:
+                                                            datetime.datetime.strptime(x, '%Y-%m-%d'))
+        else:
+            threads['DateTime'] = threads['posteddate'].map(str) + ' ' + threads['postedtime'].map(str)
+            threads['DateTime'] = threads['DateTime'].apply(lambda x:
+                                                            datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
         threads = threads.sort_values(['DateTime'], ascending=True)
 
         userWindow = [] # keeps track of the previous users in the dynamic window
@@ -173,6 +179,7 @@ def storeEdges(nwData, topics):
                 d2_ts = time.mktime(r['DateTime'].timetuple())
                 diff = int(int(d2_ts - d1_ts) / 60)  # difference in minutes
 
+                # The length of window is min 5
                 if len(meanTimeWindow) > 5:
                     meanDiffWindow = np.mean(meanTimeWindow)
                     if diff > meanDiffWindow:
@@ -184,6 +191,11 @@ def storeEdges(nwData, topics):
                                 continue
                             else:
                                 break
+
+                # The length of window is max 10
+                if len(meanTimeWindow) > 10:
+                    userWindow = userWindow[-10:]
+                    meanTimeWindow = meanTimeWindow[-10:]
 
                 for pu in range(len(userWindow)):
                     prevUser = userWindow[pu]

@@ -16,9 +16,9 @@ def get_Neo4j_data(userList):
 if __name__ == "__main__":
     engine = create_engine('postgresql://postgres:Impossible2@10.218.109.4:5432/cyber_events_pred')
 
-    query = "select * from detailed_vuln_info_28_oct"
+    query = "select * from cpe_mapping_22_dec"
     print(query)
     df = pd.read_sql_query(query, con=engine)
-    df.to_csv('../../data/DW_data/VulnInfo_11_17.csv')
+    df.to_csv('../../data/DW_data/new_DW/cve_cpe_mapDF_new.csv')
 
 
