@@ -1,24 +1,17 @@
+from matplotlib.dates import DateFormatter
 import pandas as pd
-import datetime as dt
-import operator
 import pickle
 import numpy as np
 import datetime
 import matplotlib.pyplot as plt
-import matplotlib
-from sklearn.decomposition import PCA
-import os
-from dateutil.relativedelta import relativedelta
-import sklearn.metrics
-import random
-from sklearn import linear_model, ensemble
-from sklearn.naive_bayes import GaussianNB
-from random import shuffle
-
-from sklearn.svm import SVC
-from sklearn import tree
 import csv
 import sys
+import matplotlib.dates as mdates
+
+class ArgsStruct:
+    name = ''
+    plot_data = False
+
 maxInt = sys.maxsize
 decrement = True
 
@@ -138,6 +131,56 @@ def loadVulnInfo(df):
     vuln_groups= df.groupby(['vulnerabilityid'])
 
 
+def analyse_events(df_data):
+    args = ArgsStruct()
+    args.plot_data = False
+    print(df_data[:10])
+
+    if args.plot_data == True:
+        df_data['start_dates'] = df_data['start_dates'].dt.date
+
+        title = 'Weekly distribution of Armstrong attack counts: Malicious email'
+        fig, ax = plt.subplots()
+        df_data.plot.bar(ax=ax, x='start_dates', y='number_attacks', color='black', linewidth=2, )
+        plt.grid(True)
+        plt.xticks(size=20)
+        plt.yticks(size=20)
+        # ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+        plt.title(title, size=20)
+        plt.xlabel('Start dates (Week)', size=20)
+        plt.ylabel('# attacks', size=20)
+        plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
+        # file_save = plot_dir + feat + title + '.png'
+        # plt.savefig(file_save)
+        plt.show()
+        plt.close()
+
+    vuln_counts_list = []
+    for idx, row in df_data.iterrows():
+        vuln_counts = np.sum(np.array(row['vuln_counts']))
+        vuln_counts_list.append(vuln_counts)
+
+    df_data['vuln_counts_sum'] = vuln_counts_list
+
+    if args.plot_data == True:
+        df_data['start_dates'] = df_data['start_dates'].dt.date
+        title = 'Weekly distribution of Vulnerability mentions: DW'
+        fig, ax = plt.subplots()
+        df_data.plot.bar(ax=ax, x='start_dates', y='vuln_counts_sum', color='black', linewidth=2, )
+        plt.grid(True)
+        plt.xticks(size=20)
+        plt.yticks(size=20)
+        # ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+        plt.title(title, size=20)
+        plt.xlabel('Start dates (Week)', size=20)
+        plt.ylabel('# vulnerabilties mentioned', size=20)
+        plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
+        # file_save = plot_dir + feat + title + '.png'
+        # plt.savefig(file_save)
+        plt.show()
+        plt.close()
+
+
 
 def main():
     amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
@@ -146,11 +189,15 @@ def main():
     cve_cpe_map = pickle.load(open('../../data/DW_data/cve_cpe_map.pickle', 'rb'))
 
     trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
-    trainEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
+    trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
-    outputDf = weeklyCVE_event_corr(amEvents_malware, vuln_df, cve_cpe_map, trainStart_date, trainEnd_date)
+    # outputDf = weeklyCVE_event_corr(amEvents_malware, vuln_df, cve_cpe_map, trainStart_date, trainEnd_date)
 
-    pickle.dump(outputDf, open('../../data/DW_data/CPE_events_corr.pickle', 'wb'))
+    # pickle.dump(outputDf, open('../../data/DW_data/CPE_events_corr.pickle', 'wb'))
+
+    cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr.pickle')
+    analyse_events(cve_eventsDf)
+
 if __name__ == "__main__":
     main()
 

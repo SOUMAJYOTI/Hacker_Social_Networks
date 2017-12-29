@@ -1,17 +1,11 @@
-import sys
-sys.path.insert(0, '../load_data/')
-
-import load_data_api as ldap
 import pandas as pd
 import networkx as nx
 import datetime as dt
 import operator
 import matplotlib.pyplot as plt
 import numpy as np
-from sqlalchemy import create_engine
 import pickle
 import datetime
-import load_dataDW as ldDW
 
 
 def plot_bar(data, xTicks, xLabels='', yLabels=''):
@@ -141,55 +135,65 @@ def topCPEWeekly(dfCPE):
     return posts_WeeklyList
 
 
+def dwPosts_analysis(df_data, topics):
+    topic_forumsMap = {}
+    for idx, row in topics.iterrows():
+        topic = row['id']
+        forum = row['forum_id']
+
+        topic_forumsMap[topic]  = forum
+
+    print('Assign forum....')
+    forumList = []
+    for idx, row in df_data.iterrows():
+        topic = row['topic_id']
+
+        if topic not in topic_forumsMap:
+            forumList.append(' ')
+        else:
+            forumList.append(topic_forumsMap[topic])
+
+    df_data['forum'] = forumList
+
+    return df_data
+
+
+def create_dwdatabase(df_data):
+    forumsList = []
+    topicsList = []
+    postedDateList = []
+    postedTimeList = []
+    postidList = []
+    uidList = []
+
+    for idx, row in df_data.iterrows():
+        forumsList.append(row['forum'])
+        topicsList.append(row['topic_id'])
+        postedDateList.append(row['date_posted'])
+        postedTimeList.append('')
+        postidList.append(row['id'])
+        uidList.append(row['user_id'])
+
+    df_database = pd.DataFrame()
+    df_database['forumsid'] = forumsList
+    df_database['topicid'] = topicsList
+    df_database['posteddate'] = postedDateList
+    df_database['postedtime'] = postedTimeList
+    df_database['postsid'] = postidList
+    df_database['uid'] = uidList
+
+    return df_database
+
 if __name__ == "__main__":
-    titles = pickle.load(open('../../data/DW_data/09_15/train/features/titles_weekly.pickle', 'rb'))
-    forums = [88, 248, 133, 62, 161, 84, 60, 104, 173, 250, 105, 147, 40, 197]
+    dwData = pd.read_pickle('../../data/DW_data/DW_data_new_2016-2017.pickle')
+    topics = pd.read_pickle('../../data/DW_data/topics_new.pickle')
 
-    vulData = pickle.load(open('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle', 'rb'))
-    vulData['postedDate'] = pd.to_datetime(vulData['postedDate'], format='%Y-%m-%d')
-    vulDataFiltered = vulData[vulData['forumID'].isin(forums)]
+    # df_data = dwPosts_analysis(dwData, topics)
+    # pickle.dump(df_data, open('../../data/DW_data/DW_data_forum_2016-2017.pickle', 'wb'))
 
-    # df_cve_cpe = pd.read_csv('../../data/DW_data/09_15/CVE_CPE_groups.csv')
+    # dwData = pd.read_pickle('../../data/DW_data/dw_database_data_2016-17.pickle')
 
-    start_date = "2016-04-01"
-    end_date= "2016-05-01"
-    time_gap = 1
+    # pickle.dump(create_dwdatabase(df_data), open('../../data/DW_data/dw_database_data_2016-17_new.pickle', 'wb'))
 
-    numThreads = []
-    numPosts = []
-    #0. Get the DW data
-    for idx in range(6):
-        # KB network formation
-        start_month = int(start_date[5:7]) + idx
-        end_month = start_month + time_gap
-        if start_month < 10:
-            start_monthStr = str('0') + str(start_month)
-        else:
-            start_monthStr = str(start_month)
-
-        if end_month < 10:
-            end_monthStr = str('0') + str(end_month)
-        else:
-            end_monthStr = str(end_month)
-
-        start_dateCurr = start_date[:5] + start_monthStr + start_date[7:]
-        end_dateCurr = start_date[:5] + end_monthStr + start_date[7:]
-        print("KB info: ")
-        print("Start date: ", start_dateCurr, " ,End date: ", end_dateCurr)
-        df_KB = ldDW.getDW_data_postgres(forums, start_dateCurr, end_dateCurr)
-        vulDataFiltered = vulData[vulData['postedDate'] >= start_dateCurr]
-        vulDataFiltered = vulDataFiltered[vulDataFiltered['postedDate'] < end_dateCurr]
-        # print(vulDataFiltered)
-        postsWeekly = segmentPostsWeek(df_KB)
-        # postsWeekly = topCPEWeekly(vulDataFiltered)  # exit()
-
-        for w in range(len(postsWeekly)):
-            # print(len(postsWeekly[w]))
-            numPosts.append(len(postsWeekly[w]))
-            numThreads.append(len(list(set(postsWeekly[w]['topicid']))))
-
-    plot_bar(numThreads, titles, 'Time frame(start of week)', 'Number of threads')
-    plot_bar(numPosts, titles, 'Time frame(start of week)', 'Number of posts')
-
-
-  
+    df_data = pd.read_pickle('../../data/DW_data/dw_database_data_2016-17_new.pickle')
+    print(df_data[:10])
