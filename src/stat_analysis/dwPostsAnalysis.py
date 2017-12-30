@@ -109,12 +109,12 @@ def create_dwdatabase(df_data):
 
 
 def groupForumThreads(df_data):
-    forums = list(df_data['forumsid'])
-    forumsCount = (df_data.groupby(by='forumsid', ).size()).sort_values(ascending=False)
+    # print(df_data[:10])
+    forumsCount = (df_data.groupby(by='forum', ).size()).sort_values(ascending=False)
 
     forumsFinal = []
     for idx, row in forumsCount.iteritems():
-        if row > 5000: # this is the threshold of forum posts count to consider
+        if row > 1000: # this is the threshold of forum posts count to consider
             forumsFinal.append(idx)
 
     print(forumsFinal)
@@ -125,13 +125,14 @@ if __name__ == "__main__":
     dwData = pd.read_pickle('../../data/DW_data/new_DW/DW_postgres_data_new_2016-2017.pickle')
     topics = pd.read_pickle('../../data/DW_data/new_DW/topics_new.pickle')
 
-    df_data = dwPosts_analysis(dwData, topics)
+    # df_data = dwPosts_analysis(dwData, topics)
+    df_data = pickle.load(open('../../data/DW_data/new_DW/DW_postgres_data_forum_2016-2017.pickle', 'rb'))
     # pickle.dump(df_data, open('../../data/DW_data/DW_data_forum_2016-2017.pickle', 'wb'))
 
     # dwData = pd.read_pickle('../../data/DW_data/dw_database_data_2016-17.pickle')
 
-    pickle.dump(create_dwdatabase(df_data), open('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle', 'wb'))
+    # pickle.dump(create_dwdatabase(df_data), open('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle', 'wb'))
 
     # df_data = pd.read_pickle('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle')
     #
-    # groupForumThreads(df_data)
+    groupForumThreads(df_data)

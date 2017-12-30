@@ -20,8 +20,12 @@ import time
 # exit()
 
 # Global storage structures used over all pool processing
-# Top forums by count in the Armstrong timeframe > 5000 posts
-forums = [6, 129, 69, 77, 134, 178, 31, 193, 250, 56, 121, 110, 201, 194, 13, 205, 112, 233, 44, 97, 82, 23]
+# Top forums by count in the Armstrong timeframe > 1000 posts
+forums = [129, 6, 112, 77, 69, 178, 31, 134, 193, 56, 201, 250, 13,
+          205, 194, 110, 121, 233, 23, 232, 44, 29, 97, 204, 82, 155,
+          48, 93, 45, 126, 174, 117, 41, 248, 177, 135, 22, 172, 189,
+          14, 137, 231, 91, 55, 192, 245, 234, 199, 7, 184, 43, 183, 57]
+
 
 # forums = [88, ]
 vulnInfo = pd.read_pickle('../../data/DW_data/new_DW/Vulnerabilities_Armstrong.pickle')
@@ -255,7 +259,7 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
     experts = getExperts(KB_users, G_KB, deg_thresh)
 
     print("Date ", start_date.date(), )
-    print("Number of experts: ", len(experts))
+    print("Number of users: ", len(KB_users), ", Number of experts: ", len(experts))
 
     # expertsLastTime = computeExpertsTime(KB_edges, experts)
 
