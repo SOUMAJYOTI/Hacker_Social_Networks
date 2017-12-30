@@ -5,25 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import networkx as nx
 from sqlalchemy import create_engine
-
-
-def binarySearch(alist, item):
-    first = 0
-    last = len(alist)-1
-    found = False
-
-    while first<=last and not found:
-        midpoint = (first + last)//2
-        if alist[midpoint] == item:
-            found = True
-        else:
-            if item < alist[midpoint]:
-                last = midpoint-1
-            else:
-                first = midpoint+1
-
-    return found
-
+import datetime
 
 def store_neighbors(network_df):
     network_nbrList = {}
@@ -54,20 +36,6 @@ def edgeCountPairs(network_df):
         edgeCount[pairUsers] += 1
 
     return edgeCount
-
-def store_edges(network_df):
-    network_edgeList = []
-    network_edgeList_multiple = []
-    for idx, row in network_df.iterrows():
-        src = row['source']
-        tgt = row['target']
-
-        if not binarySearch(network_edgeList, (src, tgt)):
-            network_edgeList.append((src, tgt))
-
-        network_edgeList_multiple.append((src, tgt))
-
-    return network_edgeList, network_edgeList_multiple
 
 
 def plot_hist(data, numBins, xLabel='', yLabel='', titleName=''):
@@ -119,54 +87,6 @@ def computeCentrality(network, arg):
     return cent
 
 
-def topThreadsUsers(data_df, topicIdsList, limit):
-    '''
-    :param data_df:
-    :param topicIdsList:
-    :param limit: percent of topics
-    :return:
-    '''
-    topTopicsByCount = {}
-    for tl in topicIdsList:
-        topTopicsByCount[tl] = len(data_df[data_df['topicid'] == tl])
-
-    sortedTopics = sorted(topTopicsByCount.items(), key=operator.itemgetter(1), reverse=True)
-
-    topUsers = []
-    for k, v in sortedTopics:
-        users = data_df[data_df['topicid'] == k]['uid']
-        topUsers.extend(users)
-
-    return list(set(topUsers))
-
-
-def getVulnMentUsers(data_df):
-    userCVE = {}
-    userlist = []
-    for i, r in data_df.iterrows():
-        for u in r['users']:
-            if u not in userCVE:
-                userCVE[u] = []
-
-            userCVE[u].append(r['vulnId'])
-            if u not in userlist:
-                userlist.append(u)
-
-    return userCVE, userlist
-
-# def getTopUsersWithVulMent():
-
-def commUsers(train, test):
-    users_train = set(train['source']).union(set(train['target']))
-    users_test = set(test['source']).union(set(test['target']))
-
-    commUsersList = list(users_train.intersection(users_test))
-    print("Total train users: ", len(list(users_train)))
-    print("Users common: ", len(commUsersList))
-    print("New users: ", len(users_train.difference(users_test)))
-
-
-
 def plot_DegDist(data, title=''):
     sorted_X = sorted(set(data.values()))
     Y = list(data.values())
@@ -183,80 +103,72 @@ def plot_DegDist(data, title=''):
     plt.show()
 
 
+def userDegBoxPlot(degList, xlabels):
+    fig = plt.figure(1, figsize=(10, 8))
+
+    # Create an axes instance
+    ax = fig.add_subplot(111)
+
+    # Create the boxplot
+    bp = ax.boxplot(degList, patch_artist=True)
+
+    for box in bp['boxes']:
+        # change outline color
+        box.set(color='#000000', linewidth=2)
+        # change fill color
+        box.set(facecolor='#FFFFFF')
+
+        ## change color and linewidth of the whiskers
+        # for whisker in bp['whiskers']:
+        #     whisker.set(color='#7570b3', linewidth=2)
+
+        ## change color and linewidth of the caps
+        # for cap in bp['caps']:
+        #     cap.set(color='#7570b3', linewidth=2)
+
+        ## change color and linewidth of the medians
+    for median in bp['medians']:
+        median.set(color='#000000', linewidth=4)
+
+        ## change the style of fliers and their fill
+    for flier in bp['fliers']:
+        flier.set(marker='o', color='#e7298a', alpha=0.5)
+
+    # ax.set_title('Motif transition:' + str(m4) + '-->' + str(m5))
+    # ax.set_ylabel('Shortest Path', size=)
+    ax.set_ylim([0, 30])
+    ax.set_xticklabels(xlabels, rotation=60, ha='right')
+
+
+    plt.tick_params('y', labelsize=20)
+    plt.tick_params('x', labelsize=20)
+    plt.xlabel('Date(Start of each week)', fontsize=25)
+    plt.ylabel('Degrees', fontsize=25)
+    plt.title('Users : In-Degree Distribution', fontsize=25)
+    plt.subplots_adjust(left=0.12, bottom=0.25, top=0.95)
+
+    plt.grid(True)
+    plt.show()
+    # plt.savefig(file_save)
+    plt.close()
+
+
 if __name__ == "__main__":
     startDate = "2010-07-01"
     endDate = "2016-08-01"
 
     # Load the data
-    # forums to be considered
-    dw_user_edges_train = pickle.load(open('../../data/DW_data/09_15/train/edges/user_edges_selected_forums_Oct15-Mar16.pickle', 'rb'))
-    dw_user_edges_test = pickle.load(open('../../data/DW_data/09_15/test/edges/user_edges_selected_forums_Apr16.pickle', 'rb'))
+    startyear = 2016
+    startmonth = 9
+    endyear = 2017
+    endmonth = 8
+    start_dates = [datetime.date(m // 12, m % 12 + 1, 1) for m in range(startyear * 12 + startmonth - 1, endyear * 12 + endmonth)]
+    degList = pickle.load(open('../../data/DW_data/features/usersDegDistribution.pickle', 'rb'))
+    for degl in degList:
+        count = 0
+        for d in degl:
+            if d > 10:
+                count += 1
 
-    # print(dw_user_edges_test[:10])
-    # commUsers(dw_user_edges_train, dw_user_edges_test)
-
-    # posts_df = pickle.load(open('../../data/DW_data/09_15/DW_data_selected_forums_Jan-Mar16.pickle', 'rb'))
-    #
-    # results_df = pd.DataFrame()
-    #
-    # threadids = list(set(posts_df['topicid']))
-    # dw_user_edges = dw_user_edges[dw_user_edges['topicid'].isin(threadids)]
-    # print(len(dw_user_edges))
-
-    # topicsId_list = list(set(posts_df['topicid'].tolist()))
-    # dw_user_edges = dw_user_edges[dw_user_edges['topicid'].isin(topicsId_list)]
-
-    print('Creating network....')
-    nw_edges = store_edges(dw_user_edges_train)
-    network = nx.DiGraph()
-    network.add_edges_from(nw_edges)
-
-    print("Computing centralities....")
-    c = computeCentrality(network, 'neighbors')
-    plot_DegDist(c)
-    exit()
-    # pickle.dump(c, open('../../data/DW
-    # _data/09_15/centralities/outDeg_Jan-Mar2016.pickle', 'wb'))
-
-    c = pickle.load(open('../../data/DW_data/09_15/centralities/outDeg_Jan-Mar2016.pickle', 'rb'))
-    # 2. Find top users by centrality
-    perc = 0.2
-    k = int(perc * len(c))
-    topKUid = list(topKUsers(c, k).keys())
-
-    # start_date = pd.to_datetime('2016-04-01')
-    # end_date = pd.to_datetime('2016-06-01')
-    # print("Load Vul Data...")
-    # vulData = pickle.load(open("../../data/DW_data/08_29/Vulnerabilities-sample_v1+.pickle", 'rb'))
-    # vulData['postedDate'] = pd.to_datetime(vulData['postedDate'])
-    # vulData = vulData[vulData['postedDate'] > start_date]
-    # vulData = vulData[vulData['postedDate'] < endDate]
-    # pickle.dump(vulData, open('../../data/DW_data/VulnData/Vulnerabilities_Apr-May2016.pickle', 'wb'))
-
-    # userCVE, userList = getVulnMentUsers(vulData)
-    #
-    # print("Total number of users: ", len(c))
-    # print("Total number of top K users: ", len(topKUid))
-    #
-    # print("Number of top users with CVE mentions: ")
-    # print(len(list(set(topKUid).intersection(set(userList)))))
-    # print("Number of users with CVE mentions: ")
-    # print(len(list(set(list(c.keys())).intersection(set(userList)))))
-
-
-
-
-    # print(len(list(set(posts_df['uid']))))
-    # pr = pickle.load(open('../../data/Network_stats/core_Jan-Mar2016.pickle', 'rb'))
-    # print(pr)
-
-    # 2. Find the relevant popular users to the history
-    # posts_df_new = pd.read_csv('../../data/DW_data/08_20/DW_data_selected_forums_Jul16.csv')
-    # for p in [0.1, 0.2, 0.3, 0.4]:
-    #     k = int(p* len(pr))
-    #
-    #     topKUid = list(topKUsers(pr, k).keys())
-    #     newThreadUsers = list(set(posts_df_new['uid'].tolist()))
-    #
-    #     commonUsers = list(set(topKUid).intersection(set(newThreadUsers)))
-    #     print(p, len(commonUsers)/len(newThreadUsers))
+        print(count, len(degl), count/len(degl)*100)
+    # userDegBoxPlot(degList, start_dates)

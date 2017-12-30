@@ -269,26 +269,26 @@ if __name__ == "__main__":
     #                        218, 135, 257, 243, 211, 236, 229, 259, 176, 159, 38]
     # posts = pd.read_pickle('../../data/Dw_data/posts_days_forumsV1.0.pickle')
 
-    start_date = datetime.datetime.strptime('04-01-2016', '%m-%d-%Y')
-    end_date = datetime.datetime.strptime('09-01-2017', '%m-%d-%Y')
+    start_date = datetime.datetime.strptime('01-01-2016', '%m-%d-%Y')
+    end_date = datetime.datetime.strptime('10-01-2017', '%m-%d-%Y')
 
     # df_posts = countConversations(start_date, end_date, forums_cve_mentions)
     # pickle.dump(df_posts, open('../../data/DW_data/posts_days_forumsV2.0.pickle', 'wb'))
-    # vuln_old = pd.read_pickle('../../data/DW_data/09_15/Vulnerabilities-sample_v2+.pickle')
-    # print(vuln_old[:10])
+    # vuln_old = pd.read_pickle('../../data/DW_data/CPE_events_corr.pickle')
+    # print(vuln_old[:100])
     # exit()
-    vuln_df = pd.read_csv('../../data/DW_data/VulnInfo_11_17.csv', encoding='ISO-8859-1', engine='python')
+    # vuln_df = pd.read_csv('../../data/DW_data/VulnInfo_11_17.csv', encoding='ISO-8859-1', engine='python')
 
     # print(vulnInfo[:10])
     # vuln_df_filter = processVulnInfo(vuln_df, start_date, end_date)
     # print(vuln_df_filter)
     # pickle.dump(vuln_df_filter, open('../../data/DW_data/Vulnerabilities_Armstrong.pickle', 'wb'))
     # exit()
-
-    cve_cpe_df =  pd.read_csv('../../data/DW_data/new_DW/cve_cpe_mapDF_new.csv')
-    cve_cpe_map = store_cve_cpe_map(cve_cpe_df)
-
-    pickle.dump(cve_cpe_map, open('../../data/DW_data/new_DW/cve_cpe_map_new.pickle', 'wb') )
+    #
+    # cve_cpe_df =  pd.read_csv('../../data/DW_data/new_DW/cve_cpe_mapDF_new.csv')
+    # cve_cpe_map = store_cve_cpe_map(cve_cpe_df)
+    #
+    # pickle.dump(cve_cpe_map, open('../../data/DW_data/new_DW/cve_cpe_map_new.pickle', 'wb') )
 
     # topCPEGroups(start_date, end_date, vulnInfo, cve_cpe_df, -1)
     # cve_cpe_map = pd.read_csv('../../data/DW_data/cve_cpe_mapDF.csv')
@@ -306,14 +306,10 @@ if __name__ == "__main__":
     # # print(CVE_usersMap_filtered)
     # pickle.dump((users_CVEMap, CVE_usersMap), open('../../data/DW_data/new_DW/users_CVE_map_new.pickle', 'wb'))
 
-    # df_posts = pd.read_pickle('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle')
+    df_posts = pd.read_pickle('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle')
     # print(df_posts[:10])
-    # exit()
-    # df_posts = ldDW.getDW_data_postgres(forums_list=forums_cve_mentions, start_date=start_date.strftime("%Y-%m-%d"),
-    #                                        end_date=end_date.strftime("%Y-%m-%d"))
-    # pickle.dump(df_posts, open('../../data/DW_data/dw_database_data_2016-17.pickle', 'wb'))
-    # KB_edgesDf = computeKBnetwork(start_date, end_date, df_posts)
-    # pickle.dump(KB_edgesDf, open('../../data/DW_data/new_DW/KB_edges_df_new.pickle', 'wb'))
+    KB_edgesDf = computeKBnetwork(start_date, end_date, df_posts)
+    pickle.dump(KB_edgesDf, open('../../data/DW_data/new_DW/KB_edges_df_new.pickle', 'wb'))
 
     # print(KB_edgesDf)
 

@@ -90,34 +90,6 @@ def community_detect(nw, experts, users):
     return user_count # TODO: normalized feature values
 
 
-def shortestPaths_singleSource(network, experts, users):
-    '''
-    Compute the shortest paths between each user and the pool of experts
-    :param network:
-    :param experts:
-    :param users:
-    :return:
-    '''
-
-    G_new = convert_graph_single_source(network, experts)
-    sum_path_length = 0
-    count_user_paths = 0
-    for u in users:
-        u = str(u)
-        if u in experts:
-            continue
-        try:
-            p = nx.shortest_path(G_new, source=u, target='super_source')
-            sum_path_length += len(p)
-            count_user_paths += 1
-        except:
-            continue
-    if count_user_paths == 0:
-        return -1
-    else:
-        return sum_path_length / count_user_paths
-
-
 def shortestPaths(network, experts, users):
     '''
     Compute the shortest paths between each user and the pool of experts
@@ -154,8 +126,8 @@ def shortestPaths(network, experts, users):
 
 
 ''' Maximum flow as a measure of trust propagation between experts and users '''
-# def maximum_flow(network, experts, users):
-
+def maximum_flow(network, experts, users):
+    ''
 
 def computeDegreeMatrix(network):
     num_nodes = len(list(network.nodes()))
@@ -212,38 +184,6 @@ def commuteTime(G, pseudo_lapl_G, experts, users):
         return np.log(avg_dist/ count_user_paths)
 
 
-def commuteTime_singleSource(G, experts, users):
-    # Form the Laplacian of the graph
-    # print('Computing laplacian...')
-    lapl_mat = nx.laplacian_matrix(G)
-    pseudo_lapl_mat = np.linalg.pinv(lapl_mat)  # Compute the pseudo-inverse of the graph laplacian
-
-    volume = computeDegreeMatrix(G)
-    avg_dist = 0.
-    count_user_paths = 0
-    for u in users:
-        u = str(u)
-        sum_dist = 0
-        count_paths = 0
-        for e in experts:
-            e = str(e)
-            # try:
-            if u == e:
-                continue
-            l_ii = pseudo_lapl_mat[u, u]
-            l_jj = pseudo_lapl_mat[e, e]
-            l_ij = pseudo_lapl_mat[u, e]
-            sum_dist += (volume * (l_ii + l_jj - 2 * l_ij))
-            count_paths += 1
-            # except:
-            #     continue
-
-        if count_paths > 0:
-            avg_dist += (sum_dist / count_paths)
-            count_user_paths += 1
-
-    return avg_dist / count_user_paths
-
 
 def Conductance(network, userG1, userG2):
     try:
@@ -273,6 +213,16 @@ def centralities(network, arg, users):
         cent_sum += cent[u]
 
     return cent_sum / len(users)
+
+
+def getDegDist(G, users):
+    degList = [] # Stores the in-degree list ---> how many people replied to this guy
+
+    for u in users:
+        in_deg = G.in_degree(u)
+        degList.append(in_deg)
+
+    return degList
 
 
 

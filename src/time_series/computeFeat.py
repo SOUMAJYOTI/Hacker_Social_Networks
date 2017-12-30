@@ -15,8 +15,8 @@ import re
 from src.network_analysis.features import *
 import time
 
-# data = pd.read_pickle('../../data/DW_data/user_interStats_DeltaT_4_Sept16-Apr17_TP10.pickle')
-# print(data)
+# data = pd.read_pickle('../../data/DW_data/new_DW/Vulnerabilities_Armstrong.pickle')
+# print(data[:20])
 # exit()
 
 # Global storage structures used over all pool processing
@@ -35,9 +35,9 @@ users_CVEMap, CVE_usersMap = pickle.load(open('../../data/DW_data/new_DW/users_C
 allPosts = pd.read_pickle('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle')
 KB_edges_DS = pd.read_pickle('../../data/DW_data/new_DW/KB_edges_df_new.pickle')
 allPosts['forumsid'] = allPosts['forumsid'].astype(int)
-allPosts['topicid'] = allPosts['topicid'].astype(int)
-allPosts['postsid'] = allPosts['postsid'].astype(int)
-allPosts['uid'] = allPosts['uid'].astype(int)
+allPosts['topicid'] = allPosts['topicid'].astype(str)
+allPosts['postsid'] = allPosts['postsid'].astype(str)
+allPosts['uid'] = allPosts['uid'].astype(str)
 
 
 def dateToString(date):
@@ -119,6 +119,30 @@ def topCPEGroups(start_date, end_date, K):
     return topCPEsList
 
 
+def getVulnCount(start_date, end_date):
+    vulnCount = 0
+    for idx, row in vulnInfo.iterrows():
+        # forums filter
+        fIds = row['forumID']
+        flag = 0
+        for f in fIds:
+            if f in forums:
+                flag = 1
+                break
+
+        if flag == 0:
+            continue
+
+        postedDates = row['postedDate']
+        for pdate in postedDates:
+            pdate = pd.to_datetime(pdate)
+            if pdate >= start_date and pdate< end_date:
+                vulnCount += 1
+                break # count each vulnerability only once
+
+    return vulnCount
+
+
 def getExperts(users, G_KB, deg_thresh):
     '''
 
@@ -143,9 +167,10 @@ def getExperts(users, G_KB, deg_thresh):
 
     experts_filter = []
     for exp in experts:
-        if G_KB.in_degree(exp) > deg_thresh:
+        if G_KB.in_degree(exp) >= deg_thresh:
             experts_filter.append(exp)
-    return experts
+
+    return experts_filter
 
 
 def getExpertsCPE(users, CPE):
@@ -166,29 +191,38 @@ def getExpertsCPE(users, CPE):
     return usersCPE
 
 
-def computeExpertsTime(df, experts):
-    expertsLastTime = {}
-    for idx, row in df.iterrows():
-        src = str(int(row['source']))
-        tgt = str(int(row['target']))
+def expertDegDistr(start_date, end_date):
+    KBStartDate = start_date - relativedelta(months=3)
 
-        if src in experts:
-            if src not in expertsLastTime:
-                expertsLastTime[src] = row['diffTime']
+    KB_edges = KB_edges_DS[KBStartDate]
+    KB_users = list(set(KB_edges['source']).intersection(set(KB_edges['target'])))
+    KB_users = [str(i) for i in KB_users]
 
-        if tgt in experts:
-            if tgt not in expertsLastTime:
-                expertsLastTime[tgt] = 0.
+    # print("hello")
+    # Store the KB pairs - edges
+    KB_pairs = []
+    for idx_KB, row_KB in KB_edges.iterrows():
+        src = str(row_KB['source'])
+        tgt = str(row_KB['target'])
+        # if (src, tgt) not in KB_pairs:
+        KB_pairs.append((src, tgt))
 
-            expertsLastTime[tgt] = row['diffTime']
+    G_KB = nx.DiGraph()
+    G_KB.add_edges_from(list(set(KB_pairs)))
 
-    return expertsLastTime
+    experts = getExperts(KB_users, G_KB, 1) # deg_thresh = 1, means no restriction on in-degree
+
+    # degList = getDegDist(G_KB, experts)
+    degList = getDegDist(G_KB, KB_users)
+
+    return degList
 
 
 def computeFeatureTimeSeries_Users(start_date, end_date):
     numUsersList = []
     numExpertsList = []
     numThreadsList = []
+    numVulnList = []
     numNewUsersList = []
     numNewInterExp_ExpList = []
     numNewInterExp_NonExpList = []
@@ -201,34 +235,38 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
     KBStartDate = start_date - relativedelta(months=3)
 
     KB_edges = KB_edges_DS[KBStartDate]
+    KB_edges = KB_edges[KB_edges['Forum'].isin(forums)] ##### Forums Filter
     KB_users = list(set(KB_edges['source']).intersection(set(KB_edges['target'])))
-    KB_users = [str(int(i)) for i in KB_users]
+    KB_users = [str(i) for i in KB_users]
+
+    # print("hello")
+    # Store the KB pairs - edges
+    KB_pairs = []
+    for idx_KB, row_KB in KB_edges.iterrows():
+        src = str(row_KB['source'])
+        tgt = str(row_KB['target'])
+        # if (src, tgt) not in KB_pairs:
+        KB_pairs.append((src, tgt))
 
     G_KB = nx.DiGraph()
-    G_KB.add_edges_from(KB_edges)
+    G_KB.add_edges_from(list(set(KB_pairs)))
 
-    deg_thresh = 20
+    deg_thresh = 10
     experts = getExperts(KB_users, G_KB, deg_thresh)
 
-    print("Number of experst: ", len(experts))
+    print("Date ", start_date.date(), )
+    print("Number of experts: ", len(experts))
 
-    expertsLastTime = computeExpertsTime(KB_edges, experts)
+    # expertsLastTime = computeExpertsTime(KB_edges, experts)
 
     currStartDate = start_date
     currEndDate = start_date + datetime.timedelta(days=1)
     # print(" Month: ", currStartDate.date())
 
-    # Store the KB pairs - edges
-    KB_pairs = []
-    for idx_KB, row_KB in KB_edges.iterrows():
-        src = str(int(row_KB['source']))
-        tgt = str(int(row_KB['target']))
-        if (src, tgt) not in KB_pairs:
-            KB_pairs.append((src, tgt))
 
     ''' Feature computation starts '''
     while currEndDate <= end_date:
-        print("Date ", currStartDate.date(), )
+        # print("Date ", currStartDate.date(), )
 
         '''' Consider forums posts for current day '''
         df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date())]
@@ -269,11 +307,12 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
         numInterExp_NonExpList.append(numInterExp_NonExp)
         numNewInterExp_NonExpList.append(numNewInterExp_NonExp)
         numThreadsList.append(len(threadidsCurrDay))
+        numVulnList.append(getVulnCount(currStartDate, currEndDate))
 
         users_curr = list(set(currDay_edges['source']).intersection(set(currDay_edges['target'])))
         numUsersList.append(len(users_curr))
 
-        users_curr = [str(int(i)) for i in users_curr]
+        users_curr = [str(i) for i in users_curr]
         numNewUsersList.append(len(list(set(users_curr).difference(set(KB_users)))))
 
         datesList.append(currStartDate)
@@ -286,6 +325,7 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
     feat_df['numThreads'] = numThreadsList
     feat_df['numUsers'] = numUsersList
     feat_df['numExperts'] = numExpertsList
+    feat_df['numVulnerabilities'] = numVulnList
     feat_df['numNewUsers'] = numNewUsersList
     feat_df['expertsInteractions'] = numInterExp_ExpList
     feat_df['expertsNewInteractions'] = numNewInterExp_ExpList
@@ -822,8 +862,8 @@ def main():
     gc.collect()
     # posts = pickle.load(open('../../data/Dw_data/posts_days_forumsV1.0.pickle', 'rb'))
 
-    start_date = datetime.datetime.strptime('09-01-2016', '%m-%d-%Y')
-    end_date = datetime.datetime.strptime('05-01-2017', '%m-%d-%Y')
+    start_date = datetime.datetime.strptime('03-01-2016', '%m-%d-%Y')
+    end_date = datetime.datetime.strptime('09-01-2017', '%m-%d-%Y')
 
     # df_posts = countConversations(start_date, end_date, forums_cve_mentions)
     # pickle.dump(df_posts, open('../../data/DW_data/posts_days_forumsV2.0.pickle', 'wb'))
@@ -843,7 +883,7 @@ def main():
         start_date += relativedelta(months=1)
         currEndDate = start_date + relativedelta(months=1)
 
-    results = pool.starmap_async(computeFeatureTimeSeries_Graph_Forums, tasks)
+    results = pool.starmap_async(computeFeatureTimeSeries_Users, tasks)
     pool.close()
     pool.join()
 
@@ -855,14 +895,16 @@ def main():
 
     feat_data_all = pd.concat(df_list)
     # print(feat_data_all)
+    # pickle.dump(df_list, open('../../data/DW_data/features/usersDegDistribution.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/conductance_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/commThreads_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/commuteTime_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/communityCount_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # feat_data_all = pickle.load(open('../../data/DW_data/feature_df_Sept16-Apr17.pickle', 'rb'))
     # feat_data_all = feat_data_all.reset_index(drop=True)
-    # pickle.dump(feat_data_all, open('../../data/DW_data/user_interStats_Forums_Delta_T0_Sept16-Apr17.pickle', 'wb'))
-    pickle.dump(feat_data_all, open('../../data/DW_data/graph_stats_Forums_Delta_T0_Sept16-Apr17.pickle', 'wb'))
+    pickle.dump(feat_data_all, open('../../data/DW_data/features/feat_combine/'
+                                    'user_interStats_Delta_T0_Sept16-Aug17.pickle', 'wb'))
+    # pickle.dump(feat_data_all, open('../../data/DW_data/graph_stats_Forums_Delta_T0_Sept16-Apr17.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/graph_stats_DeltaT_2_Sept16-Apr17_TP10.pickle', 'wb'))
 
 if __name__ == "__main__":

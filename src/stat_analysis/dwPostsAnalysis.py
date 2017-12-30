@@ -125,13 +125,13 @@ if __name__ == "__main__":
     dwData = pd.read_pickle('../../data/DW_data/new_DW/DW_postgres_data_new_2016-2017.pickle')
     topics = pd.read_pickle('../../data/DW_data/new_DW/topics_new.pickle')
 
-    # df_data = dwPosts_analysis(dwData, topics)
+    df_data = dwPosts_analysis(dwData, topics)
     # pickle.dump(df_data, open('../../data/DW_data/DW_data_forum_2016-2017.pickle', 'wb'))
 
     # dwData = pd.read_pickle('../../data/DW_data/dw_database_data_2016-17.pickle')
 
-    # pickle.dump(create_dwdatabase(df_data), open('../../data/DW_data/dw_database_data_2016-17_new.pickle', 'wb'))
+    pickle.dump(create_dwdatabase(df_data), open('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle', 'wb'))
 
-    df_data = pd.read_pickle('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle')
-
-    groupForumThreads(df_data)
+    # df_data = pd.read_pickle('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle')
+    #
+    # groupForumThreads(df_data)

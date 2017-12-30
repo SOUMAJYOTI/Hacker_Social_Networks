@@ -182,7 +182,7 @@ def storeEdges(nwData, topics):
                 # The length of window is min 5
                 if len(meanTimeWindow) > 5:
                     meanDiffWindow = np.mean(meanTimeWindow)
-                    if diff > meanDiffWindow:
+                    if diff > 2*meanDiffWindow: # scale the meantime
                         while True:
                             remELem = userWindow.pop(0)
                             remTime = meanTimeWindow.pop(0)
@@ -201,14 +201,18 @@ def storeEdges(nwData, topics):
                     prevUser = userWindow[pu]
                     if prevUser == r['uid']:
                         continue
-                    if (prevUser, r['uid']) in edgesList:
+                    if (r['uid'], prevUser) in edgesList:
                         continue
-                    source.append(prevUser)
-                    target.append(r['uid'])
+
+                    ''' This is important - it is reply-oriented network ---> direction of arrow from current user poster (source)
+                        to previous users (target) to whom the current user is replying'''
+
+                    target.append(prevUser)
+                    source.append(r['uid'])
                     tid.append(r['topicid'])
                     postTime.append(r['DateTime'])
                     forumIds.append(r['forumsid'])
-                    edgesList.append((prevUser, r['uid']))
+                    edgesList.append((r['uid'], prevUser))
 
                 meanTimeWindow.append(diff)
 
@@ -228,14 +232,14 @@ def storeEdges(nwData, topics):
 def network_merge(network_df1, network_df2):
     networkMergeEdges = []
     for i, r in network_df1.iterrows():
-        s = str(int(r['source']))
-        t = str(int(r['target']))
+        s = str(r['source'])
+        t = str(r['target'])
 
         networkMergeEdges.append((s, t))
 
     for i, r in network_df2.iterrows():
-        s = str(int(r['source']))
-        t = str(int(r['target']))
+        s = str(r['source'])
+        t = str(r['target'])
 
         networkMergeEdges.append((s, t))
 
