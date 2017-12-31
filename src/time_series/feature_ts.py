@@ -20,6 +20,7 @@ from pylab import plot, show, savefig, xlim, figure, \
 
 forumsList = [35, 38, 133, 135, 146,  150, 161, 197, ]
 
+
 class ArgsStruct:
     name = ''
     feat_concat = False
@@ -281,6 +282,7 @@ def concatenateDf(featList, featDir):
 
 
 def plot_ts(df, plot_dir, title):
+    print(df[:10])
     if not os.path.exists(plot_dir):
         os.makedirs(plot_dir)
 
@@ -296,7 +298,7 @@ def plot_ts(df, plot_dir, title):
         plt.xlabel('date', size=20)
         plt.ylabel(feat, size=20)
         plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
-        file_save = plot_dir + feat + title + '.png'
+        file_save = plot_dir + feat  + '.png'
         plt.savefig(file_save)
         plt.close()
 
@@ -343,14 +345,14 @@ def computeAnomalyCount(subspace_df):
 def main():
     ''' Set the arguments for the data preprocessing here '''
     args = ArgsStruct()
-    args.feat_concat = True
-    args.forumsSplit = True
+    args.feat_concat = False
+    args.forumsSplit = False
     args.plot_data = False
-    args.plot_time_series = False
+    args.plot_time_series = True
     args.plot_subspace = False
 
-    trainStart_date = datetime.datetime.strptime('2016-9-01', '%Y-%m-%d')
-    trainEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
+    trainStart_date = datetime.datetime.strptime('2016-04-01', '%Y-%m-%d')
+    trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
     trainInst_start = trainStart_date + relativedelta(months=1)
 
@@ -360,17 +362,17 @@ def main():
     amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
     trainOutput = prepareOutput(amEvents_malware, trainStart_date, trainEnd_date)
     plot_dir = '../../plots/dw_stats/output/'
-    plot_ts(trainOutput, plot_dir, '')
+    # plot_ts(trainOutput, plot_dir, '')
 
 
     if args.feat_concat == False:
         feat_df_graph = pd.read_pickle(
             '../../data/DW_data/features/feat_forums/graph_stats_Forums_Delta_T0_Sept16-Apr17.pickle')
         feat_df_users = pd.read_pickle(
-            '../../data/DW_data/features/feat_forums/user_interStats_Forums_Delta_T0_Sept16-Apr17.pickle')
+            '../../data/DW_data/features/feat_combine/user_interStats_Delta_T0_Sept16-Aug17.pickle')
 
-        feat_df_users = feat_df_users.filter(items=['date', 'forum', 'expert_NonInteractions', 'expertsInteractions', 'numUsers'])
-        feat_df = pd.merge(feat_df_users, feat_df_graph, on=['date', 'forum'])
+        feat_df_users_filter = feat_df_users.filter(items=['date', 'forum', 'expert_NonInteractions', 'expertsInteractions', 'numUsers'])
+        feat_df = pd.merge(feat_df_users_filter, feat_df_graph, on=['date',])
         # pickle.dump(feat_df, open('../../data/DW_data/features/feat_forums/user_graph_Delta_T0_Sept16-Apr17.pickle', 'wb'))
 
     else:
@@ -414,8 +416,9 @@ def main():
 
     if args.plot_time_series == True:
         if args.forumsSplit == False:
-            plot_dir = '../../plots/dw_stats/feat_plot/feat_combine/time_series/graph_stats/'
-            plot_ts(train_featDf, plot_dir)
+            plot_dir = '../../plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/'
+            title = 'Statistics'
+            plot_ts(feat_df_users, plot_dir, title)
         else:
             for f in forumsList:
                 forum_feat_df = train_featDf[train_featDf['forum'] == f]

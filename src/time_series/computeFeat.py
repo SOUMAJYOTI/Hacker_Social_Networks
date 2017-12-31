@@ -130,6 +130,9 @@ def getVulnCount(start_date, end_date):
         fIds = row['forumID']
         flag = 0
         for f in fIds:
+            if type(f) == float and np.isnan(f):
+                continue
+            f = int(f)
             if f in forums:
                 flag = 1
                 break
@@ -235,12 +238,16 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
 
     datesList = []
 
-    # KB timeframe 3 months prior to start of daily training data
+    # KB timeframe 3 months prior to start of daily training data for the current month
     KBStartDate = start_date - relativedelta(months=3)
+
+    # ----- Temporary modification to adjust the training data availability ----!!!!
+    if KBStartDate < datetime.datetime.strptime('01-01-2016', '%m-%d-%Y'):
+        KBStartDate = datetime.datetime.strptime('01-01-2016', '%m-%d-%Y')
 
     KB_edges = KB_edges_DS[KBStartDate]
     KB_edges = KB_edges[KB_edges['Forum'].isin(forums)] ##### Forums Filter
-    KB_users = list(set(KB_edges['source']).intersection(set(KB_edges['target'])))
+    KB_users = list(set(KB_edges['source']).union(set(KB_edges['target'])))
     KB_users = [str(i) for i in KB_users]
 
     # print("hello")
@@ -255,7 +262,7 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
     G_KB = nx.DiGraph()
     G_KB.add_edges_from(list(set(KB_pairs)))
 
-    deg_thresh = 10
+    deg_thresh = 10 # based on empirical distribution
     experts = getExperts(KB_users, G_KB, deg_thresh)
 
     print("Date ", start_date.date(), )
@@ -287,8 +294,8 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
         numNewInterExp_NonExp = 0
 
         for idx_curr, row_curr in currDay_edges.iterrows():
-            src = str(int(row_curr['source']))
-            tgt = str(int(row_curr['target']))
+            src = str(row_curr['source'])
+            tgt = str(row_curr['target'])
 
             if src in experts:
                 currDayExp.append(src)
@@ -313,7 +320,7 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
         numThreadsList.append(len(threadidsCurrDay))
         numVulnList.append(getVulnCount(currStartDate, currEndDate))
 
-        users_curr = list(set(currDay_edges['source']).intersection(set(currDay_edges['target'])))
+        users_curr = list(set(currDay_edges['source']).union(set(currDay_edges['target'])))
         numUsersList.append(len(users_curr))
 
         users_curr = [str(i) for i in users_curr]
@@ -347,38 +354,50 @@ def computeFeatureTimeSeries_Users_Forums(start_date, end_date):
     numNewInterExp_NonExpList = []
     numInterExp_ExpList = []
     numInterExp_NonExpList = []
-    timeDiff_expList = []
+    numVulnList = []
 
     datesList = []
     forumsList = []
 
-    # KB timeframe 3 months prior to start of daily training data
+    # KB timeframe 3 months prior to start of daily training data for the current month
     KBStartDate = start_date - relativedelta(months=3)
 
+    # ----- Temporary modification to adjust the training data availability ----!!!!
+    if KBStartDate < datetime.datetime.strptime('01-01-2016', '%m-%d-%Y'):
+        KBStartDate = datetime.datetime.strptime('01-01-2016', '%m-%d-%Y')
+
     KB_edges = KB_edges_DS[KBStartDate]
-    KB_users = list(set(KB_edges['source']).intersection(set(KB_edges['target'])))
-    KB_users = [str(int(i)) for i in KB_users]
-    experts = getExperts(KB_users)
+    KB_edges = KB_edges[KB_edges['Forum'].isin(forums)]  ##### Forums Filter
+    KB_users = list(set(KB_edges['source']).union(set(KB_edges['target'])))
+    KB_users = [str(i) for i in KB_users]
 
-    expertsLastTime = computeExpertsTime(KB_edges, experts)
-
-    # print(" Month: ", currStartDate.date())
-
+    # print("hello")
     # Store the KB pairs - edges
     KB_pairs = []
     for idx_KB, row_KB in KB_edges.iterrows():
-        src = str(int(row_KB['source']))
-        tgt = str(int(row_KB['target']))
-        if (src, tgt) not in KB_pairs:
-            KB_pairs.append((src, tgt))
+        src = str(row_KB['source'])
+        tgt = str(row_KB['target'])
+        # if (src, tgt) not in KB_pairs:
+        KB_pairs.append((src, tgt))
+
+    G_KB = nx.DiGraph()
+    G_KB.add_edges_from(list(set(KB_pairs)))
+
+    deg_thresh = 10  # based on empirical distribution
+    experts = getExperts(KB_users, G_KB, deg_thresh)
+
+    print("Date ", start_date.date(), )
+    print("Number of users: ", len(KB_users), ", Number of experts: ", len(experts))
+
+    # print(" Month: ", currStartDate.date())
 
     ''' Feature computation starts '''
     for f in forums:
         currStartDate = start_date
         currEndDate = start_date + datetime.timedelta(days=1)
 
+        # print("Forum: ", f, " Date: ", currStartDate.date(), )
         while currEndDate <= end_date:
-            print("Forum: ", f, " Date: ", currStartDate.date(), )
 
             '''' Consider forums posts for current day '''
             df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date())]
@@ -392,9 +411,7 @@ def computeFeatureTimeSeries_Users_Forums(start_date, end_date):
             numNewInterExp_Exp = 0
             numInterExp_NonExp = 0
             numNewInterExp_NonExp = 0
-            timeDiff = 0
-            countInst = 0
-            maxTimeDiff = 0
+
             for idx_curr, row_curr in currDay_edges.iterrows():
                 src = str(int(row_curr['source']))
                 tgt = str(int(row_curr['target']))
@@ -409,55 +426,21 @@ def computeFeatureTimeSeries_Users_Forums(start_date, end_date):
                     if (src, tgt) not in KB_pairs:
                         numNewInterExp_NonExp += 1
 
-                # Time difference between the experts and the user
-                t_user = row_curr['diffTime']
-                d1_ts = time.mktime(t_user.timetuple())
-                if src in experts and src in expertsLastTime:
-                    t_exp = expertsLastTime[src]
-                    d2_ts = time.mktime(t_exp.timetuple())
-
-                    diff = (d1_ts - d2_ts)
-
-                    if diff > 0:
-                        timeDiff += diff
-                        countInst += 1
-
-                    if diff > maxTimeDiff:
-                        maxTimeDiff = diff
-
-            if countInst == 0:
-                timeDiff = 0
-            else:
-                timeDiff /= countInst
-
-            ''' Normalize it '''
-            if maxTimeDiff != 0:
-                timeDiff /= maxTimeDiff
-
-            ''' Update te last seen time for experts '''
-            # The update should be done only after \Delta t days,
-            # for idx_curr, row_curr in currDay_edges.iterrows():
-            #     tgt = str(int(row_curr['target']))
-            #
-            #     if tgt in experts:
-            #         expertsLastTime[tgt] = row_curr['diffTime']
-
             numInterExp_ExpList.append(numInterExp_Exp)
             numNewInterExp_ExpList.append(numNewInterExp_Exp)
             numInterExp_NonExpList.append(numInterExp_NonExp)
             numNewInterExp_NonExpList.append(numNewInterExp_NonExp)
-            timeDiff_expList.append(timeDiff)
             numThreadsList.append(len(threadidsCurrDay))
+            numVulnList.append(getVulnCount(currStartDate, currEndDate))
 
-            users_curr = list(set(currDay_edges['source']).intersection(set(currDay_edges['target'])))
+            users_curr = list(set(currDay_edges['source']).union(set(currDay_edges['target'])))
             numUsersList.append(len(users_curr))
 
-            users_curr = [str(int(i)) for i in users_curr]
+            users_curr = [str(i) for i in users_curr]
             numNewUsersList.append(len(list(set(users_curr).difference(set(KB_users)))))
 
-            forumsList.append(f)
             datesList.append(currStartDate)
-
+            forumsList.append(f)
             currStartDate = currStartDate + datetime.timedelta(days=1)
             currEndDate = currStartDate + datetime.timedelta(days=1)
 
@@ -467,12 +450,12 @@ def computeFeatureTimeSeries_Users_Forums(start_date, end_date):
     feat_df['forum'] = forumsList
     feat_df['numThreads'] = numThreadsList
     feat_df['numUsers'] = numUsersList
+    feat_df['numVulnerabilities'] = numVulnList
     feat_df['numNewUsers'] = numNewUsersList
     feat_df['expertsInteractions'] = numInterExp_ExpList
     feat_df['expertsNewInteractions'] = numNewInterExp_ExpList
     feat_df['expert_NonInteractions'] = numInterExp_NonExpList
     feat_df['expert_NonNewInteractions'] = numNewInterExp_NonExpList
-    feat_df['expertReplyTimeDiff'] = timeDiff_expList
 
     return feat_df
 
@@ -887,7 +870,7 @@ def main():
         start_date += relativedelta(months=1)
         currEndDate = start_date + relativedelta(months=1)
 
-    results = pool.starmap_async(computeFeatureTimeSeries_Users, tasks)
+    results = pool.starmap_async(computeFeatureTimeSeries_Users_Forums, tasks)
     pool.close()
     pool.join()
 
@@ -906,7 +889,7 @@ def main():
     # pickle.dump(feat_data_all, open('../../data/DW_data/communityCount_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
     # feat_data_all = pickle.load(open('../../data/DW_data/feature_df_Sept16-Apr17.pickle', 'rb'))
     # feat_data_all = feat_data_all.reset_index(drop=True)
-    pickle.dump(feat_data_all, open('../../data/DW_data/features/feat_combine/'
+    pickle.dump(feat_data_all, open('../../data/DW_data/features/feat_forums/'
                                     'user_interStats_Delta_T0_Sept16-Aug17.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/graph_stats_Forums_Delta_T0_Sept16-Apr17.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/graph_stats_DeltaT_2_Sept16-Apr17_TP10.pickle', 'wb'))

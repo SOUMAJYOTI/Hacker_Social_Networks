@@ -182,12 +182,13 @@ def storeEdges(nwData, topics):
                 # The length of window is min 5
                 if len(meanTimeWindow) > 5:
                     meanDiffWindow = np.mean(meanTimeWindow)
-                    if diff > 2*meanDiffWindow: # scale the meantime
+                    scale_up = 1
+                    if diff > scale_up*meanDiffWindow: # scale the meantime
                         while True:
                             remELem = userWindow.pop(0)
                             remTime = meanTimeWindow.pop(0)
                             meanDiffWindow = np.mean(meanTimeWindow) # calculate new mean after removal
-                            if diff > meanDiffWindow and len(meanTimeWindow) > 1: # maintain  atleast one element in window
+                            if diff > scale_up*meanDiffWindow and len(meanTimeWindow) > 1: # maintain  atleast one element in window
                                 continue
                             else:
                                 break

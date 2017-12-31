@@ -2,15 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b3af467-004d-4a29-a6fe-96d8d390283e" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/stat_analysis/findTopCVEInflUsers.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/stat_analysis/userStats.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/expertReplyTimeDiff.png" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/expert_NonInteractions.png" afterPath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/expert_NonInteractions.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/expert_NonNewInteractions.png" afterPath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/expert_NonNewInteractions.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/expertsInteractions.png" afterPath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/expertsInteractions.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/expertsNewInteractions.png" afterPath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/expertsNewInteractions.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/numNewUsers.png" afterPath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/numNewUsers.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/numThreads.png" afterPath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/numThreads.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/numUsers.png" afterPath="$PROJECT_DIR$/plots/dw_stats/feat_plot/feat_combine/time_series/user_stats/numUsers.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/plots/dw_stats/output/attackFlag.png" afterPath="$PROJECT_DIR$/plots/dw_stats/output/attackFlag.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/network_analysis/createConnections.py" afterPath="$PROJECT_DIR$/src/network_analysis/createConnections.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/network_analysis/features.py" afterPath="$PROJECT_DIR$/src/network_analysis/features.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py" afterPath="$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/stat_analysis/userAnalysis.py" afterPath="$PROJECT_DIR$/src/stat_analysis/userAnalysis.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/time_series/computeFeat.py" afterPath="$PROJECT_DIR$/src/time_series/computeFeat.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/time_series/preprocessData.py" afterPath="$PROJECT_DIR$/src/time_series/preprocessData.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/time_series/feature_ts.py" afterPath="$PROJECT_DIR$/src/time_series/feature_ts.py" />
     </list>
     <ignored path="Hacker_Social_Networks.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,6 +28,37 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
+  <component name="DockManager">
+    <window id="1">
+      <content type="file-editors">
+        <state>
+          <leaf>
+            <file leaf-file-name="computeFeat.py" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/src/time_series/computeFeat.py">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state relative-caret-position="682">
+                    <caret line="891" column="76" selection-start-line="891" selection-start-column="76" selection-end-line="891" selection-end-column="76" />
+                    <folding>
+                      <element signature="e#1778#2007#0" expanded="false" />
+                      <element signature="e#2043#2080#0" expanded="false" />
+                      <element signature="e#2130#3997#0" expanded="false" />
+                      <element signature="e#4044#4693#0" expanded="false" />
+                      <element signature="e#5617#6033#0" expanded="false" />
+                      <element signature="e#15940#20128#0" expanded="false" />
+                      <element signature="e#20201#24765#0" expanded="false" />
+                      <element signature="e#24833#31707#0" expanded="false" />
+                      <marker date="1514682850689" expanded="false" signature="4736:5579" ph="..." />
+                      <marker date="1514682850689" expanded="false" signature="6077:6838" ph="..." />
+                    </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+          </leaf>
+        </state>
+      </content>
+    </window>
+  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="Hacker_Social_Networks" />
@@ -33,11 +68,30 @@
       <file leaf-file-name="dwPostsAnalysis.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="366">
-              <caret line="132" column="97" selection-start-line="132" selection-start-column="97" selection-end-line="132" selection-end-column="97" />
+            <state relative-caret-position="179">
+              <caret line="113" column="0" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
                 <element signature="e#192#1785#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="feature_ts.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/time_series/feature_ts.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="432">
+              <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+              <folding>
+                <element signature="e#825#1652#0" expanded="false" />
+                <element signature="e#1735#4241#0" expanded="false" />
+                <element signature="e#4338#6888#0" expanded="false" />
+                <element signature="e#6925#7080#0" expanded="false" />
+                <element signature="e#7165#9228#0" expanded="false" />
+                <element signature="e#9273#9822#0" expanded="false" />
+                <element signature="e#10537#11701#0" expanded="false" />
+                <element signature="e#14317#15105#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -84,44 +138,12 @@
       <file leaf-file-name="cve_event.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/time_series/cve_event.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="187" column="55" selection-start-line="187" selection-start-column="0" selection-end-line="188" selection-end-column="0" />
+            <state relative-caret-position="1716">
+              <caret line="179" column="18" selection-start-line="179" selection-start-column="18" selection-end-line="179" selection-end-column="18" />
               <folding>
                 <element signature="e#0#42#0" expanded="true" />
                 <element signature="e#316#551#0" expanded="false" />
                 <element signature="e#582#811#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="createConnections.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/network_analysis/createConnections.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="216" column="24" selection-start-line="216" selection-start-column="24" selection-end-line="216" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="computeFeat.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/time_series/computeFeat.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2619">
-              <caret line="864" column="47" selection-start-line="864" selection-start-column="47" selection-end-line="864" selection-end-column="47" />
-              <folding>
-                <element signature="e#1605#1834#0" expanded="false" />
-                <element signature="e#1870#1907#0" expanded="false" />
-                <element signature="e#1957#3824#0" expanded="false" />
-                <element signature="e#3871#4423#0" expanded="false" />
-                <element signature="e#4471#5309#0" expanded="false" />
-                <element signature="e#5347#5763#0" expanded="false" />
-                <element signature="e#5812#6568#0" expanded="false" />
-                <element signature="e#10887#16003#0" expanded="false" />
-                <element signature="e#16069#20257#0" expanded="false" />
-                <element signature="e#20330#24894#0" expanded="false" />
-                <element signature="e#24962#31836#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -209,7 +231,6 @@
         <option value="$PROJECT_DIR$/utilities/stream_plot.py" />
         <option value="$PROJECT_DIR$/src/time_series/anomalyDetect.py" />
         <option value="$PROJECT_DIR$/src/time_series/regressionAttacks.py" />
-        <option value="$PROJECT_DIR$/src/time_series/feature_ts.py" />
         <option value="$PROJECT_DIR$/src/time_series/classificationAttacks.py" />
         <option value="$PROJECT_DIR$/src/learning/GLModel.py" />
         <option value="$PROJECT_DIR$/src/time_series/cve_event.py" />
@@ -217,10 +238,11 @@
         <option value="$PROJECT_DIR$/src/load_data/load_dataDW.py" />
         <option value="$PROJECT_DIR$/src/load_data/load_data_postgres.py" />
         <option value="$PROJECT_DIR$/src/time_series/preprocessData.py" />
-        <option value="$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py" />
         <option value="$PROJECT_DIR$/src/network_analysis/features.py" />
         <option value="$PROJECT_DIR$/src/stat_analysis/userAnalysis.py" />
+        <option value="$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py" />
         <option value="$PROJECT_DIR$/src/network_analysis/createConnections.py" />
+        <option value="$PROJECT_DIR$/src/time_series/feature_ts.py" />
         <option value="$PROJECT_DIR$/src/time_series/computeFeat.py" />
       </list>
     </option>
@@ -410,7 +432,7 @@
       <recent name="F:\Github\Hacker_Social_Networks\src\load_data" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.computeFeat">
+  <component name="RunManager" selected="Python.feature_ts">
     <configuration default="false" name="dwPostsAnalysis" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -445,23 +467,6 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="load_data_postgres" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/load_data" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Hacker_Social_Networks" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/load_data/load_data_postgres.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
     <configuration default="false" name="computeFeat" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -492,6 +497,23 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Hacker_Social_Networks" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/stat_analysis/userAnalysis.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="feature_ts" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/time_series" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Hacker_Social_Networks" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/time_series/feature_ts.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -633,17 +655,17 @@
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.dwPostsAnalysis" />
       <item index="1" class="java.lang.String" itemvalue="Python.preprocessData" />
-      <item index="2" class="java.lang.String" itemvalue="Python.load_data_postgres" />
-      <item index="3" class="java.lang.String" itemvalue="Python.computeFeat" />
-      <item index="4" class="java.lang.String" itemvalue="Python.userAnalysis" />
+      <item index="2" class="java.lang.String" itemvalue="Python.computeFeat" />
+      <item index="3" class="java.lang.String" itemvalue="Python.userAnalysis" />
+      <item index="4" class="java.lang.String" itemvalue="Python.feature_ts" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.computeFeat" />
-        <item index="1" class="java.lang.String" itemvalue="Python.userAnalysis" />
-        <item index="2" class="java.lang.String" itemvalue="Python.preprocessData" />
-        <item index="3" class="java.lang.String" itemvalue="Python.dwPostsAnalysis" />
-        <item index="4" class="java.lang.String" itemvalue="Python.load_data_postgres" />
+        <item index="0" class="java.lang.String" itemvalue="Python.feature_ts" />
+        <item index="1" class="java.lang.String" itemvalue="Python.computeFeat" />
+        <item index="2" class="java.lang.String" itemvalue="Python.dwPostsAnalysis" />
+        <item index="3" class="java.lang.String" itemvalue="Python.userAnalysis" />
+        <item index="4" class="java.lang.String" itemvalue="Python.preprocessData" />
       </list>
     </recent_temporary>
   </component>
@@ -667,15 +689,15 @@
     <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1427816" sideWeight="0.74022347" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1427816" sideWeight="0.7406855" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18912797" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2400906" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1427816" sideWeight="0.25977653" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1427816" sideWeight="0.25931445" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3272933" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -972,21 +994,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/time_series/feature_ts.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3410">
-          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#824#1651#0" expanded="false" />
-            <element signature="e#1734#4240#0" expanded="false" />
-            <element signature="e#6924#7079#0" expanded="false" />
-            <element signature="e#7164#9227#0" expanded="false" />
-            <element signature="e#9272#9821#0" expanded="false" />
-            <element signature="e#14300#15088#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/network_analysis/runCommunityDetect.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="66">
@@ -1005,34 +1012,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/time_series/cve_event.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="187" column="55" selection-start-line="187" selection-start-column="0" selection-end-line="188" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#42#0" expanded="true" />
-            <element signature="e#316#551#0" expanded="false" />
-            <element signature="e#582#811#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/load_data/load_data_postgres.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="21" column="40" selection-start-line="21" selection-start-column="40" selection-end-line="21" selection-end-column="40" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="366">
-          <caret line="132" column="97" selection-start-line="132" selection-start-column="97" selection-end-line="132" selection-end-column="97" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#192#1785#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1111,30 +1095,69 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/stat_analysis/dwPostsAnalysis.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="113" column="0" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#192#1785#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/network_analysis/createConnections.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="216" column="24" selection-start-line="216" selection-start-column="24" selection-end-line="216" selection-end-column="24" />
+        <state relative-caret-position="2198">
+          <caret line="197" column="34" selection-start-line="197" selection-start-column="34" selection-end-line="197" selection-end-column="34" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/time_series/cve_event.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1716">
+          <caret line="179" column="18" selection-start-line="179" selection-start-column="18" selection-end-line="179" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+            <element signature="e#316#551#0" expanded="false" />
+            <element signature="e#582#811#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/time_series/feature_ts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+          <folding>
+            <element signature="e#825#1652#0" expanded="false" />
+            <element signature="e#1735#4241#0" expanded="false" />
+            <element signature="e#4338#6888#0" expanded="false" />
+            <element signature="e#6925#7080#0" expanded="false" />
+            <element signature="e#7165#9228#0" expanded="false" />
+            <element signature="e#9273#9822#0" expanded="false" />
+            <element signature="e#10537#11701#0" expanded="false" />
+            <element signature="e#14317#15105#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/time_series/computeFeat.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2619">
-          <caret line="864" column="47" selection-start-line="864" selection-start-column="47" selection-end-line="864" selection-end-column="47" />
+        <state relative-caret-position="682">
+          <caret line="891" column="76" selection-start-line="891" selection-start-column="76" selection-end-line="891" selection-end-column="76" />
           <folding>
-            <element signature="e#1605#1834#0" expanded="false" />
-            <element signature="e#1870#1907#0" expanded="false" />
-            <element signature="e#1957#3824#0" expanded="false" />
-            <element signature="e#3871#4423#0" expanded="false" />
-            <element signature="e#4471#5309#0" expanded="false" />
-            <element signature="e#5347#5763#0" expanded="false" />
-            <element signature="e#5812#6568#0" expanded="false" />
-            <element signature="e#10887#16003#0" expanded="false" />
-            <element signature="e#16069#20257#0" expanded="false" />
-            <element signature="e#20330#24894#0" expanded="false" />
-            <element signature="e#24962#31836#0" expanded="false" />
+            <element signature="e#1778#2007#0" expanded="false" />
+            <element signature="e#2043#2080#0" expanded="false" />
+            <element signature="e#2130#3997#0" expanded="false" />
+            <element signature="e#4044#4693#0" expanded="false" />
+            <element signature="e#5617#6033#0" expanded="false" />
+            <element signature="e#15940#20128#0" expanded="false" />
+            <element signature="e#20201#24765#0" expanded="false" />
+            <element signature="e#24833#31707#0" expanded="false" />
+            <marker date="1514682850689" expanded="false" signature="4736:5579" ph="..." />
+            <marker date="1514682850689" expanded="false" signature="6077:6838" ph="..." />
           </folding>
         </state>
       </provider>
