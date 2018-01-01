@@ -246,6 +246,35 @@ def network_merge(network_df1, network_df2):
 
     return list(set(networkMergeEdges))
 
+
+def weighted_network_merge(network_df1, network_df2):
+    networkMergeEdges = []
+    for i, r in network_df1.iterrows():
+        s = str(r['source'])
+        t = str(r['target'])
+
+        networkMergeEdges.append((s, t))
+
+    for i, r in network_df2.iterrows():
+        s = str(r['source'])
+        t = str(r['target'])
+
+        networkMergeEdges.append((s, t))
+
+    edge_counts = {}
+    for src, tgt in networkMergeEdges:
+        if (src, tgt) not in edge_counts:
+            edge_counts[(src, tgt)] = 0
+
+        edge_counts[(src, tgt)] += 1
+
+    weighted_edges = []
+    for src, tgt in edge_counts:
+        weighted_edges.append((src, tgt, 1 / edge_counts[(src, tgt)]))
+
+    return weighted_edges
+
+
 # if __name__ == "__main__":
 #     # startDate = "2010-04-01"
 #     # endDate = "2016-05-01"
