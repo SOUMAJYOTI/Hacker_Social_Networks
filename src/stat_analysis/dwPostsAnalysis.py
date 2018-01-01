@@ -114,7 +114,7 @@ def groupForumThreads(df_data):
 
     forumsFinal = []
     for idx, row in forumsCount.iteritems():
-        if row > 1000: # this is the threshold of forum posts count to consider
+        if row > 10000: # this is the threshold of forum posts count to consider
             forumsFinal.append(idx)
 
     print(forumsFinal)

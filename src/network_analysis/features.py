@@ -37,92 +37,127 @@ def convert_graph_single_source(G, experts):
 
 
 def threadCommon(df_posts, experts):
-    # print(len(experts))
     topics = list(set(df_posts['topicid']))
     count_topicsComm = 0
     for topicid in topics:
         threads = df_posts[df_posts['topicid'] == topicid]
         threads.is_copy = False
-        threads['DateTime'] = threads['posteddate'].map(str) + ' ' + threads['postedtime'].map(str)
-        threads['DateTime'] = threads['DateTime'].apply(lambda x:
-                                                        datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
+        if threads.iloc[0]['postedtime'] == '':
+            threads['DateTime'] = threads['posteddate'].map(str)
+            threads['DateTime'] = threads['DateTime'].apply(lambda x:
+                                                            datetime.datetime.strptime(x, '%Y-%m-%d'))
+        else:
+            threads['DateTime'] = threads['posteddate'].map(str) + ' ' + threads['postedtime'].map(str)
+            threads['DateTime'] = threads['DateTime'].apply(lambda x:
+                                                            datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S'))
         threads = threads.sort_values(['DateTime'], ascending=True)
-        threadUsers = list(threads['uid'].astype(str))
+        threadUsers = list(threads['uid'])
 
         # print(type(threadUsers[0]), type(experts[0]), threadUsers[0], experts[0])
         for e in experts:
-            e = str(e)
             if e in threadUsers:
                 count_topicsComm += 1
                 break
 
     return count_topicsComm
 
-# def avgTime_user_interact() ## DO NOT HAVE THE TIME OF POSTING CORRECTLY
+
+def community_experts(nw, experts):
+    '''
+    This function returns the communities of the experts in the KB graph
+    '''
+    partition = community.best_partition(nw.to_undirected())
+
+    ''' List of Communities experts belong to '''
+    comm_experts = []
+    for e in experts:
+        comm_experts.append(partition[e])
+
+    comm_experts = list(set(comm_experts))
+
+    return comm_experts, partition
 
 
-def community_detect(nw, experts, users):
-    G_new = convert_graph_single_source(nw, experts)
-    partition = community.best_partition(G_new.to_undirected())
-
-    ''' If super source not in the communities just return 0 '''
-    if "super_source" not in partition:
-        return 0
-
-    # print("Super source: ", partition['super_source'])
-    # comm_experts = [] # communities experts belong to
-    # for e in experts:
-    #     comm_experts.append(partition[e])
-    #
-    # comm_experts = list(set(comm_experts))
-    # print(comm_experts, list(set(list(partition.values()))))
+def approximate_community_detect(G_merge, comm_partition, comm_experts, KB_users, experts, users):
+    '''
+    This function returns the number of users daily who share communities with the experts
+    :param nw:
+    :param users:
+    :param comm_partition: communities of all nodes in KB graph
+    :param comm_experts: communities of experts
+    :return:
+    '''
     ''' Check how many users in the current day share communities with the experts '''
     user_count = 0
     for u in users:
         if u in experts:
-            continue
+            user_count += 1
         else:
-            # print(partition[u])
-            if partition[u] == partition['super_source']:# in comm_experts:
-                user_count += 1
+            '''
+            Condition 1: If user is present in KB graph, check its community and return appropriate result
+            Condition 2: If user is not in KB graph, i.e new user
+                        Sub 1: If user is a direct neighbor of expert, return same community and hence true result
+                                                        OR
+                        Sub 2: If user has a neighbor who shares a community with expert, return true result (2-hop)
+            '''
+            if u in KB_users:
+                if comm_partition[u] in comm_experts:
+                    user_count += 1
+            else:
+                nbrs_user = list(G_merge.neighbors(u))
+                common_exp = list(set(nbrs_user).intersection(set(experts)))
+                if len(common_exp) >= 1:
+                    user_count += 1
+                    break
+
+                # Reaching this loop means Condition 2: Sub 1 is not satisifed
+                for nb in nbrs_user:
+                    try:
+                        if comm_partition[nb] in comm_experts:
+                            user_count += 1
+                            break
+                    except:
+                        continue
 
     # print(user_count, len(users))
     return user_count # TODO: normalized feature values
 
 
-def shortestPaths(network, experts, users):
+def shortestPaths(network, experts, users, weighted=False):
     '''
-    Compute the shortest paths between each user and the pool of experts
-    :param network:
+    Compute the shortest paths between FROM experts TO users
     :param experts:
     :param users:
     :return:
     '''
 
-    avg_path_length = 0
+    sum_path_length = 0
     count_user_paths = 0
     for u in users:
-        u = str(u)
-        sum_paths = 0
-        count_paths = 0
+        min_sp = 100000 # stores the minimum among all experts
         for e in experts:
-            e = str(e)
             try:
                 if u == e:
                     continue
-                p = nx.shortest_path(network, source=u, target=e)
-                sum_paths += len(p)
-                count_paths += 1
-            except:
+                if weighted == False:
+                    p = nx.shortest_path_length(network, source=e, target=u) # SOUREC  = expert
+                else:
+                    p = nx.shortest_path_length(network, source=e, target=u, weight='weight')
+                if p < min_sp:
+                    min_sp = p
+            except nx.NetworkXNoPath:
                 continue
 
-        if count_paths > 0:
-            avg_path_length += (sum_paths/count_paths)
+        if min_sp < 100000:
+            sum_path_length += min_sp
             count_user_paths += 1
+        else:
+            continue
+
     if count_user_paths == 0:
-        return -1
+        return -1.
     else:
-        return avg_path_length / count_user_paths
+        return sum_path_length / count_user_paths
 
 
 ''' Maximum flow as a measure of trust propagation between experts and users '''
@@ -140,25 +175,17 @@ def computeDegreeMatrix(network):
 
 
 # Compute the commute-time distance between the users and the experts
-def commuteTime(G, pseudo_lapl_G, experts, users):
-    # Form the Laplacian of the graph
-    # print('Computing laplacian...')
-
+def commuteTime(pseudo_lapl_G, nodeIndexMap, experts, users):
+    nodeList = list(nodeIndexMap.keys())
     avg_mooreInv = np.mean(pseudo_lapl_G.diagonal())
-    nodeList = list(G.nodes())
-    nodeIndexMap = {}
-    for idx_n in range(len(nodeList)):
-        nodeIndexMap[nodeList[idx_n]] = idx_n
 
-    volume = computeDegreeMatrix(G)
+    # volume = computeDegreeMatrix(G)
     avg_dist = 0.
     count_user_paths = 0
     for u in users:
-        u = str(int(u))
         sum_dist = 0
-        count_paths = 0
+        count_exp_paths = 0
         for e in experts:
-            e = str(int(e))
             if u == e:
                 continue
             if u not in nodeList:
@@ -169,26 +196,25 @@ def commuteTime(G, pseudo_lapl_G, experts, users):
                 l_ij = pseudo_lapl_G[nodeIndexMap[u], nodeIndexMap[e]]
 
             l_jj = pseudo_lapl_G[nodeIndexMap[e], nodeIndexMap[e]]
-            sum_dist += (volume * (l_ii + l_jj - 2*l_ij))
+            sum_dist += ((l_ii + l_jj - 2*l_ij))
             # print(sum_dist)
-            count_paths += 1
+            count_exp_paths += 1
 
-        if count_paths > 0:
-            avg_dist += (sum_dist / count_paths)
+        if count_exp_paths > 0:
+            avg_dist += (sum_dist / count_exp_paths)
             count_user_paths += 1
 
     # print(avg_dist/ count_user_paths)
     if count_user_paths == 0:
-        return -1
+        return 0.0
     else:
-        return np.log(avg_dist/ count_user_paths)
-
+        return np.log(avg_dist)
 
 
 def Conductance(network, userG1, userG2):
     try:
         conductanceVal = nxCut.conductance(network, userG1, userG2)
-    except:
+    except nx.NetworkXError:
         conductanceVal = 0.
 
     return conductanceVal
@@ -223,6 +249,10 @@ def getDegDist(G, users):
         degList.append(in_deg)
 
     return degList
+
+
+
+
 
 
 

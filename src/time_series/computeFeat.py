@@ -26,6 +26,7 @@ forums = [129, 6, 112, 77, 69, 178, 31, 134, 193, 56, 201, 250, 13,
           48, 93, 45, 126, 174, 117, 41, 248, 177, 135, 22, 172, 189,
           14, 137, 231, 91, 55, 192, 245, 234, 199, 7, 184, 43, 183, 57]
 
+forums_features = [129, 6, 112, 77, 69, 178, 31, 134, 193, 56, 201, 250, 13, 205, 194, 110, 121]
 
 # forums = [88, ]
 vulnInfo = pd.read_pickle('../../data/DW_data/new_DW/Vulnerabilities_Armstrong.pickle')
@@ -271,12 +272,11 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
     # expertsLastTime = computeExpertsTime(KB_edges, experts)
 
     currStartDate = start_date
-    currEndDate = start_date + datetime.timedelta(days=1)
+    currEndDate = start_date + datetime.timedelta(days=7)
     # print(" Month: ", currStartDate.date())
 
-
     ''' Feature computation starts '''
-    while currEndDate <= end_date:
+    while currEndDate <= end_date: # FOR WEEKLY
         # print("Date ", currStartDate.date(), )
 
         '''' Consider forums posts for current day '''
@@ -327,8 +327,12 @@ def computeFeatureTimeSeries_Users(start_date, end_date):
         numNewUsersList.append(len(list(set(users_curr).difference(set(KB_users)))))
 
         datesList.append(currStartDate)
-        currStartDate = currStartDate + datetime.timedelta(days=1)
-        currEndDate = currStartDate + datetime.timedelta(days=1)
+        currStartDate = currStartDate + datetime.timedelta(days=7)
+        currEndDate = currStartDate + datetime.timedelta(days=7)
+
+        # For weekly end date consideration
+        if currEndDate > end_date:
+            currEndDate = end_date
 
     ''' Put the data into a dataframe '''
     feat_df = pd.DataFrame()
@@ -413,8 +417,8 @@ def computeFeatureTimeSeries_Users_Forums(start_date, end_date):
             numNewInterExp_NonExp = 0
 
             for idx_curr, row_curr in currDay_edges.iterrows():
-                src = str(int(row_curr['source']))
-                tgt = str(int(row_curr['target']))
+                src = str(row_curr['source'])
+                tgt = str(row_curr['target'])
 
                 if src in experts and tgt in experts:
                     numInterExp_Exp += 1
@@ -466,6 +470,7 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
     shortPathList = []
     commutePathList = []
     communityCountList = []
+    weighted = False
 
     datesList = []
     featDF = pd.DataFrame()
@@ -473,38 +478,39 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
     # KB timeframe 3 months prior to start of daily training data
     KBStartDate = start_date - relativedelta(months=3)
 
-    # while currEndDate < end_date:
+    # ----- Temporary modification to adjust the training data availability ----!!!!
+    if KBStartDate < datetime.datetime.strptime('01-01-2016', '%m-%d-%Y'):
+        KBStartDate = datetime.datetime.strptime('01-01-2016', '%m-%d-%Y')
+
     KB_edges = KB_edges_DS[KBStartDate]
-    KB_users = list(set(KB_edges['source']).intersection(set(KB_edges['target'])))
-    KB_users = [str(int(i)) for i in KB_users]
-    experts = getExperts(KB_users)
+    KB_edges = KB_edges[KB_edges['Forum'].isin(forums)]  ##### Forums Filter
+    KB_users = list(set(KB_edges['source']).union(set(KB_edges['target'])))
+    KB_pairs = []
+
+    for idx_KB, row_KB in KB_edges.iterrows():
+        src = row_KB['source']
+        tgt = row_KB['target']
+        # if (src, tgt) not in KB_pairs:
+        KB_pairs.append((src, tgt))
+
+    G_KB = nx.DiGraph()
+    G_KB.add_edges_from(list(set(KB_pairs)))
+
+    deg_thresh = 10  # based on empirical distribution
+    experts = getExperts(KB_users, G_KB, deg_thresh)
+
+    ''' Community detection for the KB '''
+    # comm_experts, comm_partition = community_experts(G_KB, experts)
+    # print(comm_experts)
+
+    print("Date ", start_date.date(), )
+    print("Number of users: ", len(KB_users), ", Number of experts: ", len(experts))
 
     currStartDate = start_date
     currEndDate = start_date + datetime.timedelta(days=1)
 
-    G_KB = nx.DiGraph()
-    G_KB.add_edges_from(KB_edges)
-
-    # lapl_mat = (nx.laplacian_matrix(G_KB.to_undirected())).todense()
-    # print(lapl_mat.shape)
-    # print('Computing pseudo lapl')
-    # pseudo_lapl_mat = np.linalg.pinv(lapl_mat)  # Compute the pseudo-inverse of the graph laplacian
-
-    # Store the KB pairs
-    KB_pairs = []
-    for idx_KB, row_KB in KB_edges.iterrows():
-        src = str(row_KB['source'])
-        tgt = str(row_KB['target'])
-        if(src, tgt) not in KB_pairs:
-            KB_pairs.append((src, tgt))
-
     while currEndDate <= end_date:
-        print("Date ", currStartDate.date(), )
-        # users_currDay = postsDailyDf[postsDailyDf['date'] == currStartDate]
-        # Compute the feature for each forum separately
-
-        # users_currDay_forum = users_currDay[users_currDay['forum'] == float(f)]
-
+        # print(currStartDate)
         '''' Consider forums posts for current day '''
         df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date())]
         df_currDay = df_currDay[df_currDay['posteddate'] < currEndDate.date()]
@@ -526,7 +532,7 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
             currEndDate = currStartDate + datetime.timedelta(days=1)
             continue
 
-        users_curr = list(set(currDay_edges['source']).intersection(set(currDay_edges['target'])))
+        users_curr = list(set(currDay_edges['source']).union(set(currDay_edges['target'])))
 
         # If there are no users, no feature computation
         if len(users_curr) == 0:
@@ -541,20 +547,25 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
             currEndDate = currStartDate + datetime.timedelta(days=1)
             continue
 
-        users_curr = [str(int(i)) for i in users_curr]
+        # users_curr = [str(i) for i in users_curr]
 
-        # print("Merging edges...")
-        mergeEgdes = ccon.network_merge(KB_edges.copy(), currDay_edges)  # Update the mergedEdges every day
-
-        G = nx.DiGraph()
-        G.add_edges_from(mergeEgdes)
+        # G = nx.DiGraph()
+        # if weighted == False:
+        #     # print("Merging edges...")
+        #     mergeEgdes = ccon.network_merge(KB_edges.copy(), currDay_edges)  # Update the mergedEdges every day
+        #     G.add_edges_from(mergeEgdes)
+        # else:
+        #     weightedMergeEdges = ccon.weighted_network_merge(KB_edges.copy(), currDay_edges)
+        #     G.add_weighted_edges_from(weightedMergeEdges)
 
         ''' Store the computed features '''
-        condExpertsList.append(Conductance(G, experts, users_curr))
+        # condExpertsList.append(Conductance(G, experts, users_curr))
         commThreadsList.append(threadCommon(df_currDay, experts))
-        shortPathList.append(shortestPaths(G, experts, users_curr))
-        communityCountList.append(community_detect(G, experts, users_curr))
-        # commutePathList[key].append(commuteTime(G, pseudo_lapl_mat, expertUsersCPE, users_curr))
+        # shortPathList.append(shortestPaths(G, experts, users_curr, weighted=weighted))
+        # print(shortPathList)
+        # communityCountList.append(approximate_community_detect(G, comm_partition, comm_experts, KB_users, experts, users_curr ))
+        # commutePathList.append(commuteTime(pseudo_lapl_mat, nodeIndexMap, experts, users_curr))
+        # print(commutePathList)
         # print(commuteTime(G, expertUsersCPE, users_curr))
 
         datesList.append(currStartDate)
@@ -562,21 +573,22 @@ def computeFeatureTimeSeries_Graph(start_date, end_date,):
         currEndDate = currStartDate + datetime.timedelta(days=1)
 
     featDF['date'] = datesList
-    featDF['shortestPaths'] = shortPathList
-    # featDF['commuteTime'] = commutePathList[
-    featDF['communityCount'] = communityCountList
+    # featDF['shortestPaths'] = shortPathList
+    # featDF['commuteTime'] = commutePathList
+    # featDF['communityCount'] = communityCountList
     featDF['expertsThreads'] = commThreadsList
-    featDF['CondExperts'] = condExpertsList
+    # featDF['CondExperts'] = condExpertsList
 
     return featDF
 
 
-def computeFeatureTimeSeries_Graph_Forums(start_date, end_date,):
+def computeFeatureTimeSeries_Graph_Forums(start_date, end_date, ):
     condExpertsList = []
     commThreadsList = []
     shortPathList = []
     commutePathList = []
     communityCountList = []
+    weighted = True
 
     datesList = []
     forumsList = []
@@ -585,39 +597,40 @@ def computeFeatureTimeSeries_Graph_Forums(start_date, end_date,):
     # KB timeframe 3 months prior to start of daily training data
     KBStartDate = start_date - relativedelta(months=3)
 
-    # while currEndDate < end_date:
+    # ----- Temporary modification to adjust the training data availability ----!!!!
+    if KBStartDate < datetime.datetime.strptime('01-01-2016', '%m-%d-%Y'):
+        KBStartDate = datetime.datetime.strptime('01-01-2016', '%m-%d-%Y')
+
     KB_edges = KB_edges_DS[KBStartDate]
-    KB_users = list(set(KB_edges['source']).intersection(set(KB_edges['target'])))
-    KB_users = [str(int(i)) for i in KB_users]
-    experts = getExperts(KB_users)
-
-    # G_KB = nx.DiGraph()
-    # G_KB.add_edges_from(KB_edges)
-
-    # lapl_mat = (nx.laplacian_matrix(G_KB.to_undirected())).todense()
-    # print(lapl_mat.shape)
-    # print('Computing pseudo lapl')
-    # pseudo_lapl_mat = np.linalg.pinv(lapl_mat)  # Compute the pseudo-inverse of the graph laplacian
-
-    # Store the KB pairs
+    KB_edges = KB_edges[KB_edges['Forum'].isin(forums)]  ##### Forums Filter
+    KB_users = list(set(KB_edges['source']).union(set(KB_edges['target'])))
     KB_pairs = []
-    for idx_KB, row_KB in KB_edges.iterrows():
-        src = str(row_KB['source'])
-        tgt = str(row_KB['target'])
-        if(src, tgt) not in KB_pairs:
-            KB_pairs.append((src, tgt))
 
-    for f in forums:
+    for idx_KB, row_KB in KB_edges.iterrows():
+        src = row_KB['source']
+        tgt = row_KB['target']
+        # if (src, tgt) not in KB_pairs:
+        KB_pairs.append((src, tgt))
+
+    G_KB = nx.DiGraph()
+    G_KB.add_edges_from(list(set(KB_pairs)))
+
+    deg_thresh = 10  # based on empirical distribution
+    experts = getExperts(KB_users, G_KB, deg_thresh)
+
+    ''' Community detection for the KB'''
+    comm_experts, comm_partition = community_experts(G_KB, experts)
+    # print(comm_experts)
+
+    print("Date ", start_date.date(), )
+    print("Number of users: ", len(KB_users), ", Number of experts: ", len(experts))
+
+    for f in forums_features:
         currStartDate = start_date
         currEndDate = start_date + datetime.timedelta(days=1)
-        print("Forum:", f, " Month: ", currStartDate.date())
 
         while currEndDate <= end_date:
-            print("Date ", currStartDate.date(), )
-            # users_currDay = postsDailyDf[postsDailyDf['date'] == currStartDate]
-            # Compute the feature for each forum separately
-
-            # users_currDay_forum = users_currDay[users_currDay['forum'] == float(f)]
+            print("Forum:", f, ", Date ", currStartDate.date(), )
 
             '''' Consider forums posts for current day '''
             df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date())]
@@ -635,12 +648,13 @@ def computeFeatureTimeSeries_Graph_Forums(start_date, end_date,):
                 commutePathList.append(0)
                 communityCountList.append(0)
 
+                forumsList.append(f)
                 datesList.append(currStartDate)
                 currStartDate = currStartDate + datetime.timedelta(days=1)
                 currEndDate = currStartDate + datetime.timedelta(days=1)
                 continue
 
-            users_curr = list(set(currDay_edges['source']).intersection(set(currDay_edges['target'])))
+            users_curr = list(set(currDay_edges['source']).union(set(currDay_edges['target'])))
 
             # If there are no users, no feature computation
             if len(users_curr) == 0:
@@ -650,23 +664,27 @@ def computeFeatureTimeSeries_Graph_Forums(start_date, end_date,):
                 commutePathList.append(0)
                 communityCountList.append(0)
 
+                forumsList.append(f)
                 datesList.append(currStartDate)
                 currStartDate = currStartDate + datetime.timedelta(days=1)
                 currEndDate = currStartDate + datetime.timedelta(days=1)
                 continue
 
-            users_curr = [str(int(i)) for i in users_curr]
-
-            # print("Merging edges...")
-            mergeEgdes = ccon.network_merge(KB_edges.copy(), currDay_edges)  # Update the mergedEdges every day
-
             G = nx.DiGraph()
-            G.add_edges_from(mergeEgdes)
+            if weighted == False:
+                # print("Merging edges...")
+                mergeEgdes = ccon.network_merge(KB_edges.copy(), currDay_edges)  # Update the mergedEdges every day
+                G.add_edges_from(mergeEgdes)
+            else:
+                weightedMergeEdges = ccon.weighted_network_merge(KB_edges.copy(), currDay_edges)
+                G.add_weighted_edges_from(weightedMergeEdges)
 
             ''' Store the computed features '''
-            condExpertsList.append(Conductance(G, experts, users_curr))
-            commThreadsList.append(threadCommon(df_currDay, experts))
-            shortPathList.append(shortestPaths(G, experts, users_curr))
+            # condExpertsList.append(Conductance(G, experts, users_curr))
+            # commThreadsList.append(threadCommon(df_currDay, experts))
+            shortPathList.append(shortestPaths(G, experts, users_curr, weighted=weighted))
+            # communityCountList.append(
+            #     approximate_community_detect(G, comm_partition, comm_experts, KB_users, experts, users_curr))
             # communityCountList.append(community_detect(G, experts, users_curr))
             # commutePathList[key].append(commuteTime(G, pseudo_lapl_mat, expertUsersCPE, users_curr))
             # print(commuteTime(G, expertUsersCPE, users_curr))
@@ -678,11 +696,10 @@ def computeFeatureTimeSeries_Graph_Forums(start_date, end_date,):
 
     featDF['date'] = datesList
     featDF['forum'] = forumsList
-    featDF['shortestPaths'] = shortPathList
-    # featDF['commuteTime'] = commutePathList[
+    featDF['edgeWtshortestPaths'] = shortPathList
     # featDF['communityCount'] = communityCountList
-    featDF['expertsThreads'] = commThreadsList
-    featDF['CondExperts'] = condExpertsList
+    # featDF['expertsThreads'] = commThreadsList
+    # featDF['CondExperts'] = condExpertsList
 
     return featDF
 
@@ -870,7 +887,7 @@ def main():
         start_date += relativedelta(months=1)
         currEndDate = start_date + relativedelta(months=1)
 
-    results = pool.starmap_async(computeFeatureTimeSeries_Users_Forums, tasks)
+    results = pool.starmap_async(computeFeatureTimeSeries_Graph_Forums, tasks)
     pool.close()
     pool.join()
 
@@ -883,14 +900,15 @@ def main():
     feat_data_all = pd.concat(df_list)
     # print(feat_data_all)
     # pickle.dump(df_list, open('../../data/DW_data/features/usersDegDistribution.pickle', 'wb'))
+    # pickle.dump(feat_data_all, open('../../data/DW_data/features/feat_combine/weightedShortestPaths_Delta_T0_Mar16-Apr17.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/conductance_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
-    # pickle.dump(feat_data_all, open('../../data/DW_data/commThreads_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
+    # pickle.dump(feat_data_all, open('../../data/DW_data/features/feat_combine/commThreads_Delta_T0_Mar16-Apr17.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/commuteTime_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
-    # pickle.dump(feat_data_all, open('../../data/DW_data/communityCount_DeltaT_4_Sept16-Apr17_TP10.pickle', 'wb'))
+    # pickle.dump(feat_data_all, open('../../data/DW_data/features/feat_combine/communityCount_Delta_T0_Mar16-Apr17.pickle', 'wb'))
     # feat_data_all = pickle.load(open('../../data/DW_data/feature_df_Sept16-Apr17.pickle', 'rb'))
     # feat_data_all = feat_data_all.reset_index(drop=True)
     pickle.dump(feat_data_all, open('../../data/DW_data/features/feat_forums/'
-                                    'user_interStats_Delta_T0_Sept16-Aug17.pickle', 'wb'))
+                                    'weightedShortestPaths_Delta_T0_Mar16-Aug17.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/graph_stats_Forums_Delta_T0_Sept16-Apr17.pickle', 'wb'))
     # pickle.dump(feat_data_all, open('../../data/DW_data/graph_stats_DeltaT_2_Sept16-Apr17_TP10.pickle', 'wb'))
 
