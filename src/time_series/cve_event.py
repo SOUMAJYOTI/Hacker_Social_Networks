@@ -194,6 +194,9 @@ def main():
 
     outputDf = weeklyCVE_event_corr(amEvents_malware, vuln_df, cve_cpe_map, trainStart_date, trainEnd_date)
 
+    print(outputDf)
+
+    exit()
     pickle.dump(outputDf, open('../../data/DW_data/CPE_events_corr.pickle', 'wb'))
 
     cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr.pickle')

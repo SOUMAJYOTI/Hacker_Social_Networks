@@ -244,8 +244,9 @@ def centralities(network, arg, users):
 def getDegDist(G, users):
     degList = [] # Stores the in-degree list ---> how many people replied to this guy
 
+    # pr =nx.betweenness_centrality(G)
     for u in users:
-        in_deg = G.in_degree(u)
+        in_deg = G.out_degree(u)
         degList.append(in_deg)
 
     return degList

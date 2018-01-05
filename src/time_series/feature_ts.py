@@ -379,9 +379,9 @@ def main():
     args.feat_concat = True
     args.forumsSplit = False
     args.plot_data = False
-    args.plot_time_series = True
+    args.plot_time_series = False
     args.plot_subspace = False
-    args.TYPE_PLOT = 'LINE' 
+    args.TYPE_PLOT = 'LINE'
 
     trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
@@ -405,7 +405,7 @@ def main():
 
             feat_df_users_filter = feat_df_users.filter(items=['date', 'forum', 'expert_NonInteractions', 'expertsInteractions', 'numUsers'])
             feat_df = pd.merge(feat_df_users_filter, feat_df_graph, on=['date',])
-            # pickle.dump(feat_df, open('../../data/DW_data/features/feat_forums/user_graph_Delta_T0_Sept16-Apr17.pickle', 'wb'))
+            # pickle.dump(feat_df, open('../../data/DW_data/features/feat_combine/features_Delta_T0_Mar16-Aug17.pickle', 'wb'))
         else:
             featDir = '../../data/DW_data/features/feat_combine/new/'
 
@@ -421,8 +421,10 @@ def main():
                     else:
                         feat_df = pd.merge(feat_df, feat_df_curr, on=['date', 'forum'])
 
+            pickle.dump(feat_df, open(
+                            '../../data/DW_data/features/feat_combine/features_Delta_T0_Mar16-Aug17.pickle', 'wb'))
 
-            # feat_df_graph = concatenateDf(features, featDir)
+                        # feat_df_graph = concatenateDf(features, featDir)
 
             # feat_anomalies = pd.read_pickle(
             #     '../../data/DW_data/features/subspace_anomalies_v12_22.pickle')
