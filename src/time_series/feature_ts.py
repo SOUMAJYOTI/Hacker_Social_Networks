@@ -333,61 +333,21 @@ def plot_ts_bar(df, plot_dir, title):
         plt.close()
 
 
-def computeAnomalyCount(subspace_df):
-    subspace_anomalies = pd.DataFrame()
-    subspace_anomalies['date'] = subspace_df['date']
-    for feat in subspace_df.columns.values:
-        feat_name = feat.split('_')[0]
-        if feat == 'date':
-            continue
-
-        ''' First,  the residual vectors'''
-        if 'res' in feat:
-            mean_feat = subspace_df[feat].mean()
-            thresh = 3*mean_feat
-
-            anomaly_flag = []
-            for idx, row in subspace_df[feat].iteritems():
-                if row > thresh:
-                    anomaly_flag.append(1)
-                else:
-                    anomaly_flag.append(0)
-
-            subspace_anomalies[feat_name + '_res_flag'] = anomaly_flag
-
-        ''' Then,  the state vectors'''
-        if 'state' in feat:
-            mean_feat = subspace_df[feat].mean()
-            thresh = 3 * mean_feat
-
-            anomaly_flag = []
-            for idx, row in subspace_df[feat].iteritems():
-                if row > thresh:
-                    anomaly_flag.append(1)
-                else:
-                    anomaly_flag.append(0)
-
-            subspace_anomalies[feat_name + '_state_flag'] = anomaly_flag
-
-    return subspace_anomalies
-
-
 def main():
     ''' Set the arguments for the data preprocessing here '''
     args = ArgsStruct()
     args.LOAD_DATA = True
     args.feat_concat = True
-    args.forumsSplit = False
+    args.forumsSplit = True
     args.plot_data = False
     args.plot_time_series = False
     args.plot_subspace = False
     args.TYPE_PLOT = 'LINE'
 
-    trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
+    trainStart_date = datetime.datetime.strptime('2016-03-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
     trainInst_start = trainStart_date + relativedelta(months=1)
-
 
     ''' Load the organization attack data '''
     amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
@@ -407,11 +367,33 @@ def main():
             feat_df = pd.merge(feat_df_users_filter, feat_df_graph, on=['date',])
             # pickle.dump(feat_df, open('../../data/DW_data/features/feat_combine/features_Delta_T0_Mar16-Aug17.pickle', 'wb'))
         else:
-            featDir = '../../data/DW_data/features/feat_combine/new/'
+            featDir = '../../data/DW_data/features/feat_forums/new/'
 
             # Concatenate the features for each file
             for feat_file in os.listdir(featDir):
                 feat_df_curr = pd.read_pickle(featDir + feat_file)
+
+                feat_df_curr = feat_df_curr[feat_df_curr['date'] >= trainStart_date]
+                feat_df_curr = feat_df_curr[feat_df_curr['date'] < trainEnd_date]
+                feat_df_curr.fillna(0)
+
+                ''' Error diagnostics for features where one cannot compute the features
+                    Replace the values with the mean of the values '''
+
+                ''' TODO: Imputation measures for graph features that were infeasible for computation '''
+                for featName in feat_df_curr.columns.values:
+                    if featName == 'date' or featName == 'forum':
+                        continue
+                    X_arr = np.array(feat_df_curr[featName])
+
+                    # 2 conditions for -1 and 0. for imputation
+                    condition = X_arr != -1.
+                    X_arr = np.extract(condition, X_arr)
+                    condition = X_arr != 0.
+                    X_arr = np.extract(condition, X_arr)
+                    medianVal = np.mean(X_arr)
+                    feat_df_curr[featName] = feat_df_curr[featName].replace([-1.0, 0.0], medianVal)
+
                 if feat_df.empty:
                     feat_df = feat_df_curr
                 else:
@@ -421,10 +403,11 @@ def main():
                     else:
                         feat_df = pd.merge(feat_df, feat_df_curr, on=['date', 'forum'])
 
-            pickle.dump(feat_df, open(
-                            '../../data/DW_data/features/feat_combine/features_Delta_T0_Mar16-Aug17.pickle', 'wb'))
+            # pickle.dump(feat_df, open(
+            #                 '../../data/DW_data/features/feat_forums/features_Delta_T0_Mar16-Aug17.pickle', 'wb'))
 
-                        # feat_df_graph = concatenateDf(features, featDir)
+            # feat_df_graph = concatenateDf(features, featDir)
+
 
             # feat_anomalies = pd.read_pickle(
             #     '../../data/DW_data/features/subspace_anomalies_v12_22.pickle')
@@ -433,8 +416,6 @@ def main():
             #             open('../../data/DW_data/features/feat_combine/user_graph_Delta_T0_Sept16-Apr17.pickle', 'wb'))
 
 
-        # train_featDf = feat_df[feat_df['date'] >= trainStart_date]
-        # train_featDf = train_featDf[train_featDf['date'] < trainEnd_date]
 
     ''' Some plot functionalities '''
     delta_time_prev = 14
@@ -469,7 +450,6 @@ def main():
                 plot_dir = '../../plots/dw_stats/feat_plot/feat_forums/time_series/graph_stats/'
                 title = 'Forum_' + str(f)
                 plot_ts(forum_feat_df, plot_dir, title)
-
 
     if args.plot_subspace == True:
         subspace_df = pd.read_pickle('../../data/DW_data/features/subspace_df_v12_22.pickle')

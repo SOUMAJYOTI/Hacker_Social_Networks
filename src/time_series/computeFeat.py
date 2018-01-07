@@ -39,6 +39,7 @@ users_CVEMap, CVE_usersMap = pickle.load(open('../../data/DW_data/new_DW/users_C
 
 allPosts = pd.read_pickle('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle')
 KB_edges_DS = pd.read_pickle('../../data/DW_data/new_DW/KB_edges_df_new.pickle')
+
 allPosts['forumsid'] = allPosts['forumsid'].astype(int)
 allPosts['topicid'] = allPosts['topicid'].astype(str)
 allPosts['postsid'] = allPosts['postsid'].astype(str)

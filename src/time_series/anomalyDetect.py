@@ -289,12 +289,16 @@ def predictAttacks_onAnomaly(input, output, thresholds):
     # plt.show()
 
 
-def anomalyVec(res_vec, ):
-    mean_rvec = np.mean(res_vec)
+def anomalyVec(res_vec, thresh):
+    '''
 
+    :param res_vec:
+    :param thresh: Threshold to choose the anomaly vector
+    :return:
+    '''
     anomaly_vec = np.zeros(res_vec.shape)
     for t in range(res_vec.shape[0]):
-        if res_vec[t] > mean_rvec:
+        if res_vec[t] > thresh:
             anomaly_vec[t] = 1.
 
     return anomaly_vec
@@ -340,11 +344,17 @@ def trainModel(trainDf, featStr, forums):
     forumTSMat, forumTSMAtCent = formTSMatrix(trainDf, featStr)
     # print(forumTSMat.shape)
 
-    ''' Get the PCA components'''
+    ''' Get the PCA components '''
     num_comp = 8
     top_comp, variance_comp = getTopComponents(forumTSMAtCent, num_comp)
-    # print(variance_comp)
-    # print(top_comp.shape)
+
+    ''' Compute the variance percentage '''
+    variance_sum = np.sum(np.array(variance_comp))
+    variance_perc = []
+    for vc in range(len(variance_comp)):
+        variance_perc.append(variance_comp[vc]/variance_sum)
+
+    # print(variance_perc)
 
     ''' Find the normal and residual subspace '''
     # keep the first 3 components as normal subspace
@@ -420,25 +430,99 @@ def trainModel(trainDf, featStr, forums):
     # # Attack prediction evaluation
     # prec, rec, f1_score = predictAttacks_onAnomaly(df_test_feat, testOutput, thresh)
     # print(feat, prec, rec, f1_score)
-    return df_train_feat
+    return df_train_feat, variance_perc
+
+def computeAnomalyCount(subspace_df):
+    '''
+    This function computes the anomaly vectors based on a threshold mechanism
+    :param subspace_df:
+    :return:
+    '''
+    subspace_anomalies = pd.DataFrame()
+    subspace_anomalies['date'] = subspace_df['date']
+    for feat in subspace_df.columns.values:
+        feat_name = feat.split('_')[0]
+        if feat == 'date':
+            continue
+
+        ''' First,  the residual vectors'''
+        if 'res' in feat:
+            mean_feat = subspace_df[feat].mean()
+            thresh = 2.5*mean_feat
+
+            anomaly_flag = []
+            for idx, row in subspace_df[feat].iteritems():
+                if row > thresh:
+                    anomaly_flag.append(1)
+                else:
+                    anomaly_flag.append(0)
+
+            subspace_anomalies[feat_name + '_res_flag'] = anomaly_flag
+
+        ''' Then,  the state vectors'''
+        if 'state' in feat:
+            mean_feat = subspace_df[feat].mean()
+            thresh = 2.5 * mean_feat
+
+            anomaly_flag = []
+            for idx, row in subspace_df[feat].iteritems():
+                if row > thresh:
+                    anomaly_flag.append(1)
+                else:
+                    anomaly_flag.append(0)
+
+            subspace_anomalies[feat_name + '_state_flag'] = anomaly_flag
+
+    return subspace_anomalies
+
+def plot_ts(df, plot_dir, title):
+    # print(df[:10])
+    if not os.path.exists(plot_dir):
+        os.makedirs(plot_dir)
+
+    for feat in df.columns.values:
+        if feat == 'date' or feat == 'forum':
+            continue
+
+        featList = ['numUsers', 'numVulnerabilities', 'numThreads', 'expert_NonNewInteractions']
+        feat_state_vec = [sVec + '_state_vec' for sVec in featList]
+        feat_res_vec = [rVec + '_res_vec' for rVec in featList]
+
+        if feat not in feat_res_vec and feat not in feat_state_vec:
+            continue
+
+        df.plot(figsize=(12,8), x='date', y=feat, color='black', linewidth=2)
+        plt.grid(True)
+        plt.xticks(size=20)
+        plt.yticks(size=20)
+        plt.title(title, size=20)
+        plt.xlabel('date', size=20)
+        plt.ylabel(feat, size=20)
+        plt.subplots_adjust(left=0.13, bottom=0.25, top=0.9)
+        file_save = plot_dir + feat  + '.png'
+        plt.savefig(file_save)
+        plt.close()
 
 
 def main():
     args = ArgsStruct()
     args.cpe_split = False
     args.forumsSplit = True
-
-    forums = [35, 38, 133, 135, 146,  150, 161, 197, ]
+    args.feat_concat = False
+    args.IMPUTATION = False
+    args.plot_subspace = True
+    ''' Selected forums for the features # 17 - not the 53 forums considered'''
+    forums = [129, 6, 112, 77, 69, 178, 31, 134, 193, 56, 201, 250, 13, 205, 194, 110, 121]
     # forums = [35,]
 
     # amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
     # amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
 
-    trainStart_date = datetime.datetime.strptime('2016-9-01', '%Y-%m-%d')
-    trainEnd_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
+    trainStart_date = datetime.datetime.strptime('2016-03-01', '%Y-%m-%d')
+    trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
-    feat_df = pd.read_pickle('../../data/DW_data/features/feat_forums/user_graph_Delta_T0_Sept16-Apr17.pickle')
-    feat_df = feat_df[feat_df['forum'].isin(forums)]
+    feat_df = pd.read_pickle('../../data/DW_data/features/feat_forums/features_Delta_T0_Mar16-Aug17.pickle')
+    # feat_df = feat_df[feat_df['forum'].isin(forums)]
     trainDf = feat_df[feat_df['date'] >= trainStart_date]
     trainDf = trainDf[trainDf['date'] < trainEnd_date]
 
@@ -446,35 +530,64 @@ def main():
         for feat in feat_df.columns.values:
             if feat == 'date' or feat == 'forum':
                 continue
-            if args.forumsSplit == True:
-                for f in forums:
-                    df_forum = trainDf[trainDf['forum'] == f]
+
+            ''' These are imputation measures based on different forums'''
+            if args.IMPUTATION == True:
+                if args.forumsSplit == True:
+                    for f in forums:
+                        df_forum = trainDf[trainDf['forum'] == f]
+                        df_forum_act = df_forum[(df_forum[feat] != -1.) & (df_forum[feat] != 0.)][feat]
+                        median_value = np.median(np.array(list(df_forum_act)))
+                        if np.isnan(median_value):
+                            median_value = 0.
+                        trainDf.ix[trainDf.forum == f, feat] = trainDf[trainDf['forum'] == f][feat].replace(
+                            [-1.00], median_value)
+                else:
                     df_forum_act = df_forum[(df_forum[feat] != -1.) & (df_forum[feat] != 0.)][feat]
                     median_value = np.median(np.array(list(df_forum_act)))
                     if np.isnan(median_value):
                         median_value = 0.
-                    trainDf.ix[trainDf.forum == f, feat] = trainDf[trainDf['forum'] == f][feat].replace(
-                        [-1.00], median_value)
-            else:
-                df_forum_act = df_forum[(df_forum[feat] != -1.) & (df_forum[feat] != 0.)][feat]
-                median_value = np.median(np.array(list(df_forum_act)))
-                if np.isnan(median_value):
-                    median_value = 0.
-                trainDf[feat] = trainDf[feat].replace([-1.00], median_value)
+                    trainDf[feat] = trainDf[feat].replace([-1.00], median_value)
 
         ''' Form the residual and normal time series for each feaure, for each CPE'''
         subspace_df = pd.DataFrame()
+        variance_vals = []
         for feat in trainDf.columns.values:
             if feat == 'date' or feat == 'forum':
                 continue
-            trainDf_subspace = trainModel(trainDf, feat, forums)
+
+            if feat not in ['numUsers', 'numVulnerabilities', 'numThreads', 'expert_NonNewInteractions']:
+                continue
+            trainDf_subspace, variance_comp = trainModel(trainDf, feat, forums)
+            variance_vals.append(variance_comp)
+
+            print(feat)
             if subspace_df.empty:
                 subspace_df = trainDf_subspace
             else:
                 subspace_df = pd.merge(subspace_df, trainDf_subspace, on=['date'])
 
-        # print(subspace_df)
-        pickle.dump(subspace_df, open('../../data/DW_data/features/subspace_df_v12_22.pickle', 'wb'))
+        ''' Get the feature anomaly vector from the resiudal subpspace '''
+        ''' Compute the anomaly dataframe '''
+        feat_anomalies = computeAnomalyCount(subspace_df)
+        pickle.dump(feat_anomalies, open(
+            '../../data/DW_data/features/feat_forums/anomalyVec_Delta_T0_Mar16-Aug17.pickle', 'wb'))
+
+        if args.plot_subspace == True:
+            subspace_df = pd.read_pickle('../../data/DW_data/features/feat_forums/subspace_df_v01_05.pickle')
+            title = ''
+            plot_dir = '../../plots/dw_stats/feat_plot/feat_forums/time_series/subspace/anomalies/'
+            plot_ts(subspace_df, plot_dir, title)
+
+            # subspace_anomalies = computeAnomalyCount(subspace_df)
+
+            # pickle.dump(subspace_anomalies, open('../../data/DW_data/features/subspace_anomalies_v12_22.pickle', 'wb'))
+
+            ''' Merge subspace anomaly feature and the other features '''
+
+            # print(subspace_df)
+        # print(variance_vals )
+        # pickle.dump(subspace_df, open('../../data/DW_data/features/feat_forums/subspace_df_v01_05.pickle', 'wb'))
 
     else:
         for feat in feat_df.columns.values:
@@ -492,9 +605,6 @@ def main():
                     if np.isnan(median_value):
                         median_value = 0.
                     trainDf.ix[trainDf.forum==f, featStr] = trainDf[trainDf['forum'] == f][featStr].replace([-1.00], median_value)
-
-
-
 
 if __name__ == "__main__":
     main()
