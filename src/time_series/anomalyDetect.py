@@ -55,6 +55,7 @@ def formTSMatrix(forumTS, feat):
         for idx_t in range(len(currTS)):
             A[idx_t, idx_f] = featList[idx_t]
 
+    ''' Centerd 2D matrix using the means '''
     centerd_A = np.zeros(A.shape)
     for c in range(centerd_A.shape[1]):
         colMean = np.mean(A[:, c])
@@ -123,7 +124,7 @@ def Q_statistic(top_comp, num_norm_comp, data):
     h_0 = 1 - (2*phi[0]*phi[2]/(3*np.power(phi[1], 2)))
     c_alpha = 2.58
 
-    numer = (c_alpha*np.power(2*phi[1] * np.power(h_0, 1), 0.5) / phi[0]) + 1 \
+    numer = (c_alpha*np.power(2*phi[1] * np.power(h_0, 2), 0.5) / phi[0]) + 1 \
             + (phi[1]*h_0*(h_0-1)/np.power(phi[0], 2))
 
     q_value = phi[0] * np.power(numer, (1/h_0))
@@ -432,6 +433,7 @@ def trainModel(trainDf, featStr, forums):
     # print(feat, prec, rec, f1_score)
     return df_train_feat, variance_perc
 
+
 def computeAnomalyCount(subspace_df):
     '''
     This function computes the anomaly vectors based on a threshold mechanism
@@ -556,7 +558,8 @@ def main():
             if feat == 'date' or feat == 'forum':
                 continue
 
-            if feat not in ['numUsers', 'numVulnerabilities', 'numThreads', 'expert_NonNewInteractions']:
+            if feat not in ['numUsers', 'numVulnerabilities', 'numThreads', 'expert_NonInteractions', 'edgeWtshortestPaths',
+                'communityCount', 'shortestPaths', 'CondExperts']:
                 continue
             trainDf_subspace, variance_comp = trainModel(trainDf, feat, forums)
             variance_vals.append(variance_comp)

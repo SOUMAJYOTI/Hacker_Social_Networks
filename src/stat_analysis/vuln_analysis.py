@@ -116,83 +116,13 @@ def weeklyCVE_anomaly_corr(eventsDf, anomalyVecDf, start_date, end_date):
     return outputDf
 
 
-def anomaly_eventCorr(eventsDf, anomalyVecDf, start_date, end_date):
-    '''
-
-    :param eventsDf:
-    :param anomalyVecDf:
-    :param start_date:
-    :param end_date:
-    :return:
-    '''
-
-    histDays = 30
-
-    eventsDf['date'] = pd.to_datetime(eventsDf['date'])
-    eventsDf = eventsDf[eventsDf['date'] >= start_date]
-    eventsDf = eventsDf[eventsDf['date'] < end_date]
-
-    anomalyVecDf = anomalyVecDf[anomalyVecDf['date'] >= (start_date-datetime.timedelta(days=histDays))]
-    anomalyVecDf = anomalyVecDf[anomalyVecDf['date'] < end_date]
-
-    anomPriorEvent = {}
-
-    ''' The following calculates the number of distinct days on which there was an attack '''
-    num_Attacks = len(eventsDf[eventsDf['count'] > 0])
-
-    for idx, row in eventsDf.iterrows():
-        dateAttack = row['date']
-
-        ''' Consider the following operations only if there is an attack on that day '''
-        if row['count'] > 0:
-            ''' Iterate over the history of anomalies in darkweb
-                This is  where we see how the anomalies in features correlate with attacks
-            '''
-            for hd in range(1, histDays+1):
-                dateAnom = dateAttack - datetime.timedelta(days=hd)
-
-                ''' Iterate over the features inividually to check their occurrence
-                    1. Check only the residual vectors
-                    2. TODO: Take the union of the state and the residual vectors
-                '''
-                for feat in anomalyVecDf.columns.values:
-                    if feat == 'date' or 'state' in feat: # Avoid the state vector flags
-                        continue
-
-                    if feat not in anomPriorEvent:
-                        anomPriorEvent[feat] = [0 for _ in range(histDays)]
-                    isAnom = (anomalyVecDf[anomalyVecDf['date'] == dateAnom][feat].values)[0]
-                    # print(isAnom)
-                    if isAnom == 1:
-                        anomPriorEvent[feat][hd-1] += 1
-
-    for feat in anomPriorEvent:
-        for d in range(len(anomPriorEvent[feat])):
-            anomPriorEvent[feat][d] /= num_Attacks
-
-    return anomPriorEvent
 
 
 def main():
-    amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
-    amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
-
-    anomalyDf = pd.read_pickle('../../data/DW_data/features/feat_forums/anomalyVec_Delta_T0_Mar16-Aug17.pickle')
-    # print(anomalyDf)
-
+    vulnInfo = pd.read_pickle('../../data/DW_data/new_Dw/Vulnerabilities_Armstrong.pickle')
+    print(vulnInfo)
     trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
-
-    # outputDf = weeklyCVE_anomaly_corr(amEvents_malware, anomalyDf, trainStart_date, trainEnd_date)
-
-    # anomPriorEvent = anomaly_eventCorr(amEvents_malware, anomalyDf, trainStart_date, trainEnd_date)
-
-    anomPriorEvent = anomaly_eventCorr(amEvents_malware, anomalyDf, trainStart_date, trainEnd_date)
-    pickle.dump(anomPriorEvent, open('../../data/DW_data/anomalies_events_corr.pickle', 'wb'))
-    anomPriorEvent = pd.read_pickle('../../data/DW_data/anomalies_events_corr.pickle')
-    for feat in anomPriorEvent:
-        print(feat)
-        print(anomPriorEvent[feat])
 
 
 if __name__ == "__main__":

@@ -185,23 +185,22 @@ def analyse_events(df_data):
 
 def main():
     amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
-    amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
+    amEvents_malware = amEvents[amEvents['type'] == 'endpoint-malware']
     vuln_df = pd.read_csv('../../data/DW_data/VulnInfo_11_17.csv', encoding='ISO-8859-1', engine='python')
     cve_cpe_map = pickle.load(open('../../data/DW_data/new_DW/cve_cpe_map_new.pickle', 'rb'))
 
-    trainStart_date = datetime.datetime.strptime('2016-09-01', '%Y-%m-%d')
-    trainEnd_date = datetime.datetime.strptime('2017-09-10', '%Y-%m-%d')
+    trainStart_date = datetime.datetime.strptime('2016-04-01', '%Y-%m-%d')
+    trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
     outputDf = weeklyCVE_event_corr(amEvents_malware, vuln_df, cve_cpe_map, trainStart_date, trainEnd_date)
 
     print(outputDf)
 
-    exit()
-    pickle.dump(outputDf, open('../../data/DW_data/CPE_events_corr.pickle', 'wb'))
+    pickle.dump(outputDf, open('../../data/DW_data/CPE_events_corr_em.pickle', 'wb'))
 
-    cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr.pickle')
-    outputDf = analyse_events(cve_eventsDf)
-    pickle.dump(outputDf, open('../../data/DW_data/CPE_events_corr.pickle', 'wb'))
+    # cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr.pickle')
+    # outputDf = analyse_events(cve_eventsDf)
+    # pickle.dump(outputDf, open('../../data/DW_data/CPE_events_corr.pickle', 'wb'))
 
 
 if __name__ == "__main__":
