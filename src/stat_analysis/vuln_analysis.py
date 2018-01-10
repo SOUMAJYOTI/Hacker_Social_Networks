@@ -39,23 +39,20 @@ def dateToString(date):
     return yearNum+"-"+monthNum+"-"+dayNum
 
 
-def weeklyCVE_anomaly_corr(eventsDf, anomalyVecDf, start_date, end_date):
+def weeklyCVE_stats(eventsDf,start_date, end_date):
     '''
 
     :param eventsDf: Armstrong data
-    :param anomalyVecDf: Darkweb data
     :param start_date:
     :param end_date:
     :return:
     '''
 
-    eventsDf['date'] = pd.to_datetime(eventsDf['date'])
-    anomalyVecDf['date'] = pd.to_datetime(anomalyVecDf['date'])
 
     # DS Structures
     startDatesList = []
     endDatesList = []
-    attacksList = []
+    weeklyCount = []
 
     outputDf = pd.DataFrame()
 
@@ -64,65 +61,37 @@ def weeklyCVE_anomaly_corr(eventsDf, anomalyVecDf, start_date, end_date):
 
     while (endWeek < end_date):
         ''' For the armstrong data '''
-        eventsCurr = eventsDf[eventsDf['date'] >= startWeek]
-        eventsCurr = eventsCurr[eventsCurr['date'] < endWeek]
-        total_count = pd.DataFrame(eventsCurr.groupby(['date']).sum())
-        count_attacks = np.sum(total_count['count'].values)
+        currWeekCount = 0
+        for idx, row in eventsDf.iterrows():
+            for d in row['postedDate']:
+                d = pd.to_datetime(d)
+                if d >=startWeek and d < endWeek:
+                    currWeekCount += 1
+                    break
 
-        if count_attacks == 0:
-            attacksCurr = 0
-        else:
-            attacksCurr = count_attacks
-
+        weeklyCount.append(currWeekCount)
         startDatesList.append(startWeek)
         endDatesList.append(endWeek)
-        attacksList.append(attacksCurr)
-
         startWeek = endWeek
         endWeek = startWeek + datetime.timedelta(days=7)
 
     outputDf['start_dates'] = startDatesList
     outputDf['end_dates'] = endDatesList
-    outputDf['number_attacks'] = attacksList
-
-    for feat in anomalyVecDf.columns.values:
-        if feat == 'date':
-            continue
-
-        startWeek = start_date
-        endWeek = startWeek + datetime.timedelta(days=7)
-
-        anomalyCount = []
-        ''' Store the weekly statistics of the anomalies '''
-        while(endWeek < end_date):
-            anomalyCountWeek = 0
-
-            ''' For the darkweb data '''
-            currWeekDf = anomalyVecDf[anomalyVecDf['date'] >= startWeek]
-            currWeekDf = currWeekDf[currWeekDf['date'] < endWeek]
-
-            for idx, row in currWeekDf.iterrows():
-                if row[feat] == 1:
-                    anomalyCountWeek += 1
-
-            startWeek = endWeek
-            endWeek = startWeek + datetime.timedelta(days=7)
-
-            anomalyCount.append(anomalyCountWeek)
-
-        outputDf[feat] = anomalyCount
-
-
+    outputDf['number_VulnMentions'] = weeklyCount
     return outputDf
-
-
 
 
 def main():
     vulnInfo = pd.read_pickle('../../data/DW_data/new_Dw/Vulnerabilities_Armstrong.pickle')
-    print(vulnInfo)
-    trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
+    # print(vulnInfo)
+    trainStart_date = datetime.datetime.strptime('2016-01-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
+
+    pickle.dump(weeklyCVE_stats(vulnInfo, trainStart_date, trainEnd_date),
+                open('../../data/DW_data/stats/weekly_vulnMentions.pickle', 'wb'))
+
+    vulnWeeklyInfo = pd.read_pickle('../../data/DW_data/stats/weekly_vulnMentions.pickle')
+    print(vulnWeeklyInfo)
 
 
 if __name__ == "__main__":

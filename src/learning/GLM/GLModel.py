@@ -8,7 +8,16 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import numpy as np
 import sklearn.metrics
+from sklearn import linear_model, ensemble
+from sklearn.naive_bayes import GaussianNB
+from random import shuffle
+import csv
 
+from sklearn.svm import SVC
+from sklearn import tree
+from sklearn import preprocessing
+# import glmnet_python
+# from glmnet import glmnet
 
 class ArgsStruct:
     LOAD_DATA = True
@@ -48,7 +57,7 @@ def prepareOutput(eventsDf, start_date, end_date):
     return outputDf
 
 
-def prepareData(inputDf, outputDf):
+def prepareData(inputDf, outputDf, delta_gap_time, delta_prev_time_start):
     train_start_date = pd.to_datetime(outputDf.iloc[0, 0]) # first row
     train_end_date = pd.to_datetime(outputDf.iloc[-1, 0]) # last row
 
@@ -61,25 +70,26 @@ def prepareData(inputDf, outputDf):
     y_true = outputDf['attackFlag']
 
     # This can be validated through
-    delta_prev_time = 7  # no of days to check before the week of current day
+    # delta_gap_time = 7  # no of days to check
+    # delta_prev_time_start = 28 # no of days to check before the current day
 
     currDate = train_start_date
     countDayIndx = 0
 
     num_features = len(inputDf.columns) - 1
-    X = np.zeros((y_true.shape[0], delta_prev_time*num_features)) #input
+    X = np.zeros((y_true.shape[0], delta_gap_time*num_features)) #input
     Y = -np.ones((y_true.shape[0], 1)) #output
 
-    while (currDate < train_end_date):
+    while (currDate <= train_end_date):
         ''' This loop checks values on either of delta days prior '''
-        for idx in range(delta_prev_time):
-            historical_day = pd.to_datetime(currDate - datetime.timedelta(days=delta_prev_time)) # one week before
+        for idx in range(delta_gap_time):
+            historical_day = pd.to_datetime(currDate - datetime.timedelta(days=delta_prev_time_start - idx)) # one week before
             try:
                 X[countDayIndx, idx*num_features:(idx+1)*num_features] = (inputDf[inputDf['date'] == historical_day.date()].ix[:,1:]).values[0] # exclude date
             except:
                 continue
 
-        Y[countDayIndx] = outputDf[outputDf['date'] == currDate.date()].ix[:, 1]
+        Y[countDayIndx] = (outputDf[outputDf['date'] == currDate.date()].ix[:, 1])
 
         countDayIndx += 1
         currDate += datetime.timedelta(days=1)
@@ -116,108 +126,132 @@ def main():
             feat_df = pickle.load(
                 open('../../data/DW_data/features/feat_combine/user_interStats_Delta_T0_Sep16-Aug17.pickle', 'rb'))
 
-    # the previous month is needed for features - since we measure lag correlation for the prediction
-    instance_TrainStartDate = trainStart_date - relativedelta(months=1) # the previous month is needed for features
+        # Prepare the dataframe for output
+        trainOutput = prepareOutput(amEvents_malware, trainStart_date, trainEnd_date)
 
-    # Make the date common for all
-    feat_df['date'] = pd.to_datetime(feat_df['date'])
-    trainDf = feat_df[feat_df['date'] >= instance_TrainStartDate]
-    trainDf = trainDf[trainDf['date'] < trainEnd_date]
+        # the previous month is needed for features - since we measure lag correlation for the prediction
+        instance_TrainStartDate = trainStart_date - relativedelta(months=1) # the previous month is needed for features
 
+        # Make the date common for all
+        feat_df['date'] = pd.to_datetime(feat_df['date'])
+        trainDf = feat_df[feat_df['date'] >= instance_TrainStartDate]
+        trainDf = trainDf[trainDf['date'] < trainEnd_date]
 
-    trainOutput = prepareOutput(amEvents_malware, trainStart_date, trainEnd_date)
-    instance_TestStartDate = testStart_date - relativedelta(months=1)
-    testDf =feat_df[feat_df['date'] >= instance_TestStartDate]
-    testDf = testDf[testDf['date'] < testEnd_date]
-    testOutput = prepareOutput(amEvents_malware, testStart_date, testEnd_date)
+        instance_TestStartDate = testStart_date - relativedelta(months=1)
+        testDf = feat_df[feat_df['date'] >= instance_TestStartDate]
+        testDf = testDf[testDf['date'] < testEnd_date]
+        testOutput = prepareOutput(amEvents_malware, testStart_date, testEnd_date)
+        y_actual_test = list(testOutput['attackFlag'])
 
-    y_actual_test = list(testOutput['attackFlag'])
+        prec_rand = 0.
+        rec_rand = 0.
+        f1_rand = 0.
+        for idx_rand in range(5):
+            y_random = np.random.randint(2, size=len(y_actual_test))
+            prec_rand += sklearn.metrics.precision_score(y_actual_test, y_random)
+            rec_rand += sklearn.metrics.recall_score(y_actual_test, y_random)
+            f1_rand += sklearn.metrics.f1_score(y_actual_test, y_random)
 
-    # y_random = np.random.randint(2, size=len(y_actual_test))
-    # random_prec = sklearn.metrics.precision_score(y_actual_test, y_random)
-    # random_recall = sklearn.metrics.recall_score(y_actual_test, y_random)
-    # random_f1 = sklearn.metrics.f1_score(y_actual_test, y_random)
-    # print('Random: ', random_prec, random_recall, random_f1)
+        prec_rand /= 5
+        rec_rand /= 5
+        f1_rand /= 5
+        print('Random: ', prec_rand, rec_rand, f1_rand)
 
-    ''' For each feature perform the following:
-        1. Prepare the time lagged longitudinal features
-        2. Fit the GLM model
-        3. Measure the accuracy
+    delta_gap_time = [7, 10, 14, 17, 21]
+    delta_prev_time_start = [8, 14, 21, 28]
 
+    for dgt in delta_gap_time:
+        for dprev in delta_prev_time_start:
 
-    '''
+            if dgt >= dprev:
+                continue
+            outputDf = pd.DataFrame()
+            for feat in trainDf.columns:
 
-    for feat in trainDf.columns:
-        if feat == 'date' or feat == 'forums':
-            continue
-
-        print('Computing for feature: ', feat)
-
-        trainDf_curr = trainDf[['date', feat]]
-        testDf_curr = testDf[['date', feat]]
-        X_train, y_train = prepareData(trainDf_curr, trainOutput)
-        X_test, y_test = prepareData(testDf_curr, testOutput)
-
-        ''' Fit a GLM model with logit link on a binomial distribution data '''
-        # TODO: Add sparsity for the single predictor models
-        # TODO: FOr combined predictors models, add group lasso sparsity - how to define the groups
-
-
-        print(X_train.shape, y_train.shape)
-        y_train = y_train.astype(int)
-
-        glm_LR = GLM(distr='multinomial', alpha=0.01, verbose=True)
-        glm_LR.threshold = 1e-3
-        glm_fit = (glm_LR.fit(X_train, y_train.flatten()))
-        y_pred = glm_fit[-1].predict(X_train)
-        print(y_train)
-        print(y_pred)
-        exit()
-        y_pred = (np.array(y_pred)).transpose()
-
-        prec, rec, f1_score = sklearn.metrics.precision_score(y_train, y_pred),\
-        sklearn.metrics.recall_score(y_train, y_pred), \
-        sklearn.metrics.f1_score(y_train, y_pred),
-
-        print(prec, rec, f1_score)
-
-        exit()
-
-        ''' Second step - Fit a boosting model/Decision tree stumps for the residual subspace features'''
+                ''' For each feature perform the following:
+                    1. Prepare the time lagged longitudinal features
+                    2. Fit the GLM model
+                    3. Measure the accuracy
 
 
+                '''
 
-        ''' Final step: Should be a bagging/ensemble technique for combining the above two '''
-        # TODO: explanatory analysis - which attacks can be detected by anomalies
-        # TODO: anomaly correlation with count
+                if feat == 'date' or feat == 'forums':
+                    continue
 
-        # X_train = preprocessing.normalize(X_train, norm='l2')
-        # X_test = preprocessing.normalize(X_test, norm='l2')
+                print('Computing for feature: ', feat)
 
-        # glmnetPlot(fit, xvar='dev', label=True)
-        # plt.show()
+                trainDf_curr = trainDf[['date', feat]]
+                testDf_curr = testDf[['date', feat]]
 
-        # y_pred = glmnetPredict(fit, newx = X_test, ptype='class', s = scipy.array([0.05, 0.01]))
-        # print(y_pred)
+                X_train, y_train = prepareData(trainDf_curr, trainOutput, dgt, dprev)
+                X_test, y_test = prepareData(testDf_curr, testOutput, dgt, dprev)
 
-        # print(X_train)
-        # clf = linear_model.LogisticRegression(penalty='l1', class_weight='balanced')
-        # clf = tree.DecisionTreeClassifier()
+                ''' Fit a GLM model with logit link on a binomial distribution data '''
+                # TODO: Add sparsity for the single predictor models
+                # TODO: FOr combined predictors models, add group lasso sparsity - how to define the groups
 
-        # X_res, y_res = reSample(X_train, y_train)
-        # print(X_train.shape, X_res.shape)
+                y_train = y_train.flatten()
+                y_train = y_train.astype(int)
+                y_test = y_test.flatten()
+                y_test = y_test.astype(int)
 
-        # clf = ensemble.RandomForestClassifier()
-        # clf.fit(X_train, y_train)
-        # y_pred = clf.predict(X_test)
+                clf = linear_model.LogisticRegression(penalty='l2', class_weight='balanced')
+                # clf = ensemble.RandomForestClassifier()
+
+                clf.fit(X_train, y_train)
+                y_pred = clf.predict(X_test)
+
+                # glm_LR = GLM(distr='multinomial', alpha=0.01, reg_lambda=0.2, verbose=True)
+                # glm_LR.threshold = 1e-5
+                # glm_fit = (glm_LR.fit(X_train, y_train))
+                # y_pred = glm_fit[-1].predict(X_train)
+                # print(y_test)
+                # print(y_pred)
+                # exit()
+                # y_pred = (np.array(y_pred)).transpose()
+                #
+                # print(y_train)
+                # print(y_pred)
+                prec, rec, f1_score = sklearn.metrics.precision_score(y_test, y_pred),\
+                sklearn.metrics.recall_score(y_test, y_pred), \
+                sklearn.metrics.f1_score(y_test, y_pred),
+
+                print(prec, rec, f1_score)
+
+                outputDf[feat] = [prec, rec, f1_score]
+
+            meta_data = pd.Series([('Random: '), ('precision: ' + str(prec_rand),
+                                                  ('recall: ' + str(rec_rand)), ('f1: ' + str(f1_rand)))])
+            with open('../../../data/results/01_09/LR_L2/' + str('regular_') + 'tgap_' + str(dgt) + '_tstart_' + str(dprev) + '.csv', 'w') as fout:
+                fout.write('meta data\n:')
+                meta_data.to_csv(fout)
+                outputDf.to_csv(fout)
+
+            ''' Second step - Fit a boosting model/Decision tree stumps for the residual subspace features'''
 
 
-        # Attack prediction evaluation
-        # prec, rec, f1_score = sklearn.metrics.precision_score(y_actual_test, y_pred),\
-                              # sklearn.metrics.recall_score(y_actual_test, y_pred), \
-                              # sklearn.metrics.f1_score(y_actual_test, y_pred),
+            ''' Final step: Should be a bagging/ensemble technique for combining the above two '''
+            # TODO: explanatory analysis - which attacks can be detected by anomalies
+            # TODO: anomaly correlation with count
 
-        # print(prec, rec, f1_score)
+            # fit = glmnet(x=X_train.copy(), y=y_train.copy(), family='multinomial', mtype='grouped')
+
+            # X_train = preprocessing.normalize(X_train, norm='l2')
+            # X_test = preprocessing.normalize(X_test, norm='l2')
+
+            # glmnetPlot(fit, xvar='dev', label=True)
+            # plt.show()
+
+            # y_pred = glmnetPredict(fit, newx = X_test, ptype='class', s = scipy.array([0.05, 0.01]))
+            # print(y_pred)
+
+            # print(X_train)
+            # clf = linear_model.LogisticRegression(penalty='l1', class_weight='balanced')
+            # clf = tree.DecisionTreeClassifier()
+
+            # X_res, y_res = reSample(X_train, y_train)
+
 
 if __name__ == "__main__":
     main()
