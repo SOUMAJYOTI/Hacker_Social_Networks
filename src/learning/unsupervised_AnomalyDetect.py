@@ -100,7 +100,7 @@ def predictAttacks_onAnomaly(inputDf, outputDf, delta_gap_time, delta_prev_time_
         countDayIndx = 0
         while(currDate <= test_end_date):
             '''This loop checks values on either of delta days prior'''
-            count_anomalies = 0 # number of anomalies in the deta_prev time window
+            count_anomalies = 0 # number of anomalies in the delta_prev time window
             for idx in range(delta_gap_time):
                 historical_day = pd.to_datetime(currDate - datetime.timedelta(days=delta_prev_time_start - idx))
 
@@ -172,8 +172,8 @@ def main():
 
 
     # parameters for model
-    delta_gap_time = [7, 10, 14, 17, 21]
-    delta_prev_time_start = [8, 14, 21, 28]
+    delta_gap_time = [7, 14]
+    delta_prev_time_start = [8, 14, 21, 28, 35]
     thresh_anom_count = 1
 
     rocList = {}

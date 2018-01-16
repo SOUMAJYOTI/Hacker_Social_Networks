@@ -157,24 +157,28 @@ def main():
         f1_rand /= 5
         print('Random: ', prec_rand, rec_rand, f1_rand)
 
-    delta_gap_time = [7, 10, 14, 17, 21]
-    delta_prev_time_start = [8, 14, 21, 28]
+    delta_gap_time = [7, 10, 14, 17]
+    delta_prev_time_start = [8, 14, 21, 28, 35]
 
     for dgt in delta_gap_time:
-        for dprev in delta_prev_time_start:
-
-            if dgt >= dprev:
-                continue
-            outputDf = pd.DataFrame()
-            for feat in trainDf.columns:
-
-                ''' For each feature perform the following:
-                    1. Prepare the time lagged longitudinal features
-                    2. Fit the GLM model
-                    3. Measure the accuracy
+        outputDf = pd.DataFrame()
+        scoreDict = {}
+        for feat in trainDf.columns:
+            scoreDict[feat] = {}
+            ''' For each feature perform the following:
+                1. Prepare the time lagged longitudinal features
+                2. Fit the GLM model
+                3. Measure the accuracy
 
 
-                '''
+            '''
+            precList = []
+            recList = []
+            f1List = []
+            for dprev in delta_prev_time_start:
+
+                if dgt >= dprev:
+                    continue
 
                 if feat == 'date' or feat == 'forums':
                     continue
@@ -217,16 +221,18 @@ def main():
                 sklearn.metrics.recall_score(y_test, y_pred), \
                 sklearn.metrics.f1_score(y_test, y_pred),
 
+                precList.append(prec)
+                recList.append(rec)
+                f1List.append(f1_score)
+
                 print(prec, rec, f1_score)
 
-                outputDf[feat] = [prec, rec, f1_score]
 
-            meta_data = pd.Series([('Random: '), ('precision: ' + str(prec_rand),
-                                                  ('recall: ' + str(rec_rand)), ('f1: ' + str(f1_rand)))])
-            with open('../../../data/results/01_09/LR_L2/' + str('regular_') + 'tgap_' + str(dgt) + '_tstart_' + str(dprev) + '.csv', 'w') as fout:
-                fout.write('meta data\n:')
-                meta_data.to_csv(fout)
-                outputDf.to_csv(fout)
+            scoreDict[feat]['precision'] = precList
+            scoreDict[feat]['recall'] = recList
+            scoreDict[feat]['f1'] = f1List
+
+            # pickle.dump(scoreDict, open('../../../data/results/01_09/regular/LR_L2/' + 'tgap_' + str(dgt) + '.pickle', 'wb'))
 
             ''' Second step - Fit a boosting model/Decision tree stumps for the residual subspace features'''
 

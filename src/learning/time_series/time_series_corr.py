@@ -52,8 +52,8 @@ def main():
     ''
 
     # Load the time series data for measuring cross correlation
-    featDf = pd.read_pickle('../../../data/DW_data/features/feat_combine/user_interStats_weekly_Delta_T0_Sept16-Aug17.pickle')
-    cve_eventsDf = pd.read_pickle('../../../data/DW_data/CPE_events_corr.pickle')
+    featDf = pd.read_pickle('../../../data/DW_data/features/feat_combine/graph_stats_weekly_Delta_T0_Mar16-Sep17.pickle')
+    cve_eventsDf = pd.read_pickle('../../../data/DW_data/CPE_events_corr_me.pickle')
 
     ts_1 = cve_eventsDf[['start_dates', 'number_attacks']]
     featDf['date'] = pd.to_datetime(featDf['date'])
