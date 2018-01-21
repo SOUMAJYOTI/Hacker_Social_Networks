@@ -89,10 +89,7 @@ def predictAttacks_onAnomaly(inputDf, outputDf, delta_gap_time, delta_prev_time_
     test_start_date = outputDf.iloc[0, 0]
     test_end_date = outputDf.iloc[-1, 0]
 
-    maxPrec = -10
-    maxRec = -10
-    f1_score = -10
-
+    ''' Iterate over all the thresholds for ROC curves '''
     for t in thresholds_anom:
         # print('Threshold: ', t)
         currDate = test_start_date
@@ -117,6 +114,7 @@ def predictAttacks_onAnomaly(inputDf, outputDf, delta_gap_time, delta_prev_time_
                     continue
 
             ''' Choose threshold scaling more wisely !!!! '''
+            ''' If the number of anomalies crosses a threshold over the time gap, predict as attack'''
             if count_anomalies >= (delta_gap_time/7 * thresh_anom_count):
                 y_estimate[countDayIndx] = 1
 
@@ -127,15 +125,8 @@ def predictAttacks_onAnomaly(inputDf, outputDf, delta_gap_time, delta_prev_time_
         tprList.append(tpr)
         fprList.append(fpr)
 
-        y_actual_list = list(y_actual)
-        # Get the best precision and recall for all the thresholds
-        if f1_score < sklearn.metrics.f1_score(y_actual_list, y_estimate):
-            maxPrec = sklearn.metrics.precision_score(y_actual_list, y_estimate)
-            maxRec = sklearn.metrics.recall_score(y_actual_list, y_estimate)
-            f1_score = sklearn.metrics.f1_score(y_actual_list, y_estimate)
 
-    return tprList, fprList, maxPrec, maxRec, f1_score
-
+    return tprList, fprList,
 
 def main():
     args = ArgsStruct()
@@ -182,12 +173,11 @@ def main():
 
             if dgt >= dprev:
                 continue
-            outputDf = pd.DataFrame()
             for feat in trainDf.columns:
 
                 if feat == 'date' or feat == 'forums':
                     continue
-
+                rocList[feat] = {}
                 if 'state' in feat:
                     continue
                 print('Computing for feature: ', feat)
@@ -201,16 +191,15 @@ def main():
                 thresh_anomList = np.arange(thresh_min, thresh_max, (thresh_max - thresh_min)/10)
 
 
-                tprList, fprList, maxPrec, maxRec, f1_score = predictAttacks_onAnomaly(trainDf, trainOutput, dgt, dprev,
+                tprList, fprList, = predictAttacks_onAnomaly(testDf, testOutput, dgt, dprev,
                                                                                        thresh_anomList, feat, thresh_anom_count)
 
-                rocList[feat] = tprList, fprList
-                outputDf[feat] = [maxPrec, maxRec, f1_score]
+                rocList[feat]['tprList'] = tprList
+                rocList[feat]['fprList'] = fprList
 
 
-            pickle.dump(rocList, open('../../data/results/01_09/anomaly/threshold/roc/' + str('res_') + 'tgap_' + str(dgt) + '_tstart_' + str(dprev) + '.pickle', 'wb'))
-            with open('../../data/results/01_09/anomaly/threshold/' + str('res_') + 'tgap_' + str(dgt) + '_tstart_' + str(dprev) + '.csv', 'w') as fout:
-                outputDf.to_csv(fout)
+            pickle.dump(rocList, open('../../data/results/01_09/anomaly/' + str('res_') + 'tgap_' + str(dgt) + '_tstart_' + str(dprev) + '.pickle', 'wb'))
+
 
 
 

@@ -161,13 +161,12 @@ def main():
     delta_prev_time_start = [8, 14, 21, 28, 35]
 
     for dgt in delta_gap_time:
-        outputDf = pd.DataFrame()
         scoreDict = {}
         for feat in trainDf.columns:
             scoreDict[feat] = {}
             ''' For each feature perform the following:
                 1. Prepare the time lagged longitudinal features
-                2. Fit the GLM model
+                2. Fit the model
                 3. Measure the accuracy
 
 

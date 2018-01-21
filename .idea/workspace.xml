@@ -2,15 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b3af467-004d-4a29-a6fe-96d8d390283e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/learning/Lasso/fabian_lasso.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/learning/Lasso/group_lasso_features.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/learning/parsimony/test.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/learning/parsimony/test_parsimony.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/learning/GLM/GLModel.py" afterPath="$PROJECT_DIR$/src/learning/GLM/GLModel.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/learning/time_series/time_series_corr.py" afterPath="$PROJECT_DIR$/src/learning/time_series/time_series_corr.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/learning/Lasso/blockwise_descent_semisparse.py" afterPath="$PROJECT_DIR$/src/learning/Lasso/blockwise_descent_semisparse.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/learning/parsimony/test.py" afterPath="$PROJECT_DIR$/src/learning/parsimony/test.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/learning/unsupervised_AnomalyDetect.py" afterPath="$PROJECT_DIR$/src/learning/unsupervised_AnomalyDetect.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/time_series/anomalyDetect.py" afterPath="$PROJECT_DIR$/src/time_series/anomalyDetect.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/learning/logReg.py" afterPath="$PROJECT_DIR$/src/learning/Lasso/__init__.py" />
     </list>
     <ignored path="Hacker_Social_Networks.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,28 +21,6 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
-  <component name="DockManager">
-    <window id="1">
-      <content type="file-editors">
-        <state>
-          <leaf>
-            <file leaf-file-name="blockwise_descent_semisparse.py" pinned="false" current-in-tab="true">
-              <entry file="file://$PROJECT_DIR$/src/learning/Lasso/blockwise_descent_semisparse.py">
-                <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="500">
-                    <caret line="186" column="51" selection-start-line="186" selection-start-column="51" selection-end-line="186" selection-end-column="51" />
-                    <folding>
-                      <element signature="e#0#12#0" expanded="true" />
-                    </folding>
-                  </state>
-                </provider>
-              </entry>
-            </file>
-          </leaf>
-        </state>
-      </content>
-    </window>
-  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="Hacker_Social_Networks" />
@@ -55,21 +30,20 @@
       <file leaf-file-name="GLModel.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/learning/GLM/GLModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="223" column="37" selection-start-line="223" selection-start-column="37" selection-end-line="223" selection-end-column="37" />
+            <state relative-caret-position="2992">
+              <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
               <folding>
                 <element signature="e#728#1555#0" expanded="false" />
-                <element signature="e#1637#3257#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="unsupervised_AnomalyDetect.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="unsupervised_AnomalyDetect.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/learning/unsupervised_AnomalyDetect.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1188">
-              <caret line="100" column="41" selection-start-line="100" selection-start-column="41" selection-end-line="100" selection-end-column="41" />
+            <state relative-caret-position="656">
+              <caret line="124" column="27" selection-start-line="124" selection-start-column="27" selection-end-line="124" selection-end-column="27" />
               <folding>
                 <element signature="e#330#1157#0" expanded="false" />
                 <element signature="e#1203#1632#0" expanded="false" />
@@ -105,22 +79,12 @@
       <file leaf-file-name="group_lasso_features.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/learning/Lasso/group_lasso_features.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="413">
-              <caret line="204" column="70" selection-start-line="204" selection-start-column="70" selection-end-line="204" selection-end-column="70" />
+            <state relative-caret-position="2662">
+              <caret line="148" column="31" selection-start-line="0" selection-start-column="0" selection-end-line="218" selection-end-column="10" />
               <folding>
                 <element signature="e#468#486#0" expanded="true" />
                 <element signature="e#865#1692#0" expanded="false" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/learning/parsimony/test.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="67">
-              <caret line="21" column="41" selection-start-line="21" selection-start-column="41" selection-end-line="21" selection-end-column="41" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -152,7 +116,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/stat_analysis/cve_cpe_analysis.py" />
         <option value="$PROJECT_DIR$/src/time_series/anomaly detection.py" />
         <option value="$PROJECT_DIR$/src/learning.py" />
         <option value="$PROJECT_DIR$/src/learning/logReg.py" />
@@ -194,15 +157,16 @@
         <option value="$PROJECT_DIR$/src/learning/adaboost.py" />
         <option value="$PROJECT_DIR$/src/time_series/anomalyDetect.py" />
         <option value="$PROJECT_DIR$/src/learning/time_series/time_series_corr.py" />
-        <option value="$PROJECT_DIR$/src/learning/unsupervised_AnomalyDetect.py" />
         <option value="$PROJECT_DIR$/src/learning/Lasso/test_sgl_logistic.py" />
         <option value="$PROJECT_DIR$/src/learning/Lasso/__init__.py" />
-        <option value="$PROJECT_DIR$/src/learning/GLM/GLModel.py" />
         <option value="$PROJECT_DIR$/src/learning/Lasso/utils.py" />
         <option value="$PROJECT_DIR$/src/learning/Lasso/fabian_lasso.py" />
         <option value="$PROJECT_DIR$/src/learning/Lasso/group_lasso_features.py" />
         <option value="$PROJECT_DIR$/src/learning/Lasso/blockwise_descent_semisparse.py" />
+        <option value="$PROJECT_DIR$/src/learning/parsimony/test_parsimony.py" />
         <option value="$PROJECT_DIR$/src/learning/parsimony/test.py" />
+        <option value="$PROJECT_DIR$/src/learning/GLM/GLModel.py" />
+        <option value="$PROJECT_DIR$/src/learning/unsupervised_AnomalyDetect.py" />
       </list>
     </option>
   </component>
@@ -237,7 +201,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -360,28 +323,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Lasso" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Hacker_Social_Networks" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="learning" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="GLM" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -389,6 +330,7 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -405,41 +347,7 @@
       <recent name="F:\Github\Hacker_Social_Networks\plots\dw_stats" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.test">
-    <configuration default="false" name="GLModel" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/learning/GLM" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Hacker_Social_Networks" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/learning/GLM/GLModel.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="blockwise_descent_semisparse" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/learning/Lasso" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="Hacker_Social_Networks" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/learning/Lasso/blockwise_descent_semisparse.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
+  <component name="RunManager" selected="Python.unsupervised_AnomalyDetect">
     <configuration default="false" name="GLM_multinomial" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -487,6 +395,40 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Hacker_Social_Networks" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/learning/parsimony/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="test_parsimony" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/learning/parsimony" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Hacker_Social_Networks" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/learning/parsimony/test_parsimony.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="unsupervised_AnomalyDetect" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/learning" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Hacker_Social_Networks" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/learning/unsupervised_AnomalyDetect.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -626,19 +568,19 @@
       <method />
     </configuration>
     <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.GLModel" />
-      <item index="1" class="java.lang.String" itemvalue="Python.blockwise_descent_semisparse" />
-      <item index="2" class="java.lang.String" itemvalue="Python.GLM_multinomial" />
-      <item index="3" class="java.lang.String" itemvalue="Python.group_lasso_features" />
-      <item index="4" class="java.lang.String" itemvalue="Python.test" />
+      <item index="0" class="java.lang.String" itemvalue="Python.GLM_multinomial" />
+      <item index="1" class="java.lang.String" itemvalue="Python.group_lasso_features" />
+      <item index="2" class="java.lang.String" itemvalue="Python.test" />
+      <item index="3" class="java.lang.String" itemvalue="Python.test_parsimony" />
+      <item index="4" class="java.lang.String" itemvalue="Python.unsupervised_AnomalyDetect" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.test" />
-        <item index="1" class="java.lang.String" itemvalue="Python.group_lasso_features" />
-        <item index="2" class="java.lang.String" itemvalue="Python.GLM_multinomial" />
-        <item index="3" class="java.lang.String" itemvalue="Python.GLModel" />
-        <item index="4" class="java.lang.String" itemvalue="Python.blockwise_descent_semisparse" />
+        <item index="0" class="java.lang.String" itemvalue="Python.unsupervised_AnomalyDetect" />
+        <item index="1" class="java.lang.String" itemvalue="Python.test" />
+        <item index="2" class="java.lang.String" itemvalue="Python.test_parsimony" />
+        <item index="3" class="java.lang.String" itemvalue="Python.group_lasso_features" />
+        <item index="4" class="java.lang.String" itemvalue="Python.GLM_multinomial" />
       </list>
     </recent_temporary>
   </component>
@@ -659,18 +601,18 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="-9" width="1938" height="1048" extended-state="6" />
+    <frame x="-9" y="-9" width="1938" height="1048" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14225277" sideWeight="0.70538723" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14225277" sideWeight="0.7021518" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3272933" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14225277" sideWeight="0.2946128" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14225277" sideWeight="0.29784825" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19705549" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32616082" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -692,8 +634,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/stat_analysis/userStats.py" />
-    <entry file="file://$PROJECT_DIR$/src/stat_analysis/findTopCVEInflUsers.py" />
     <entry file="file://$PROJECT_DIR$/utilities/plot_shortest_paths.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="110">
@@ -924,9 +864,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#12#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -949,17 +886,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
           <caret line="10" column="11" selection-start-line="10" selection-start-column="11" selection-end-line="10" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/learning/unsupervised_AnomalyDetect.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1188">
-          <caret line="100" column="41" selection-start-line="100" selection-start-column="41" selection-end-line="100" selection-end-column="41" />
-          <folding>
-            <element signature="e#330#1157#0" expanded="false" />
-            <element signature="e#1203#1632#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -997,7 +923,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4488">
           <caret line="313" column="23" selection-start-line="313" selection-start-column="23" selection-end-line="313" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1005,35 +930,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1056">
           <caret line="49" column="14" selection-start-line="49" selection-start-column="14" selection-end-line="49" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/learning/GLM/GLModel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="223" column="37" selection-start-line="223" selection-start-column="37" selection-end-line="223" selection-end-column="37" />
-          <folding>
-            <element signature="e#728#1555#0" expanded="false" />
-            <element signature="e#1637#3257#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/learning/Lasso/blockwise_descent_semisparse.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="186" column="51" selection-start-line="186" selection-start-column="51" selection-end-line="186" selection-end-column="51" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-2000">
+          <caret line="16" column="61" selection-start-line="16" selection-start-column="61" selection-end-line="16" selection-end-column="61" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/learning/Lasso/group_lasso_features.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="413">
-          <caret line="204" column="70" selection-start-line="204" selection-start-column="70" selection-end-line="204" selection-end-column="70" />
+        <state relative-caret-position="2662">
+          <caret line="148" column="31" selection-start-line="0" selection-start-column="0" selection-end-line="218" selection-end-column="10" />
           <folding>
             <element signature="e#468#486#0" expanded="true" />
             <element signature="e#865#1692#0" expanded="false" />
@@ -1041,11 +951,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/Python34/Lib/site-packages/scipy/sparse/base.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-8619">
+          <caret line="370" column="0" selection-start-line="370" selection-start-column="0" selection-end-line="370" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/learning/parsimony/test_parsimony.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="48" column="76" selection-start-line="47" selection-start-column="45" selection-end-line="48" selection-end-column="76" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/learning/parsimony/test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="67">
-          <caret line="21" column="41" selection-start-line="21" selection-start-column="41" selection-end-line="21" selection-end-column="41" />
-          <folding />
+        <state relative-caret-position="37">
+          <caret line="119" column="58" selection-start-line="119" selection-start-column="58" selection-end-line="119" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/learning/GLM/GLModel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2992">
+          <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
+          <folding>
+            <element signature="e#728#1555#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/learning/unsupervised_AnomalyDetect.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="656">
+          <caret line="124" column="27" selection-start-line="124" selection-start-column="27" selection-end-line="124" selection-end-column="27" />
+          <folding>
+            <element signature="e#330#1157#0" expanded="false" />
+            <element signature="e#1203#1632#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

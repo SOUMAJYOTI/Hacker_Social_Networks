@@ -1,8 +1,6 @@
 import numpy
 from utils import S, norm_non0
 
-__author__ = 'Romain Tavenard romain.tavenard[at]univ-rennes2.fr'
-
 
 class SGL:
     def __init__(self, groups, alpha, lbda, ind_sparse, max_iter_outer=10000, max_iter_inner=100, rtol=1e-6):
