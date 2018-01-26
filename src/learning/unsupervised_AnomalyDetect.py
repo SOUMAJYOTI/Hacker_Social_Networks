@@ -10,6 +10,8 @@ import sklearn.metrics
 from random import shuffle
 
 
+''' The random case is included in the predictAnomalyonAttacks method '''
+
 class ArgsStruct:
     LOAD_DATA = True
 
@@ -115,16 +117,18 @@ def predictAttacks_onAnomaly(inputDf, outputDf, delta_gap_time, delta_prev_time_
 
             ''' Choose threshold scaling more wisely !!!! '''
             ''' If the number of anomalies crosses a threshold over the time gap, predict as attack'''
-            if count_anomalies >= (delta_gap_time/7 * thresh_anom_count):
+            # print(count_anomalies)
+            if count_anomalies > int((delta_gap_time/7 * thresh_anom_count)):
                 y_estimate[countDayIndx] = 1
 
             countDayIndx += 1
             currDate += datetime.timedelta(days=1)
 
         tpr, fpr = roc_metrics(y_actual, y_estimate)
+
+        # print(tpr, fpr)
         tprList.append(tpr)
         fprList.append(fpr)
-
 
     return tprList, fprList,
 
@@ -137,7 +141,7 @@ def main():
     trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
 
-    testStart_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
+    testStart_date = datetime.datetime.strptime('2017-04-01', '%Y-%m-%d')
     testEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
     if args.LOAD_DATA:
@@ -163,8 +167,8 @@ def main():
 
 
     # parameters for model
-    delta_gap_time = [7, 14]
-    delta_prev_time_start = [8, 14, 21, 28, 35]
+    delta_gap_time = [7, ]
+    delta_prev_time_start = [8, 15, 21, 28, 35]
     thresh_anom_count = 1
 
     rocList = {}
@@ -183,13 +187,12 @@ def main():
                 print('Computing for feature: ', feat)
 
                 feat_val = trainDf[feat]
-                thresh_min = np.mean(np.array(feat_val))
-                thresh_max = 4*np.mean(np.array(feat_val))
+                thresh_min = 0.1*np.mean(np.array(feat_val))
+                thresh_max = 10*np.mean(np.array(feat_val))
 
                 # print(thrsh_min, thresh_max)
 
-                thresh_anomList = np.arange(thresh_min, thresh_max, (thresh_max - thresh_min)/10)
-
+                thresh_anomList = np.arange(thresh_min, thresh_max, (thresh_max - thresh_min)/50)
 
                 tprList, fprList, = predictAttacks_onAnomaly(testDf, testOutput, dgt, dprev,
                                                                                        thresh_anomList, feat, thresh_anom_count)
@@ -197,10 +200,8 @@ def main():
                 rocList[feat]['tprList'] = tprList
                 rocList[feat]['fprList'] = fprList
 
-
-            pickle.dump(rocList, open('../../data/results/01_09/anomaly/' + str('res_') + 'tgap_' + str(dgt) + '_tstart_' + str(dprev) + '.pickle', 'wb'))
-
-
+            pickle.dump(rocList, open('../../data/results/01_25/anomaly/thresh_anom_' + str(thresh_anom_count) + '/' +
+                                      str('res_') + 'tgap_' + str(dgt) + '_tstart_' + str(dprev) + '.pickle', 'wb'))
 
 
 

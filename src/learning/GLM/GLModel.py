@@ -110,15 +110,15 @@ def main():
     args.TYPE_PLOT = 'LINE'
 
     ''' SET THE TRAINING AND TEST TIME PERIODS - THIS IS MANUAL '''
-    trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
-    trainEnd_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
+    trainStart_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
+    trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
     testStart_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
     testEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
     if args.LOAD_DATA:
         amEvents = pd.read_csv('../../../data/Armstrong_data/amEvents_11_17.csv')
-        amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
+        amEvents_malware = amEvents[amEvents['type'] == 'malicious-destination']
 
         if args.FEAT_TYPE == "REGULAR":
             feat_df = pickle.load(open('../../../data/DW_data/features/feat_combine/features_Delta_T0_Mar16-Aug17.pickle', 'rb'))
@@ -137,28 +137,29 @@ def main():
         trainDf = feat_df[feat_df['date'] >= instance_TrainStartDate]
         trainDf = trainDf[trainDf['date'] < trainEnd_date]
 
+
         instance_TestStartDate = testStart_date - relativedelta(months=1)
         testDf = feat_df[feat_df['date'] >= instance_TestStartDate]
         testDf = testDf[testDf['date'] < testEnd_date]
         testOutput = prepareOutput(amEvents_malware, testStart_date, testEnd_date)
         y_actual_test = list(testOutput['attackFlag'])
 
-        prec_rand = 0.
-        rec_rand = 0.
-        f1_rand = 0.
-        for idx_rand in range(5):
-            y_random = np.random.randint(2, size=len(y_actual_test))
-            prec_rand += sklearn.metrics.precision_score(y_actual_test, y_random)
-            rec_rand += sklearn.metrics.recall_score(y_actual_test, y_random)
-            f1_rand += sklearn.metrics.f1_score(y_actual_test, y_random)
+        # prec_rand = 0.
+        # rec_rand = 0.
+        # f1_rand = 0.
+        # for idx_rand in range(5):
+        #     y_random = np.random.randint(2, size=len(y_actual_test))
+        #     prec_rand += sklearn.metrics.precision_score(y_actual_test, y_random)
+        #     rec_rand += sklearn.metrics.recall_score(y_actual_test, y_random)
+        #     f1_rand += sklearn.metrics.f1_score(y_actual_test, y_random)
+        #
+        # prec_rand /= 5
+        # rec_rand /= 5
+        # f1_rand /= 5
+        # print('Random: ', prec_rand, rec_rand, f1_rand)
 
-        prec_rand /= 5
-        rec_rand /= 5
-        f1_rand /= 5
-        print('Random: ', prec_rand, rec_rand, f1_rand)
-
-    delta_gap_time = [7, 10, 14, 17]
-    delta_prev_time_start = [8, 14, 21, 28, 35]
+    delta_gap_time = [7, 14,]
+    delta_prev_time_start = [8, 15, 21, 28, 35]
 
     for dgt in delta_gap_time:
         scoreDict = {}
@@ -205,17 +206,6 @@ def main():
                 clf.fit(X_train, y_train)
                 y_pred = clf.predict(X_test)
 
-                # glm_LR = GLM(distr='multinomial', alpha=0.01, reg_lambda=0.2, verbose=True)
-                # glm_LR.threshold = 1e-5
-                # glm_fit = (glm_LR.fit(X_train, y_train))
-                # y_pred = glm_fit[-1].predict(X_train)
-                # print(y_test)
-                # print(y_pred)
-                # exit()
-                # y_pred = (np.array(y_pred)).transpose()
-                #
-                # print(y_train)
-                # print(y_pred)
                 prec, rec, f1_score = sklearn.metrics.precision_score(y_test, y_pred),\
                 sklearn.metrics.recall_score(y_test, y_pred), \
                 sklearn.metrics.f1_score(y_test, y_pred),
@@ -231,31 +221,11 @@ def main():
             scoreDict[feat]['recall'] = recList
             scoreDict[feat]['f1'] = f1List
 
-            # pickle.dump(scoreDict, open('../../../data/results/01_09/regular/LR_L2/' + 'tgap_' + str(dgt) + '.pickle', 'wb'))
-
-            ''' Second step - Fit a boosting model/Decision tree stumps for the residual subspace features'''
-
+            pickle.dump(scoreDict, open('../../../data/results/01_09/regular/LR_L2/' + 'tgap_' + str(dgt) + '.pickle', 'wb'))
 
             ''' Final step: Should be a bagging/ensemble technique for combining the above two '''
             # TODO: explanatory analysis - which attacks can be detected by anomalies
             # TODO: anomaly correlation with count
-
-            # fit = glmnet(x=X_train.copy(), y=y_train.copy(), family='multinomial', mtype='grouped')
-
-            # X_train = preprocessing.normalize(X_train, norm='l2')
-            # X_test = preprocessing.normalize(X_test, norm='l2')
-
-            # glmnetPlot(fit, xvar='dev', label=True)
-            # plt.show()
-
-            # y_pred = glmnetPredict(fit, newx = X_test, ptype='class', s = scipy.array([0.05, 0.01]))
-            # print(y_pred)
-
-            # print(X_train)
-            # clf = linear_model.LogisticRegression(penalty='l1', class_weight='balanced')
-            # clf = tree.DecisionTreeClassifier()
-
-            # X_res, y_res = reSample(X_train, y_train)
 
 
 if __name__ == "__main__":

@@ -183,6 +183,35 @@ def analyse_events(df_data):
     return df_data
 
 
+def firstMentions_CVE(vulnDf):
+    '''
+
+    :param vulnDf:
+    :return:
+    '''
+
+    ''' Find and store the list of vulnerability mention dates for each one of them '''
+    vulnMentions = {}
+    for idx, row in vulnDf.iterrows():
+        vid = row['vulnerabilityid']
+        if  vid not in vulnMentions:
+            vulnMentions[vid] = []
+
+        if type(row['posteddate']) is not str:
+            continue
+        vulnMentions[vid].append(datetime.datetime.strptime(row['posteddate'], '%Y-%m-%d'))
+
+
+    ''' Return the sorted dates of mentions for each vulnerability '''
+    for v in vulnMentions:
+        datesMentions = list(set(vulnMentions[v]))
+        sortedDates = sorted(datesMentions)
+        vulnMentions[v] = sortedDates
+
+    return vulnMentions
+
+
+
 def main():
     amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
     amEvents_malware = amEvents[amEvents['type'] == 'endpoint-malware']
@@ -192,11 +221,11 @@ def main():
     trainStart_date = datetime.datetime.strptime('2016-04-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
-    outputDf = weeklyCVE_event_corr(amEvents_malware, vuln_df, cve_cpe_map, trainStart_date, trainEnd_date)
+    # outputDf = weeklyCVE_event_corr(amEvents_malware, vuln_df, cve_cpe_map, trainStart_date, trainEnd_date)
 
-    print(outputDf)
+    vulnDatesList = firstMentions_CVE(vuln_df)
 
-    pickle.dump(outputDf, open('../../data/DW_data/CPE_events_corr_em.pickle', 'wb'))
+    # pickle.dump(outputDf, open('../../data/DW_data/CPE_events_corr_em.pickle', 'wb'))
 
     # cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr.pickle')
     # outputDf = analyse_events(cve_eventsDf)

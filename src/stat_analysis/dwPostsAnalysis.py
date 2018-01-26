@@ -121,18 +121,57 @@ def groupForumThreads(df_data):
     print(len(forumsFinal))
 
 
+def user_forums(df_data):
+    user_forum_count = {}
+    users_fcount = {}
+
+    users_1 = list(df_data[df_data['forumsid'] == 129]['uid'])
+    users_2 = list(df_data[df_data['forumsid'] == 178]['uid'])
+
+    print(list(set(users_1).intersection(set(users_2))))
+
+    exit()
+    for idx, row in df_data.iterrows():
+        if row['uid'] not in users_fcount:
+            users_fcount[row['uid']] = []
+
+        if row['forumsid'] not in users_fcount[row['uid']]:
+            users_fcount[row['uid']].append(row['forumsid'])
+        print(row['uid'], users_fcount[row['uid']])
+
+    for uid in users_fcount:
+        forums_count = len(list(set(users_fcount[uid])))
+        print(forums_count)
+        if forums_count not in user_forum_count:
+            user_forum_count[forums_count] = 0
+
+        user_forum_count[forums_count] += 1
+
+    return user_forum_count
+
+
 if __name__ == "__main__":
     dwData = pd.read_pickle('../../data/DW_data/new_DW/DW_postgres_data_new_2016-2017.pickle')
     topics = pd.read_pickle('../../data/DW_data/new_DW/topics_new.pickle')
 
+    dwData['date_scraped'] = pd.to_datetime(dwData['date_scraped'])
+    print(dwData[:10])
+    print(min(dwData['date_scraped']), max(dwData['date_scraped']))
+
+    exit()
+
     # df_data = dwPosts_analysis(dwData, topics)
-    df_data = pickle.load(open('../../data/DW_data/new_DW/DW_postgres_data_forum_2016-2017.pickle', 'rb'))
+    # df_data = pickle.load(open('../../data/DW_data/new_DW/DW_postgres_data_forum_2016-2017.pickle', 'rb'))
     # pickle.dump(df_data, open('../../data/DW_data/DW_data_forum_2016-2017.pickle', 'wb'))
 
     # dwData = pd.read_pickle('../../data/DW_data/dw_database_data_2016-17.pickle')
 
     # pickle.dump(create_dwdatabase(df_data), open('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle', 'wb'))
 
-    # df_data = pd.read_pickle('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle')
-    #
-    groupForumThreads(df_data)
+    df_data = pd.read_pickle('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle')
+
+    # groupForumThreads(df_data)
+
+    user_forum_count = user_forums(df_data)
+
+    pickle.dump(user_forum_count, open('../../data/DW_data/new_DW/cdf_users_forums.pickle', 'wb'))
