@@ -122,14 +122,14 @@ def main():
 
 
     ''' SET THE TRAINING AND TEST TIME PERIODS - THIS IS MANUAL '''
-    trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
-    trainEnd_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
+    trainStart_date = datetime.datetime.strptime('2016-04-01', '%Y-%m-%d')
+    trainEnd_date = datetime.datetime.strptime('2016-09-01', '%Y-%m-%d')
 
     testStart_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
     testEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
     amEvents = pd.read_csv('../../../data/Armstrong_data/amEvents_11_17.csv')
-    amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
+    amEvents_malware = amEvents[amEvents['type'] == 'endpoint_malware']
 
     feat_df = pickle.load(
         open('../../../data/DW_data/features/feat_combine/features_Delta_T0_Mar16-Aug17.pickle', 'rb'))
@@ -191,7 +191,7 @@ def main():
                                       algorithm_params=dict(max_iter=1000))
             model = estimator.fit(X_train, y_train)
 
-            print(model.parameters())
+            # print(model.parameters())
 
             y_pred = model.predict(X_test)
 
@@ -212,7 +212,7 @@ def main():
         scoreDict['f1'] = f1List
 
         pickle.dump(scoreDict,
-                    open('../../../data/results/01_09/regular/group/' + 'tgap_' + str(dgt) + '_gparam_' + str(g) + '.pickle', 'wb'))
+                    open('../../../data/results/01_25/regular/endpoint_malware/group/' + 'tgap_' + str(dgt) + '_gparam_' + str(g) + '.pickle', 'wb'))
 
 
 if __name__ == "__main__":

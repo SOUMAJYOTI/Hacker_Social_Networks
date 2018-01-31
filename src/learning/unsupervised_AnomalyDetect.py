@@ -142,7 +142,7 @@ def main():
     trainEnd_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
 
     testStart_date = datetime.datetime.strptime('2017-04-01', '%Y-%m-%d')
-    testEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
+    testEnd_date = datetime.datetime.strptime('2017-08-01', '%Y-%m-%d')
 
     if args.LOAD_DATA:
         amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
@@ -200,7 +200,7 @@ def main():
                 rocList[feat]['tprList'] = tprList
                 rocList[feat]['fprList'] = fprList
 
-            pickle.dump(rocList, open('../../data/results/01_25/anomaly/thresh_anom_' + str(thresh_anom_count) + '/' +
+            pickle.dump(rocList, open('../../data/results/01_25/anomaly/malicious_email/thresh_anom_' + str(thresh_anom_count) + '/' +
                                       str('res_') + 'tgap_' + str(dgt) + '_tstart_' + str(dprev) + '.pickle', 'wb'))
 
 

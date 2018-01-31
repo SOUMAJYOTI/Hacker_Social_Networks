@@ -53,7 +53,7 @@ def weeklyCVE_event_corr(eventsDf, vulnInfo, cve_cpe_map, start_date, end_date):
     vulnInfo['posteddate'] = pd.to_datetime(vulnInfo['posteddate'])
 
     startWeek = start_date
-    endWeek = startWeek + datetime.timedelta(days=7)
+    endWeek = startWeek + datetime.timedelta(days=61)
 
     # DS Structures
     startDatesList = []
@@ -110,7 +110,7 @@ def weeklyCVE_event_corr(eventsDf, vulnInfo, cve_cpe_map, start_date, end_date):
         numAttacks.append(attacksCurr)
 
         startWeek = endWeek
-        endWeek = startWeek + datetime.timedelta(days=7)
+        endWeek = startWeek + datetime.timedelta(days=61)
 
     outputDf = pd.DataFrame()
     outputDf['start_dates'] = startDatesList
@@ -206,26 +206,113 @@ def firstMentions_CVE(vulnDf):
     for v in vulnMentions:
         datesMentions = list(set(vulnMentions[v]))
         sortedDates = sorted(datesMentions)
-        vulnMentions[v] = sortedDates
+
+        # Consider the first few mentions of each CVE
+        if 0.5 * len(sortedDates) > 1:
+            vulnMentions[v] = sortedDates[:int(0.1*len(sortedDates))]
 
     return vulnMentions
 
+def weeklyCVE_fisrtMentions_event_corr(eventsDf, vulnInfo, start_date, end_date, vulnDates):
+    '''
+
+    :param eventsDf:
+    :param vulnInfo:
+    :param start_date:
+    :param end_date:
+    :param vulnDates:
+    :return:
+    '''
+    eventsDf['date'] = pd.to_datetime(eventsDf['date'])
+    vulnInfo['posteddate'] = pd.to_datetime(vulnInfo['posteddate'])
+
+    startWeek = start_date
+    endWeek = startWeek + datetime.timedelta(days=7)
+
+    # DS Structures
+    startDatesList = []
+    endDatesList = []
+    vulnCounstListFirst = []
+    vulnCounstList = []
+    numAttacks = []
+
+    sum_attacks = 0
+    total_attack_days = 0
+    while(endWeek < end_date):
+
+        ''' For the darkweb data '''
+        vulnsCount = 0
+        vulnsCountsFirst = 0
+        # try:
+        vulWeek = vulnInfo[vulnInfo['posteddate'] >= startWeek]
+        vulWeek = vulWeek[vulWeek['posteddate'] < endWeek]
+
+        for idx, row in vulWeek.iterrows():
+            cve = row['vulnerabilityid']
+            vulnsCount += 1
+            for dm in vulnDates[cve]:
+                if dm >= startWeek and dm < endWeek:
+                    vulnsCountsFirst += 1
+                    break
+
+        # except:
+        #     pass
+
+        ''' For the armstrong data '''
+        eventsCurr = eventsDf[eventsDf['date'] >= startWeek]
+        eventsCurr = eventsCurr[eventsCurr['date'] < endWeek]
+        total_count = pd.DataFrame(eventsCurr.groupby(['date']).sum())
+        count_attacks = np.sum(total_count['count'].values)
+
+
+        if count_attacks == 0:
+            attacksCurr = 0
+        else:
+            sum_attacks += count_attacks
+            total_attack_days += 1
+
+            if count_attacks > 5:
+                attacksCurr = count_attacks
+
+
+                startDatesList.append(startWeek)
+                endDatesList.append(endWeek)
+                vulnCounstList.append(vulnsCount)
+                vulnCounstListFirst.append(vulnsCountsFirst)
+                numAttacks.append(attacksCurr)
+
+        startWeek = endWeek
+        endWeek = startWeek + datetime.timedelta(days=7)
+
+    outputDf = pd.DataFrame()
+    outputDf['start_dates'] = startDatesList
+    outputDf['end_dates'] = endDatesList
+    outputDf['vuln_counts'] = vulnCounstList
+    outputDf['vuln_counts_first'] = vulnCounstListFirst
+    outputDf['number_attacks'] = numAttacks
+
+    print("Attack average: ", sum_attacks, total_attack_days, sum_attacks/total_attack_days)
+    return outputDf
 
 
 def main():
     amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
-    amEvents_malware = amEvents[amEvents['type'] == 'endpoint-malware']
+    amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
+
     vuln_df = pd.read_csv('../../data/DW_data/VulnInfo_11_17.csv', encoding='ISO-8859-1', engine='python')
     cve_cpe_map = pickle.load(open('../../data/DW_data/new_DW/cve_cpe_map_new.pickle', 'rb'))
 
-    trainStart_date = datetime.datetime.strptime('2016-04-01', '%Y-%m-%d')
+    trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
     # outputDf = weeklyCVE_event_corr(amEvents_malware, vuln_df, cve_cpe_map, trainStart_date, trainEnd_date)
 
     vulnDatesList = firstMentions_CVE(vuln_df)
+    outputDf = weeklyCVE_fisrtMentions_event_corr(amEvents_malware, vuln_df,  trainStart_date,
+                                                  trainEnd_date, vulnDatesList)
 
-    # pickle.dump(outputDf, open('../../data/DW_data/CPE_events_corr_em.pickle', 'wb'))
+    print(outputDf)
+    # pickle.dump(outputDf, open('../../data/DW_data/CVE_mentions_events_corr_me.pickle', 'wb'))
 
     # cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr.pickle')
     # outputDf = analyse_events(cve_eventsDf)

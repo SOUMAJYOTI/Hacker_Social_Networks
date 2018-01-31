@@ -110,16 +110,17 @@ def main():
     args.TYPE_PLOT = 'LINE'
 
     ''' SET THE TRAINING AND TEST TIME PERIODS - THIS IS MANUAL '''
-    trainStart_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
-    trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
+    trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
+    trainEnd_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
 
     testStart_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
     testEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
     if args.LOAD_DATA:
         amEvents = pd.read_csv('../../../data/Armstrong_data/amEvents_11_17.csv')
-        amEvents_malware = amEvents[amEvents['type'] == 'malicious-destination']
+        amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
 
+        # print(amEvents_malware)
         if args.FEAT_TYPE == "REGULAR":
             feat_df = pickle.load(open('../../../data/DW_data/features/feat_combine/features_Delta_T0_Mar16-Aug17.pickle', 'rb'))
         else:
@@ -137,6 +138,9 @@ def main():
         trainDf = feat_df[feat_df['date'] >= instance_TrainStartDate]
         trainDf = trainDf[trainDf['date'] < trainEnd_date]
 
+        # y_actual_train = list(trainOutput['attackFlag'])
+        # y_actual_train = np.array(y_actual_train)
+        # print(y_actual_train[y_actual_train == 1.].shape, y_actual_train.shape)
 
         instance_TestStartDate = testStart_date - relativedelta(months=1)
         testDf = feat_df[feat_df['date'] >= instance_TestStartDate]
@@ -149,6 +153,9 @@ def main():
         # f1_rand = 0.
         # for idx_rand in range(5):
         #     y_random = np.random.randint(2, size=len(y_actual_test))
+        #     # print(y_random)
+        #     y_actual_test = np.array(y_actual_test)
+        #     # print(y_actual_test[y_actual_test == 1.].shape, y_actual_test.shape)
         #     prec_rand += sklearn.metrics.precision_score(y_actual_test, y_random)
         #     rec_rand += sklearn.metrics.recall_score(y_actual_test, y_random)
         #     f1_rand += sklearn.metrics.f1_score(y_actual_test, y_random)
@@ -157,13 +164,18 @@ def main():
         # rec_rand /= 5
         # f1_rand /= 5
         # print('Random: ', prec_rand, rec_rand, f1_rand)
+        #
+        # exit()
 
-    delta_gap_time = [7, 14,]
+    delta_gap_time = [7, ]
     delta_prev_time_start = [8, 15, 21, 28, 35]
 
     for dgt in delta_gap_time:
         scoreDict = {}
         for feat in trainDf.columns:
+            if feat == 'date' or feat == 'forums':
+                continue
+
             scoreDict[feat] = {}
             ''' For each feature perform the following:
                 1. Prepare the time lagged longitudinal features
@@ -180,8 +192,6 @@ def main():
                 if dgt >= dprev:
                     continue
 
-                if feat == 'date' or feat == 'forums':
-                    continue
 
                 print('Computing for feature: ', feat)
 
@@ -200,8 +210,8 @@ def main():
                 y_test = y_test.flatten()
                 y_test = y_test.astype(int)
 
-                clf = linear_model.LogisticRegression(penalty='l2', class_weight='balanced')
-                # clf = ensemble.RandomForestClassifier()
+                # clf = linear_model.LogisticRegression(penalty='l2', class_weight='balanced')
+                clf = ensemble.RandomForestClassifier()
 
                 clf.fit(X_train, y_train)
                 y_pred = clf.predict(X_test)
@@ -221,11 +231,11 @@ def main():
             scoreDict[feat]['recall'] = recList
             scoreDict[feat]['f1'] = f1List
 
-            pickle.dump(scoreDict, open('../../../data/results/01_09/regular/LR_L2/' + 'tgap_' + str(dgt) + '.pickle', 'wb'))
+        pickle.dump(scoreDict, open('../../../data/results/01_25/regular/endpoint_malware/' + 'tgap_' + str(dgt) + '.pickle', 'wb'))
 
-            ''' Final step: Should be a bagging/ensemble technique for combining the above two '''
-            # TODO: explanatory analysis - which attacks can be detected by anomalies
-            # TODO: anomaly correlation with count
+        ''' Final step: Should be a bagging/ensemble technique for combining the above two '''
+        # TODO: explanatory analysis - which attacks can be detected by anomalies
+        # TODO: anomaly correlation with count
 
 
 if __name__ == "__main__":

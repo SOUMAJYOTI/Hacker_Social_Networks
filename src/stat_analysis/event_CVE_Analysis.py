@@ -137,18 +137,22 @@ def getTopCVEs_byWeek(dataDf):
         cveCount_List = {}
         cpeCount_List = {}
         for idx_vuln in range(len(vulns)):
+            # if vulns[idx_vuln] == 'cve-2017-5638':
+            #     print(row['start_dates'], vulnCounts[idx_vuln])
             cveCount_List[vulns[idx_vuln]] = vulnCounts[idx_vuln]
             cveCount_List_sorted = sorted(cveCount_List.items(), key=operator.itemgetter(1), reverse=True )
 
         for idx_cpe in range(len(cpes)):
             cpeCount_List[cpes[idx_cpe]] = cpeCounts[idx_cpe]
-            cpeCount_List_sorted = sorted(cpeCount_List.items(), key=operator.itemgetter(1), reverse=True)
+
+        cpeCount_List_sorted = sorted(cpeCount_List.items(), key=operator.itemgetter(1), reverse=True)
 
 
             # for v, c in cveCount_List_sorted:
             #     print(v, c)
 
-        print(row['start_dates'], row['number_attacks'], cveCount_List_sorted[:2], cpeCount_List_sorted[:2])
+        # print(row['start_dates'], row['number_attacks'], cveCount_List_sorted[:10],)# cpeCount_List_sorted[:5])
+        print(row['start_dates'], cpeCount_List_sorted[:8])
 
 
 def analyzeResiduals(subspaceDf):
@@ -160,14 +164,14 @@ def analyzeResiduals(subspaceDf):
 
 
 def main():
-    cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr_em.pickle')
+    cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr_me_monthly.pickle')
 
-    trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
-    trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
+    # trainStart_date = datetime.datetime.strptime('2017-01-01', '%Y-%m-%d')
+    # trainEnd_date = datetime.datetime.strptime('2017-08-01', '%Y-%m-%d')
 
 
-    cve_eventsDf = cve_eventsDf[cve_eventsDf['start_dates'] >= trainStart_date]
-    cve_eventsDf = cve_eventsDf[cve_eventsDf['start_dates'] < trainEnd_date]
+    # cve_eventsDf = cve_eventsDf[cve_eventsDf['start_dates'] >= trainStart_date]
+    # cve_eventsDf = cve_eventsDf[cve_eventsDf['start_dates'] < trainEnd_date]
 
     getTopCVEs_byWeek(cve_eventsDf)
 

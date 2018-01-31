@@ -39,26 +39,38 @@ def time_lagged_cross_correlation_ts(ts_1, ts_2, start_date, end_date, feat, tla
         ts_2_shift = ts_2_shift[ts_2_shift['date'] >= start_date]
         ts_2_shift = ts_2_shift[ts_2_shift['date'] < end_date]
 
+        # print(ts_1, ts_2_shift)
         # Convert the time series Dataframe into pandas series object of 1d TS
         ts_1_1d = ts_1.ix[:, 1]
         ts_2_1d = ts_2_shift.ix[:, 1]
+        ts_2_1d = ts_2_1d[:ts_1_1d.shape[0]]
 
-        correlationMatrix[lag_idx-1] = np.correlate(ts_1_1d, ts_2_1d)[0]
+        # print(ts_1_1d.shape, ts_2_1d.shape)
+        correlationMatrix[lag_idx-1] = np.corrcoef(ts_1_1d, ts_2_1d)[0, 1] # the diagonal element
 
-    return np.array(correlationMatrix)
+    return correlationMatrix
 
 
 def main():
     ''
 
+    featList = ['numUsers', 'numVulnerabilities', 'numThreads',  'expert_NonInteractions']
+
     # Load the time series data for measuring cross correlation
-    featDf = pd.read_pickle('../../../data/DW_data/features/feat_combine/graph_stats_weekly_Delta_T0_Mar16-Sep17.pickle')
+    # featDf = pd.read_pickle('../../../data/DW_data/features/feat_combine/graph_stats_weekly_Delta_T0_Mar16-Sep17.pickle')
+    featDf = pd.read_pickle('../../../data/DW_data/features/feat_combine/user_interStats_weekly_Delta_T0_Mar16-Sep17.pickle')
     cve_eventsDf = pd.read_pickle('../../../data/DW_data/CPE_events_corr_me.pickle')
 
     ts_1 = cve_eventsDf[['start_dates', 'number_attacks']]
+
     featDf['date'] = pd.to_datetime(featDf['date'])
+
+    y = []
     for feat in featDf.columns.values:
         if feat == 'date':
+            continue
+
+        if feat not in featList:
             continue
         ts_2 = featDf[['date', feat]]
 
@@ -67,7 +79,9 @@ def main():
 
         corrMat = time_lagged_cross_correlation_ts(ts_1, ts_2, start_date, end_date, feat)
         print('Feature: ', feat)
-        print(corrMat)
+        # print(corrMat)
+        y.append(corrMat)
 
+    print(y)
 if __name__ == "__main__":
     main()
