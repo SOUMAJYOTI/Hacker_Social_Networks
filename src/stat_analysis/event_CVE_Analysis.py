@@ -163,8 +163,20 @@ def analyzeResiduals(subspaceDf):
         print(feat, np.mean(residualValues), 10*np.mean(residualValues))
 
 
+# FIrst select the few attack days of each event depending on the count of attacks
+def select_attack_days(eventsDf):
+    '''
+
+    :param eventsDf:
+    :return:
+    '''
+
+    for idx, row in eventsDf.iterrows():
+        if row['number_attacks'] >= 5:
+            print(row)
+
 def main():
-    cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr_me_monthly.pickle')
+    cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr_em.pickle')
 
     # trainStart_date = datetime.datetime.strptime('2017-01-01', '%Y-%m-%d')
     # trainEnd_date = datetime.datetime.strptime('2017-08-01', '%Y-%m-%d')
@@ -173,11 +185,13 @@ def main():
     # cve_eventsDf = cve_eventsDf[cve_eventsDf['start_dates'] >= trainStart_date]
     # cve_eventsDf = cve_eventsDf[cve_eventsDf['start_dates'] < trainEnd_date]
 
-    getTopCVEs_byWeek(cve_eventsDf)
+    # getTopCVEs_byWeek(cve_eventsDf)
 
-    subspace = pd.read_pickle('../../data/DW_data/features/feat_forums/subspace_df_v01_05.pickle')
+    # subspace = pd.read_pickle('../../data/DW_data/features/feat_forums/subspace_df_v01_05.pickle')
 
     # analyzeResiduals(subspace)
+
+    select_attack_days(cve_eventsDf)
 
 if __name__ == "__main__":
     main()

@@ -112,7 +112,6 @@ def weeklyCVE_anomaly_corr(eventsDf, anomalyVecDf, start_date, end_date):
 
         outputDf[feat] = anomalyCount
 
-
     return outputDf
 
 
