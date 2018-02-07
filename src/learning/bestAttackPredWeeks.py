@@ -7,17 +7,7 @@ import pickle
 import datetime
 from dateutil.relativedelta import relativedelta
 import numpy as np
-import sklearn.metrics
 from sklearn import linear_model, ensemble
-from sklearn.naive_bayes import GaussianNB
-from random import shuffle
-import csv
-
-from sklearn.svm import SVC
-from sklearn import tree
-from sklearn import preprocessing
-# import glmnet_python
-# from glmnet import glmnet
 
 
 class ArgsStruct:
@@ -120,23 +110,20 @@ def predictAttacks_onAnomaly(inputDf, outputDf, delta_gap_time, delta_prev_time_
     :return:
     '''
 
-    ''' Metrics for ROC curve '''
-    tprList = []
-    fprList = []
-
     y_actual = outputDf['attackFlag']
 
     test_start_date = outputDf.iloc[0, 0]
     test_end_date = outputDf.iloc[-1, 0]
 
     week_predDf = pd.DataFrame()
-    dateList = []
+    count_t = 0
     ''' Iterate over all the thresholds for ROC curves '''
     for t in thresholds_anom:
         # print('Threshold: ', t)
         currDate = test_start_date
         y_estimate = np.zeros(y_actual.shape)
         countDayIndx = 0
+        dateList = []
         while(currDate <= test_end_date):
             '''This loop checks values on either of delta days prior'''
             count_anomalies = 0 # number of anomalies in the delta_prev time window
@@ -165,7 +152,11 @@ def predictAttacks_onAnomaly(inputDf, outputDf, delta_gap_time, delta_prev_time_
             dateList.append(currDate)
             currDate += datetime.timedelta(days=1)
 
+        week_predDf['pred_thresh_' + str(count_t)] = y_estimate
+        count_t += 1
 
+    week_predDf['actual'] = y_actual
+    week_predDf['date'] = dateList
 
     return week_predDf
 
@@ -188,7 +179,6 @@ def main():
         amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
         amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
 
-        # print(amEvents_malware)
         if args.FEAT_TYPE == "REGULAR":
             feat_df = pickle.load(open('../../data/DW_data/features/feat_combine/features_Delta_T0_Mar16-Aug17.pickle', 'rb'))
         else:
@@ -206,40 +196,14 @@ def main():
         trainDf = feat_df[feat_df['date'] >= instance_TrainStartDate]
         trainDf = trainDf[trainDf['date'] < trainEnd_date]
 
-        # y_actual_train = list(trainOutput['attackFlag'])
-        # y_actual_train = np.array(y_actual_train)
-        # print(y_actual_train[y_actual_train == 1.].shape, y_actual_train.shape)
-
         instance_TestStartDate = testStart_date - relativedelta(months=1)
         testDf = feat_df[feat_df['date'] >= instance_TestStartDate]
         testDf = testDf[testDf['date'] < testEnd_date]
         testOutput = prepareOutput(amEvents_malware, testStart_date, testEnd_date)
-        y_actual_test = list(testOutput['attackFlag'])
-
-
-        ''' This is the random prediction without any priors'''
-        # prec_rand = 0.
-        # rec_rand = 0.
-        # f1_rand = 0.
-        # for idx_rand in range(5):
-        #     y_random = np.random.randint(2, size=len(y_actual_test))
-        #     # print(y_random)
-        #     y_actual_test = np.array(y_actual_test)
-        #     # print(y_actual_test[y_actual_test == 1.].shape, y_actual_test.shape)
-        #     prec_rand += sklearn.metrics.precision_score(y_actual_test, y_random)
-        #     rec_rand += sklearn.metrics.recall_score(y_actual_test, y_random)
-        #     f1_rand += sklearn.metrics.f1_score(y_actual_test, y_random)
-        #
-        # prec_rand /= 5
-        # rec_rand /= 5
-        # f1_rand /= 5
-        # print('Random: ', prec_rand, rec_rand, f1_rand)
-        #
-
-        ''' This is the prediction with a binomial random variable with prior prediction probability'''
 
     delta_gap_time = [7, ]
-    delta_prev_time_start = [8, 15, 21, 28, 35]
+    delta_prev_time_start = [8, ]
+    thresh_anom_count = 1
 
     for feat in trainDf.columns:
         if feat == 'date' or feat == 'forums':
@@ -271,15 +235,32 @@ def main():
                 y_test = y_test.flatten()
                 y_test = y_test.astype(int)
 
-                clf = linear_model.LogisticRegression(penalty='l2', class_weight='balanced')
+
+                '''
+                1. Supervised Classification
+                '''
+                # clf = linear_model.LogisticRegression(penalty='l2', class_weight='balanced')
                 # clf = ensemble.RandomForestClassifier()
 
-                clf.fit(X_train, y_train)
-                y_pred = clf.predict(X_test)
+                # clf.fit(X_train, y_train)
+                # y_pred = clf.predict(X_test)
 
-                datePredict['pred_' + 'eta_' + str(dgt) + '_delta_' + str(dprev)] = y_pred
+                # datePredict['pred_' + 'eta_' + str(dgt) + '_delta_' + str(dprev)] = y_pred
 
-        pickle.dump(datePredict, open('../../data/results/01_25/regular/malicious_email/LR_L2/'
+                '''
+                2. Unsupervised classification: Anomaly detection
+                '''
+                thresh_min = 0.1 * np.mean(X_test)
+                thresh_max = 10 * np.mean(np.array(X_test))
+
+
+                thresh_anomList = np.arange(thresh_min, thresh_max, (thresh_max - thresh_min) / 50)
+
+                datePredict = predictAttacks_onAnomaly(testDf, testOutput, dgt, dprev,
+                                                             thresh_anomList, feat, thresh_anom_count)
+
+
+        pickle.dump(datePredict, open('../../data/results/01_25/anomaly/malicious_email/'
                                       + str(feat) + '_predictDict.pickle', 'wb'))
 
 
