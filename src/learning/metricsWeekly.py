@@ -141,26 +141,26 @@ def main():
                                       + str(feat) + '_predictDict.pickle', 'rb'))
 
         ''' For supervised prediction '''
-        # for dgt in delta_gap_time:
-        #     for dprev in delta_prev_time_start:
-        #
-        #         if dgt >= dprev:
-        #             continue
-        #
-        #         featString = 'pred_' + 'eta_' + str(dgt) + '_delta_' + str(dprev)
-        #
-        #         prec, rec, f1 = classiicationWeeks(feat_predictDf, weeks_imp, featString)
-        #
-        #         metricsDict[feat]['prec'] = prec
-        #         metricsDict[feat]['rec'] = rec
-        #         metricsDict[feat]['f1'] = f1
+        for dgt in delta_gap_time:
+            for dprev in delta_prev_time_start:
+
+                if dgt >= dprev:
+                    continue
+
+                featString = 'pred_' + 'eta_' + str(dgt) + '_delta_' + str(dprev)
+
+                prec, rec, f1 = classiicationWeeks(feat_predictDf, weeks_imp, featString)
+
+                metricsDict[feat]['prec'] = prec
+                metricsDict[feat]['rec'] = rec
+                metricsDict[feat]['f1'] = f1
 
         ''' For anomaly detetor based prediction '''
-        tprList, fprList = anomalyDetectWeeks(anom_predictDf, weeks_imp)
-        metricsDict[feat]['tprList'] = tprList
-        metricsDict[feat]['fprList'] = fprList
-
-    pickle.dump(metricsDict, open('../../data/results/01_25/anomaly/malicious_email/metricsWeekly_best.pickle', 'wb') )
+    #     tprList, fprList = anomalyDetectWeeks(anom_predictDf, weeks_imp)
+    #     metricsDict[feat]['tprList'] = tprList
+    #     metricsDict[feat]['fprList'] = fprList
+    #
+    # pickle.dump(metricsDict, open('../../data/results/01_25/anomaly/malicious_email/metricsWeekly_best.pickle', 'wb') )
 
 if __name__ == "__main__":
     main()

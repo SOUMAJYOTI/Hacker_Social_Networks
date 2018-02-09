@@ -239,29 +239,29 @@ def main():
                 '''
                 1. Supervised Classification
                 '''
-                # clf = linear_model.LogisticRegression(penalty='l2', class_weight='balanced')
+                clf = linear_model.LogisticRegression(penalty='l2', class_weight='balanced')
                 # clf = ensemble.RandomForestClassifier()
 
-                # clf.fit(X_train, y_train)
-                # y_pred = clf.predict(X_test)
+                clf.fit(X_train, y_train)
+                y_pred = clf.predict(X_test)
 
-                # datePredict['pred_' + 'eta_' + str(dgt) + '_delta_' + str(dprev)] = y_pred
+                datePredict['pred_' + 'eta_' + str(dgt) + '_delta_' + str(dprev)] = y_pred
 
                 '''
                 2. Unsupervised classification: Anomaly detection
                 '''
-                thresh_min = 0.1 * np.mean(X_test)
-                thresh_max = 10 * np.mean(np.array(X_test))
-
-
-                thresh_anomList = np.arange(thresh_min, thresh_max, (thresh_max - thresh_min) / 50)
-
-                datePredict = predictAttacks_onAnomaly(testDf, testOutput, dgt, dprev,
-                                                             thresh_anomList, feat, thresh_anom_count)
-
-
-        pickle.dump(datePredict, open('../../data/results/01_25/anomaly/malicious_email/'
-                                      + str(feat) + '_predictDict.pickle', 'wb'))
+        #         thresh_min = 0.1 * np.mean(X_test)
+        #         thresh_max = 10 * np.mean(np.array(X_test))
+        #
+        #
+        #         thresh_anomList = np.arange(thresh_min, thresh_max, (thresh_max - thresh_min) / 50)
+        #
+        #         datePredict = predictAttacks_onAnomaly(testDf, testOutput, dgt, dprev,
+        #                                                      thresh_anomList, feat, thresh_anom_count)
+        #
+        #
+        # pickle.dump(datePredict, open('../../data/results/01_25/anomaly/malicious_email/'
+        #                               + str(feat) + '_predictDict.pickle', 'wb'))
 
 
 if __name__ == "__main__":
