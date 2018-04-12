@@ -11,12 +11,12 @@ import numpy as np
 from sqlalchemy import create_engine
 import pickle
 
+
 def threadsTimeDist(data_df):
     threadids = list(set(data_df['topicid']))
 
     # for tid in threadids:
     #     dataThread = data_df[data_df['topicid'] == tid]
-
 
 
 def threadsLenDist(data_df, topicsList):

@@ -83,7 +83,8 @@ def weeklyCVE_stats(eventsDf,start_date, end_date):
 
 def main():
     vulnInfo = pd.read_pickle('../../data/DW_data/new_Dw/Vulnerabilities_Armstrong.pickle')
-    # print(vulnInfo)
+
+
     trainStart_date = datetime.datetime.strptime('2016-01-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 

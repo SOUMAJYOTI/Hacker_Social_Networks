@@ -213,6 +213,7 @@ def firstMentions_CVE(vulnDf):
 
     return vulnMentions
 
+
 def weeklyCVE_fisrtMentions_event_corr(eventsDf, vulnInfo, start_date, end_date, vulnDates):
     '''
 
