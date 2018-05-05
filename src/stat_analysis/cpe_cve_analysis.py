@@ -8,6 +8,7 @@ import sys
 import matplotlib.dates as mdates
 import operator
 from collections import *
+from dateutil.relativedelta import *
 
 class ArgsStruct:
     name = ''
@@ -161,7 +162,7 @@ def cpeCountsByWeek(vulnInfo, cve_cpe_map, start_date, end_date):
     :return:
     '''
     startWeek = start_date
-    endWeek = startWeek + datetime.timedelta(days=7)
+    endWeek = startWeek + relativedelta(months=1)
 
     startDatesList = []
     endDatesList = []
@@ -169,6 +170,7 @@ def cpeCountsByWeek(vulnInfo, cve_cpe_map, start_date, end_date):
 
     cpeList = defaultdict(int)
     while (endWeek < end_date):
+        print(endWeek)
         cpesCurr[startWeek] = defaultdict(int)
         ''' For the darkweb data '''
         vulnsCurr = defaultdict(int)
@@ -193,7 +195,7 @@ def cpeCountsByWeek(vulnInfo, cve_cpe_map, start_date, end_date):
         endDatesList.append(endWeek)
 
         startWeek = endWeek
-        endWeek = startWeek + datetime.timedelta(days=7)
+        endWeek = startWeek + relativedelta(months=1)
 
     ''' Form the weekly CPE df'''
 
@@ -205,7 +207,7 @@ def cpeCountsByWeek(vulnInfo, cve_cpe_map, start_date, end_date):
         if cpeList[cpe] > 500:
             cpeCountWeek = []
             startWeek = start_date
-            endWeek = startWeek + datetime.timedelta(days=7)
+            endWeek = startWeek + relativedelta(months=1)
             while (endWeek < end_date):
                 if cpe in cpesCurr[startWeek]:
                     cpeCountWeek.append(cpesCurr[startWeek][cpe])
@@ -213,7 +215,7 @@ def cpeCountsByWeek(vulnInfo, cve_cpe_map, start_date, end_date):
                     cpeCountWeek.append(0)
 
                 startWeek = endWeek
-                endWeek = startWeek + datetime.timedelta(days=7)
+                endWeek = startWeek + relativedelta(months=1)
 
             outputDf[cpe] = cpeCountWeek
 
@@ -240,6 +242,18 @@ def select_attack_days(eventsDf):
         if row['number_attacks'] >= 5:
             print(row)
 
+
+def selectVulnerabilities(df, cve):
+    '''
+    The idea is to check whether certain CVEs reported by FireEye as malicious emails had higher
+    attacks than
+    :return:
+    '''
+
+    df[df['vulnerabilityid'] == cve].to_csv('../../data/DW_data/CVE-2017-0199.csv')
+    print(df[df['vulnerabilityid'] == cve])
+
+
 def main():
     start_date = datetime.datetime.strptime('2016-01-01', '%Y-%m-%d')
     end_date = datetime.datetime.strptime('2017-08-01', '%Y-%m-%d')
@@ -248,9 +262,12 @@ def main():
     cve_cpe_map = pd.read_pickle('../../data/DW_data/new_DW/cve_cpe_map_new.pickle')
     vuln_df = pd.read_csv('../../data/DW_data/VulnInfo_11_17.csv', encoding='ISO-8859-1', engine='python')
     vuln_df['posteddate'] =  pd.to_datetime(vuln_df['posteddate'])
-    # print(vuln_df[:10])
+
+    vulnList = list(vuln_df['vulnerabilityid'])
+
+
     cpe_weekly_df = cpeCountsByWeek(vuln_df, cve_cpe_map, start_date, end_date )
-    cpe_weekly_df.to_csv('../../data/DW_data/new_DW/cpe_Counts_plot_weekly.csv')
+    cpe_weekly_df.to_csv('../../data/DW_data/new_DW/cpe_Counts_plot_BiWeekly.csv')
 
 
 
