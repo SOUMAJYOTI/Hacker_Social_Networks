@@ -7,6 +7,7 @@ import pickle
 from dateutil.relativedelta import relativedelta
 from datetime import *
 import datetime
+import matplotlib.pyplot as plt
 
 '''
 The purpose of this file is to check whether the feature values are outliers between the different
@@ -254,17 +255,57 @@ def load_data(df):
     '''
 
 
+def plot_ts(df):
+    forums = [129, 6, 112, 77, 69, 178, 31, 134, 193, 56, 201, 250, 13, 205, 194, 110, 121]
+
+    labels = {'numUsers': '# Users', 'numVulnerabilities': '# CVEs mentioned', 'numThreads': '# Threads',
+              'expert_NonInteractions': '# Expert replies', 'edgeWtshortestPaths': 'Weighted Shortest Path',
+              'communityCount': '# common communities', 'shortestPaths': 'Shortest Path',
+              'CondExperts': 'Graph Conductance', 'expertsThreads': '# expert threads'}
+
+    for f in forums:
+        df_forum = df[df['forum'] == f]
+        for feat in df_forum.columns:
+            if feat == 'forum' or feat == 'date':
+                continue
+
+            if feat not in labels:
+                continue
+
+            df_forum.plot(figsize=(12,8), x='date', y=feat, color='black')
+            plt.grid(True)
+            plt.xticks(size=20)
+            plt.yticks(size=20)
+
+            plt.ylabel(labels[feat], size=30)
+            plt.xlabel('', size=10)
+
+            if f == 201:
+                f = 41
+
+            plt.title("Forum: " + str(f), fontsize=30)
+            # plt.legend(False)
+
+            # plt.show()
+            plt.savefig('../../plots/dw_stats/feat_plot/feat_forums/time_series/'
+                        'graph_stats/v1/' + feat + '_'+ str(f) + '.png' )
+            plt.close()
+
 if __name__ == "__main__":
-    feat_df = pd.read_pickle('../../data/DW_data/features/feat_combine/features_Delta_T0_Mar16-Aug17.pickle')
-    vuln_df = pd.read_csv('../../data/DW_data/cve-2016-4117.csv')
-
-
-    load_data(feat_df)
-
-    user = selectVulnWeeks(vuln_df)
-
-    selectPostsUsers(user, '', '')
+    # feat_df = pd.read_pickle('../../data/DW_data/features/feat_combine/features_Delta_T0_Mar16-Aug17.pickle')
+    # vuln_df = pd.read_csv('../../data/DW_data/cve-2016-4117.csv')
+    #
+    #
+    # load_data(feat_df)
+    #
+    # user = selectVulnWeeks(vuln_df)
+    #
+    # selectPostsUsers(user, '', '')
 
     feat_df = pd.read_pickle('../../data/DW_data/features/feat_forums/features_Delta_T0_Mar16-Aug17.pickle')
+    feat_df = feat_df[feat_df['date'] > '2016-07-01']
+    feat_df = feat_df[feat_df['date'] < '2017-09-01']
+
+    # plot_ts(feat_df)
 
 

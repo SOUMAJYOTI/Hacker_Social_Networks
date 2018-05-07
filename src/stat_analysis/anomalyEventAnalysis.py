@@ -176,7 +176,7 @@ def main():
     amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
     amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
 
-    anomalyDf = pd.read_pickle('../../data/DW_data/features/feat_forums/anomalyVec_Delta_T0_Mar16-Aug17.pickle')
+    anomalyDf = pd.read_pickle('../../data/DW_data/features/feat_forums/anomalyVec_Delta_T0_Mar16-Aug17_v1.pickle')
     subspaceDf = pd.read_pickle('../../data/DW_data/features/feat_forums/subspace_df_v01_05.pickle')
     # subspaceDf = subspaceDf[['date', 'CondExperts_res_vec']]
     # subspaceDf = subspaceDf[subspaceDf['date'] > '2017-01-01']
@@ -184,15 +184,15 @@ def main():
     # print(subspaceDf)
     #
     # exit()
-    trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
+    trainStart_date = datetime.datetime.strptime('2016-7-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
-    # outputDf = weeklyCVE_anomaly_corr(amEvents_malware, anomalyDf, trainStart_date, trainEnd_date)
+    outputDf = weeklyCVE_anomaly_corr(amEvents_malware, anomalyDf, trainStart_date, trainEnd_date)
 
     # anomPriorEvent = anomaly_eventCorr(amEvents_malware, anomalyDf, trainStart_date, trainEnd_date)
 
-    anomPriorEvent = anomaly_eventCorr(amEvents_malware, anomalyDf, trainStart_date, trainEnd_date)
-    pickle.dump(anomPriorEvent, open('../../data/DW_data/anomalies_events_corr.pickle', 'wb'))
+    # anomPriorEvent = anomaly_eventCorr(amEvents_malware, anomalyDf, trainStart_date, trainEnd_date)
+    pickle.dump(outputDf, open('../../data/DW_data/anomalies_events_corr_v1.pickle', 'wb'))
     # anomPriorEvent = pd.read_pickle('../../data/DW_data/anomalies_events_corr.pickle')
     # for feat in anomPriorEvent:
     #     print(feat)

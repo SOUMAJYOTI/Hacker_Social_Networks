@@ -8,6 +8,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import numpy as np
 from sklearn import linear_model, ensemble
+import sklearn.metrics
 
 
 class ArgsStruct:
@@ -168,11 +169,11 @@ def main():
     args.TYPE_PLOT = 'LINE'
 
     ''' SET THE TRAINING AND TEST TIME PERIODS - THIS IS MANUAL '''
-    trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
-    trainEnd_date = datetime.datetime.strptime('2017-03-01', '%Y-%m-%d')
+    trainStart_date = datetime.datetime.strptime('2017-01-01', '%Y-%m-%d')
+    trainEnd_date = datetime.datetime.strptime('2017-04-16', '%Y-%m-%d')
 
-    testStart_date = datetime.datetime.strptime('2017-03-01', '%Y-%m-%d')
-    testEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
+    testStart_date = datetime.datetime.strptime('2017-04-16', '%Y-%m-%d')
+    testEnd_date = datetime.datetime.strptime('2017-05-16', '%Y-%m-%d')
 
     if args.LOAD_DATA:
         amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
@@ -238,30 +239,56 @@ def main():
                 '''
                 1. Supervised Classification
                 '''
-                clf = linear_model.LogisticRegression(penalty='l2', class_weight='balanced')
-                # clf = ensemble.RandomForestClassifier()
-
-                clf.fit(X_train, y_train)
-                y_pred = clf.predict(X_test)
-
-                datePredict['pred_' + 'eta_' + str(dgt) + '_delta_' + str(dprev)] = y_pred
+                # clf = linear_model.LogisticRegression(penalty='l2', class_weight='balanced')
+                # # clf = ensemble.RandomForestClassifier()
+                #
+                # clf.fit(X_train, y_train)
+                # y_pred = clf.predict(X_test)
+                #
+                # datePredict['pred_' + 'eta_' + str(dgt) + '_delta_' + str(dprev)] = y_pred
 
                 '''
                 2. Unsupervised classification: Anomaly detection
                 '''
-        #         thresh_min = 0.1 * np.mean(X_test)
-        #         thresh_max = 10 * np.mean(np.array(X_test))
-        #
-        #
-        #         thresh_anomList = np.arange(thresh_min, thresh_max, (thresh_max - thresh_min) / 50)
-        #
-        #         datePredict = predictAttacks_onAnomaly(testDf, testOutput, dgt, dprev,
-        #                                                      thresh_anomList, feat, thresh_anom_count)
-        #
-        #
-        pickle.dump(datePredict, open('../../data/results/05_05/supervised/malicious_email/LR_L2/'
+                thresh_min = 0.1 * np.mean(X_test)
+                thresh_max = 10 * np.mean(np.array(X_test))
+
+                thresh_anomList = np.arange(thresh_min, thresh_max, (thresh_max - thresh_min) / 50)
+
+                datePredict = predictAttacks_onAnomaly(testDf, testOutput, dgt, dprev,
+                                                             thresh_anomList, feat, thresh_anom_count)
+
+
+        # pickle.dump(datePredict, open('../../data/results/05_05/supervised/malicious_email/LR_L2/'
+        #                               + str(feat) + '_predictDict.pickle', 'wb'))
+        pickle.dump(datePredict, open('../../data/results/05_05/unsupervised/malicious_email/cve_0199/'
                                       + str(feat) + '_predictDict.pickle', 'wb'))
 
 
 if __name__ == "__main__":
-    main()
+    '''
+    The following is for manually evaulating certain weeks based on CVE discussions
+    '''
+    dict_df = pd.read_pickle('../../data/results/05_05/unsupervised/malicious_email/cve_0199/'
+                                      + 'CondExperts' + '_predictDict.pickle')
+
+    y_act = np.array(dict_df['actual'].tolist())
+    # print(y_act)
+    # print(y_act[y_act == 1.].shape)
+    y_rand = np.random.randint(2, size=len(y_act))
+    for col in dict_df.columns:
+        if col =="date" or col == "actual":
+            continue
+
+        y_pred = np.array(dict_df[col].tolist())
+        prec, rec, f1_score = sklearn.metrics.precision_score(y_act, y_pred), \
+                                  sklearn.metrics.recall_score(y_act, y_pred), \
+                                  sklearn.metrics.f1_score(y_act, y_pred)
+
+        prec_r, rec_r, f1_score_r = sklearn.metrics.precision_score(y_act, y_rand), \
+                              sklearn.metrics.recall_score(y_act, y_rand), \
+                              sklearn.metrics.f1_score(y_act, y_rand)
+
+        print(col, prec, rec, f1_score, prec_r, f1_score_r)
+
+    # main()

@@ -282,7 +282,9 @@ def main():
 
     vuln_df.sort_values(by=['vulnerabilityid'])
 
-    selectVulnerabilities(vuln_df, 'cve-2016-4117')
+    vuln_df.to_pickle('../../data/DW_data/VulnInfo_11_17.pickle')
+
+    # selectVulnerabilities(vuln_df, 'cve-2016-4117')
 
 
     # cpe_weekly_df = cpeCountsByWeek(vuln_df, cve_cpe_map, start_date, end_date )
