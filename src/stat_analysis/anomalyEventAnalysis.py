@@ -178,12 +178,12 @@ def main():
 
     anomalyDf = pd.read_pickle('../../data/DW_data/features/feat_forums/anomalyVec_Delta_T0_Mar16-Aug17.pickle')
     subspaceDf = pd.read_pickle('../../data/DW_data/features/feat_forums/subspace_df_v01_05.pickle')
-    subspaceDf = subspaceDf[['date', 'CondExperts_res_vec']]
-    subspaceDf = subspaceDf[subspaceDf['date'] > '2017-01-01']
-    subspaceDf = subspaceDf[subspaceDf['date'] < '2017-02-01']
-    print(subspaceDf)
-
-    exit()
+    # subspaceDf = subspaceDf[['date', 'CondExperts_res_vec']]
+    # subspaceDf = subspaceDf[subspaceDf['date'] > '2017-01-01']
+    # subspaceDf = subspaceDf[subspaceDf['date'] < '2017-02-01']
+    # print(subspaceDf)
+    #
+    # exit()
     trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
@@ -193,10 +193,10 @@ def main():
 
     anomPriorEvent = anomaly_eventCorr(amEvents_malware, anomalyDf, trainStart_date, trainEnd_date)
     pickle.dump(anomPriorEvent, open('../../data/DW_data/anomalies_events_corr.pickle', 'wb'))
-    anomPriorEvent = pd.read_pickle('../../data/DW_data/anomalies_events_corr.pickle')
-    for feat in anomPriorEvent:
-        print(feat)
-        print(anomPriorEvent[feat])
+    # anomPriorEvent = pd.read_pickle('../../data/DW_data/anomalies_events_corr.pickle')
+    # for feat in anomPriorEvent:
+    #     print(feat)
+    #     print(anomPriorEvent[feat])
 
 
 if __name__ == "__main__":

@@ -250,25 +250,43 @@ def selectVulnerabilities(df, cve):
     :return:
     '''
 
-    df[df['vulnerabilityid'] == cve].to_csv('../../data/DW_data/CVE-2017-0199.csv')
-    print(df[df['vulnerabilityid'] == cve])
+    df_cve = df[df['vulnerabilityid'] == cve]
+
+    df_count = df_cve[['posteddate']]
+    df_group = df_count.groupby(['posteddate']).size().reset_index(name='counts')
+
+    df_group['posteddate'] = df_group['posteddate'].dt.date
+    df_group.plot(y='counts', x='posteddate', kind='bar', color='gray')
+    plt.grid(True)
+    plt.xlabel('Date', size=30)
+    plt.ylabel('Count of mentions in Darkweb', size=30)
+    plt.legend(fontsize=20)
+    plt.xticks(size=20)
+    plt.yticks(size=20)
+    plt.show()
+
+        # .to_csv('../../data/DW_data/' + str(cve) + '.csv')
+    # print(df[df['vulnerabilityid'] == cve])
 
 
 def main():
     start_date = datetime.datetime.strptime('2016-01-01', '%Y-%m-%d')
-    end_date = datetime.datetime.strptime('2017-08-01', '%Y-%m-%d')
+    end_date = datetime.datetime.strptime('2017-10-01', '%Y-%m-%d')
 
     cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr_em.pickle')
     cve_cpe_map = pd.read_pickle('../../data/DW_data/new_DW/cve_cpe_map_new.pickle')
     vuln_df = pd.read_csv('../../data/DW_data/VulnInfo_11_17.csv', encoding='ISO-8859-1', engine='python')
     vuln_df['posteddate'] =  pd.to_datetime(vuln_df['posteddate'])
 
-    vulnList = list(vuln_df['vulnerabilityid'])
+    vuln_df['vulnerabilityid'].replace('None', '', inplace=True)
+
+    vuln_df.sort_values(by=['vulnerabilityid'])
+
+    selectVulnerabilities(vuln_df, 'cve-2016-4117')
 
 
-    cpe_weekly_df = cpeCountsByWeek(vuln_df, cve_cpe_map, start_date, end_date )
-    cpe_weekly_df.to_csv('../../data/DW_data/new_DW/cpe_Counts_plot_BiWeekly.csv')
-
+    # cpe_weekly_df = cpeCountsByWeek(vuln_df, cve_cpe_map, start_date, end_date )
+    # cpe_weekly_df.to_csv('../../data/DW_data/new_DW/cpe_Counts_plot_BiWeekly.csv')
 
 
     # cve_eventsDf = cve_eventsDf[cve_eventsDf['start_dates'] >= trainStart_date]

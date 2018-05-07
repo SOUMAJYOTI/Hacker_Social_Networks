@@ -235,7 +235,7 @@ def computeAnomalyCount(subspace_df):
         ''' First,  the residual vectors'''
         if 'res' in feat:
             mean_feat = subspace_df[feat].mean()
-            thresh = 2.5*mean_feat
+            thresh = 1.5*mean_feat
 
             anomaly_flag = []
             for idx, row in subspace_df[feat].iteritems():
@@ -249,7 +249,7 @@ def computeAnomalyCount(subspace_df):
         ''' Then,  the state vectors'''
         if 'state' in feat:
             mean_feat = subspace_df[feat].mean()
-            thresh = 2.5 * mean_feat
+            thresh = 1.5 * mean_feat
 
             anomaly_flag = []
             for idx, row in subspace_df[feat].iteritems():
@@ -297,10 +297,10 @@ def main():
     args.cpe_split = False
     args.forumsSplit = True
     args.feat_concat = False
-    args.IMPUTATION = False
-    args.plot_subspace = True
+    args.IMPUTATION = True
+    args.plot_subspace = False
     ''' Selected forums for the features # 17 - not the 53 forums considered'''
-    forums = [129, 6, 112, 77, 69, 178, 31, 134, 193, 56, 201, 250, 13, 205, 194, 110, 121]
+    forums = [129, 6, 112, 77, 69, 178, 31, 134, 193, 56, 201, 250, 13, 205, 194, 110, 121, 41]
     # forums = [35,]
 
     # amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
@@ -315,12 +315,14 @@ def main():
     trainDf = trainDf[trainDf['date'] < trainEnd_date]
 
     if args.cpe_split == False:
+        print("No CPE Split....")
         for feat in feat_df.columns.values:
             if feat == 'date' or feat == 'forum':
                 continue
 
             ''' These are imputation measures based on different forums'''
             if args.IMPUTATION == True:
+                print("Imputation start...")
                 if args.forumsSplit == True:
                     for f in forums:
                         df_forum = trainDf[trainDf['forum'] == f]
@@ -360,7 +362,7 @@ def main():
         ''' Compute the anomaly dataframe '''
         feat_anomalies = computeAnomalyCount(subspace_df)
         pickle.dump(feat_anomalies, open(
-            '../../data/DW_data/features/feat_forums/anomalyVec_Delta_T0_Mar16-Aug17.pickle', 'wb'))
+            '../../data/DW_data/features/feat_forums/anomalyVec_Delta_T0_Mar16-Aug17_v1.pickle', 'wb'))
 
         if args.plot_subspace == True:
             subspace_df = pd.read_pickle('../../data/DW_data/features/feat_forums/subspace_df_v01_05.pickle')

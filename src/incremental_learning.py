@@ -16,7 +16,11 @@ class ArgsStruct:
 '''
 
 The purpose of the code is to compute the precision metrics for the supervised
-and the unsupervised losses for the high attack weeks.
+and the unsupervised losses in an incremental fashion - that is train for
+k months and then test on the next l months succeeding k - do it on a rolling window
+basis - see if that helps the unsupervised case.
+
+This will be for the ISI 2018 paper - merge it with the Graph Convolution network features
 
 '''
 
