@@ -297,8 +297,12 @@ def weeklyCVE_fisrtMentions_event_corr(eventsDf, vulnInfo, start_date, end_date,
 
 
 def main():
-    amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
-    amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
+    # amEvents = pd.read_csv('../../data/Armstrong_data/amEvents_11_17.csv')
+    amEvents_malware = pd.read_csv('F:/Github/Hacker_Social_Networks/data/Armstrong_data/armstrong_05_18/gt_malicious-email.csv')
+    # amEvents_malware = amEvents[amEvents['type'] == 'malicious-email']
+
+    outputDf = analyse_events(amEvents_malware)
+
 
     vuln_df = pd.read_csv('../../data/DW_data/VulnInfo_11_17.csv', encoding='ISO-8859-1', engine='python')
     cve_cpe_map = pickle.load(open('../../data/DW_data/new_DW/cve_cpe_map_new.pickle', 'rb'))
@@ -307,6 +311,7 @@ def main():
     trainEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
     # outputDf = weeklyCVE_event_corr(amEvents_malware, vuln_df, cve_cpe_map, trainStart_date, trainEnd_date)
+    # pickle.dump(outputDf, open('../../data/DW_data/CPE_events_corr.pickle', 'wb'))
 
     vulnDatesList = firstMentions_CVE(vuln_df)
     outputDf = weeklyCVE_fisrtMentions_event_corr(amEvents_malware, vuln_df,  trainStart_date,
@@ -317,7 +322,6 @@ def main():
 
     # cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr.pickle')
     # outputDf = analyse_events(cve_eventsDf)
-    # pickle.dump(outputDf, open('../../data/DW_data/CPE_events_corr.pickle', 'wb'))
 
 
 if __name__ == "__main__":

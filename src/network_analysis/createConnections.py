@@ -230,6 +230,23 @@ def storeEdges(nwData, topics):
     return df_edges
 
 
+def createNetwork(df):
+    '''
+
+    Input is a dataframe
+    :param df:
+    :return:
+    '''
+    edges = []
+    for i, r in df.iterrows():
+        s = str(r['source'])
+        t = str(r['target'])
+
+        edges.append((s,t))
+
+    return list(set(edges))
+
+
 def network_merge(network_df1, network_df2):
     networkMergeEdges = []
     for i, r in network_df1.iterrows():

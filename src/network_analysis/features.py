@@ -252,10 +252,71 @@ def getDegDist(G, users):
     return degList
 
 
+'''
+
+These are the social network features for the ISI paper - with just daily networks as input
+
+'''
+
+def top_k_feat(network, arg, k):
+    '''
+
+    :param network:
+    :param k: top k users by metric
+    :return:
+    '''
+
+    cent = {}
+    if arg == "InDegree":
+        cent = nx.in_degree_centrality(network)
+
+    if arg == "OutDegree":
+        cent = nx.out_degree_centrality(network)
+
+    if arg == "PageRank":
+        cent = nx.pagerank(network)
+
+    if arg == 'Betweenness':
+        cent = nx.betweenness_centrality(network)
+
+    cent_sort = sorted(cent.items(), key=lambda  x: x[1], reverse=True)[:k]
+
+    avg = 0
+    for item, val in cent_sort:
+        avg += val
+
+    return avg / k
 
 
+def top_k_cve_feat(network, arg, k, users):
+    '''
 
+    :param network:
+    :param arg:
+    :param k:
+    :param users:
+    :return:
+    '''
 
+    cent = {}
+    if arg == "InDegree":
+        cent = nx.in_degree_centrality(network)
+
+    cent_sort = sorted(cent.items(), key=lambda  x: x[1], reverse=True)[:k]
+
+    ''' Top k with users in the user-CVE group'''
+    avg = 0
+    cnt = 0
+
+    for item, val in cent_sort:
+        if item in users:
+            avg += val
+            cnt += 1
+
+        if cnt >= k:
+            break
+
+    return avg/cnt
 
 
 
