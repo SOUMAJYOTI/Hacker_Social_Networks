@@ -279,7 +279,7 @@ def top_k_feat(network, arg, k):
     if arg == 'Betweenness':
         cent = nx.betweenness_centrality(network)
 
-    cent_sort = sorted(cent.items(), key=lambda  x: x[1], reverse=True)[:k]
+    cent_sort = sorted(cent.items(), key=lambda  x: x[1], reverse=True)[:k] # Top k without constraints
 
     avg = 0
     for item, val in cent_sort:
@@ -302,7 +302,16 @@ def top_k_cve_feat(network, arg, k, users):
     if arg == "InDegree":
         cent = nx.in_degree_centrality(network)
 
-    cent_sort = sorted(cent.items(), key=lambda  x: x[1], reverse=True)[:k]
+    if arg == "OutDegree":
+        cent = nx.out_degree_centrality(network)
+
+    if arg == "PageRank":
+        cent = nx.pagerank(network)
+
+    if arg == 'Betweenness':
+        cent = nx.betweenness_centrality(network)
+
+    cent_sort = sorted(cent.items(), key=lambda  x: x[1], reverse=True)
 
     ''' Top k with users in the user-CVE group'''
     avg = 0
@@ -316,6 +325,8 @@ def top_k_cve_feat(network, arg, k, users):
         if cnt >= k:
             break
 
+    if cnt == 0:
+        cnt = 1
     return avg/cnt
 
 

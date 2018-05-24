@@ -72,7 +72,7 @@ def prepareData(inputDf, outputDf):
     outputDf['date'] = outputDf['date'].dt.date
 
     y_true = outputDf['attackFlag']
-    delta_prev_time = 10  # no of days to check before the week of current day
+    delta_prev_time = 8  # no of days to check before the week of current day
 
     currDate = train_start_date
     countDayIndx = 0
@@ -137,7 +137,8 @@ def main():
     trainStart_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2017-03-01', '%Y-%m-%d')
 
-    feat_df = pickle.load(open('../../data/DW_data/features/feat_combine/user_graph_Delta_T0_Sept16-Apr17.pickle', 'rb'))
+    feat_df = pickle.load(open('../../data/DW_data/SNA_Mar16-Apr17_TP50.pickle', 'rb'))
+    # feat_df = pickle.load(open('../../data/DW_data/features/feat_combine/user_graph_Delta_T0_Sept16-Apr17.pickle', 'rb'))
     # feat_df = pickle.load(open('../../data/DW_data/features/subspace__v12_22.pickle', 'rb'))
 
     instance_TrainStartDate = trainStart_date - relativedelta(months=1) # the previous month is needed for features
@@ -189,6 +190,7 @@ def main():
     # clf = ensemble.RandomForestClassifier()
     clf.fit(X_train, y_train)
 
+    exit()
 
     # print(clf.coef_.shape)
     # for coef_idx in range(clf.coef_.shape[1]):

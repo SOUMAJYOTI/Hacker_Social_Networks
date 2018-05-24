@@ -117,19 +117,25 @@ def feature_scaling(inputData):
 
 def main():
     # Just setting the features list among all the groups
-    featList = ['date', 'numUsers', 'numVulnerabilities', 'numThreads', 'expert_NonInteractions', 'shortestPaths',
-                'communityCount', 'CondExperts', 'expertsThreads']
+    featList = ['date', 'numUsers', 'numVulnerabilities', 'numThreads', 'expert_NonInteractions']
 
+    # featList = ['date',  'shortestPaths',
+    #             'communityCount', 'CondExperts', 'expertsThreads']
+
+    # feat_sna = ['date', 'pagerank', 'betweenness', 'outdegree', 'pagerank_cve', 'betweenness_cve', 'outdegree_cve']
 
     ''' SET THE TRAINING AND TEST TIME PERIODS - THIS IS MANUAL '''
     trainStart_date = datetime.datetime.strptime('2016-04-01', '%Y-%m-%d')
-    trainEnd_date = datetime.datetime.strptime('2016-09-01', '%Y-%m-%d')
+    trainEnd_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
 
     testStart_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
     testEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
     amEvents = pd.read_csv('../../../data/Armstrong_data/amEvents_11_17.csv')
-    amEvents_malware = amEvents[amEvents['type'] == 'endpoint_malware']
+    amEvents_malware = amEvents[amEvents['type'] == 'endpoint-malware']
+
+    # feat_df = pickle.load(
+    #     open('../../../data/DW_data/SNA_Mar16-Apr17_TP50.pickle', 'rb'))
 
     feat_df = pickle.load(
         open('../../../data/DW_data/features/feat_combine/features_Delta_T0_Mar16-Aug17.pickle', 'rb'))
@@ -154,10 +160,10 @@ def main():
     ''' PARAMETER INITIALIZATION '''
     k = 0.0  # l2 ridge regression coefficient
     l = 0.3  # l1 lasso coefficient
-    g = 0.5  # group lasso coefficient
+    g = 0.1  # group lasso coefficient
 
-    delta_gap_time = [7, 14]
-    delta_prev_time_start = [8, 15, 21, 28, 35]
+    delta_gap_time = [7,]
+    delta_prev_time_start = [8, 15, ]
 
     for dgt in delta_gap_time:
         print(dgt)
@@ -195,6 +201,7 @@ def main():
 
             y_pred = model.predict(X_test)
 
+
             prec, rec, f1_score = sklearn.metrics.precision_score(y_test, y_pred), \
                                   sklearn.metrics.recall_score(y_test, y_pred), \
                                   sklearn.metrics.f1_score(y_test, y_pred),
@@ -207,12 +214,12 @@ def main():
 
             print(f1List)
 
-        scoreDict['precision'] = precList
-        scoreDict['recall'] = recList
-        scoreDict['f1'] = f1List
-
-        pickle.dump(scoreDict,
-                    open('../../../data/results/01_25/regular/endpoint_malware/group/' + 'tgap_' + str(dgt) + '_gparam_' + str(g) + '.pickle', 'wb'))
+        # scoreDict['precision'] = precList
+        # scoreDict['recall'] = recList
+        # scoreDict['f1'] = f1List
+        #
+        # pickle.dump(scoreDict,
+        #             open('../../../data/results/01_25/regular/endpoint_malware/group/' + 'tgap_' + str(dgt) + '_gparam_' + str(g) + '.pickle', 'wb'))
 
 
 if __name__ == "__main__":

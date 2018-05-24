@@ -29,12 +29,9 @@ forums_features = [41, 129, 6, 112, 77, 69, 178, 31, 134, 193, 56, 201, 250, 13,
 
 # forums = [88, ]
 vulnInfo = pd.read_pickle('../../data/DW_data/new_DW/Vulnerabilities_Armstrong.pickle')
-cve_cpe_DF = pd.read_csv('../../data/DW_data/new_DW/cve_cpe_mapDF_new.csv')
-cve_cpe_map = pickle.load(open('../../data/DW_data/new_DW/cve_cpe_map_new.pickle', 'rb'))
 
 # Map of users with CVE to user and user to CVE
 users_CVEMap, CVE_usersMap = pickle.load(open('../../data/DW_data/new_DW/users_CVE_map_new.pickle', 'rb'))
-
 
 allPosts = pd.read_pickle('../../data/DW_data/new_DW/dw_database_dataframe_2016-17_new.pickle')
 KB_edges_DS = pd.read_pickle('../../data/DW_data/new_DW/KB_edges_df_new.pickle')
@@ -95,13 +92,13 @@ def computeFeatureTimeSeries_SNA(start_date, end_date,):
     bw = []
 
     pr_cve = []
-    eg_cve = []
+    deg_cve = []
     bw_cve = []
 
     datesList = []
     featDF = pd.DataFrame()
 
-    users_CVEs = getUsersCVES()
+    users_CVEs = getUsersCVES() # Get the list of users with CVEs
 
     currStartDate = start_date
     currEndDate = start_date + datetime.timedelta(days=1)
@@ -112,6 +109,10 @@ def computeFeatureTimeSeries_SNA(start_date, end_date,):
         df_currDay = allPosts[allPosts['posteddate'] >= (currStartDate.date())]
         df_currDay = df_currDay[df_currDay['posteddate'] < currEndDate.date()]
         df_currDay = df_currDay[df_currDay['forumsid'].isin(forums)]
+
+        threadidsCurrDay = list(set(df_currDay['topicid']))
+        currDay_edges_df = ccon.storeEdges(df_currDay, threadidsCurrDay)
+
 
         ''' Create the network
 
@@ -128,12 +129,11 @@ def computeFeatureTimeSeries_SNA(start_date, end_date,):
          '''
         k = 50
 
-        currDay_edges = ccon.createNetwork(df_currDay)
         G = nx.DiGraph()
-        G.add_edges_from(currDay_edges)
+        G.add_edges_from(ccon.createNetwork(currDay_edges_df))
 
         # If there are no edges, no feature computation
-        if len(currDay_edges) == 0:
+        if len(currDay_edges_df) == 0:
             pr.append(0)
             deg.append(0)
             bw.append(0)
@@ -143,7 +143,7 @@ def computeFeatureTimeSeries_SNA(start_date, end_date,):
             currEndDate = currStartDate + datetime.timedelta(days=1)
             continue
 
-        users_curr = list(set(currDay_edges['source']).union(set(currDay_edges['target'])))
+        users_curr = list(set(currDay_edges_df['source']).union(set(currDay_edges_df['target'])))
 
         # If there are no users, no feature computation
         if len(users_curr) == 0:
@@ -156,48 +156,38 @@ def computeFeatureTimeSeries_SNA(start_date, end_date,):
             currEndDate = currStartDate + datetime.timedelta(days=1)
             continue
 
-        # users_curr = [str(i) for i in users_curr]
 
         ''' Store the computed features '''
-
-
         pr.append(top_k_feat(G, 'PageRank', k))
-        print(pr)
+        bw.append(top_k_feat(G, 'Betweenness', k))
+        deg.append(top_k_feat(G, 'OutDegree', k))
 
-        # condExpertsList.append(Conductance(G, experts, users_curr))
-        # commThreadsList.append(threadCommon(df_currDay, experts))
-        # shortPathList.append(shortestPaths(G, experts, users_curr, weighted=weighted))
-        # print(shortPathList)
-        # communityCountList.append(approximate_community_detect(G, comm_partition, comm_experts, KB_users, experts, users_curr ))
-        # commutePathList.append(commuteTime(pseudo_lapl_mat, nodeIndexMap, experts, users_curr))
-        # print(commutePathList)
-        # print(commuteTime(G, expertUsersCPE, users_curr))
+        pr_cve.append(top_k_cve_feat(G, 'PageRank', k, users_CVEs))
+        bw_cve.append(top_k_cve_feat(G, 'Betweenness', k, users_CVEs))
+        deg_cve.append(top_k_cve_feat(G, 'OutDegree', k, users_CVEs))
+
 
         datesList.append(currStartDate)
         currStartDate = currStartDate + datetime.timedelta(days=1)
         currEndDate = currStartDate + datetime.timedelta(days=1)
 
     featDF['date'] = datesList
-    # featDF['shortestPaths'] = shortPathList
-    # featDF['commuteTime'] = commutePathList
-    # featDF['communityCount'] = communityCountList
-    # featDF['expertsThreads'] = commThreadsList
-    # featDF['CondExperts'] = condExpertsList
+    featDF['pagerank'] = pr
+    featDF['betweenness'] = bw
+    featDF['outdegree'] = deg
+    featDF['pagerank_cve'] = pr_cve
+    featDF['betweenness_cve'] = bw_cve
+    featDF['outdegree_cve'] = deg_cve
 
     return featDF
 
 
 def main():
     gc.collect()
-    # posts = pickle.load(open('../../data/Dw_data/posts_days_forumsV1.0.pickle', 'rb'))
 
     start_date = datetime.datetime.strptime('03-01-2016', '%m-%d-%Y')
     end_date = datetime.datetime.strptime('09-01-2017', '%m-%d-%Y')
 
-    # df_posts = countConversations(start_date, end_date, forums_cve_mentions)
-    # pickle.dump(df_posts, open('../../data/DW_data/posts_days_forumsV2.0.pickle', 'wb'))
-
-    # featDf = computeFeatureTimeSeries(start_date, end_date)
 
     numProcessors = 5
     pool = multiprocessing.Pool(numProcessors)
@@ -224,11 +214,7 @@ def main():
 
     feat_data_all = pd.concat(df_list)
 
-    # print(feat_data_all)
-    # pickle.dump(df_list, open('../../data/DW_data/features/usersDegDistribution.pickle', 'wb'))
-    # pickle.dump(feat_data_all, open('../../data/DW_data/features/feat_combine/weightedShortestPaths_Delta_T0_Mar16-Apr17.pickle', 'wb'))
     pickle.dump(feat_data_all, open('../../data/DW_data/SNA_Mar16-Apr17_TP50.pickle', 'wb'))
-
 
 
 if __name__ == "__main__":
