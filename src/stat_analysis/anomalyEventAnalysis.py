@@ -60,7 +60,7 @@ def weeklyCVE_anomaly_corr(eventsDf, anomalyVecDf, start_date, end_date):
     outputDf = pd.DataFrame()
 
     startWeek = start_date
-    endWeek = startWeek + datetime.timedelta(days=7)
+    endWeek = startWeek + datetime.timedelta(days=1)
 
     while (endWeek < end_date):
         ''' For the armstrong data '''
@@ -79,7 +79,7 @@ def weeklyCVE_anomaly_corr(eventsDf, anomalyVecDf, start_date, end_date):
         attacksList.append(attacksCurr)
 
         startWeek = endWeek
-        endWeek = startWeek + datetime.timedelta(days=7)
+        endWeek = startWeek + datetime.timedelta(days=1)
 
     outputDf['start_dates'] = startDatesList
     outputDf['end_dates'] = endDatesList
@@ -90,7 +90,7 @@ def weeklyCVE_anomaly_corr(eventsDf, anomalyVecDf, start_date, end_date):
             continue
 
         startWeek = start_date
-        endWeek = startWeek + datetime.timedelta(days=7)
+        endWeek = startWeek + datetime.timedelta(days=1)
 
         anomalyCount = []
         ''' Store the weekly statistics of the anomalies '''
@@ -106,7 +106,7 @@ def weeklyCVE_anomaly_corr(eventsDf, anomalyVecDf, start_date, end_date):
                     anomalyCountWeek += 1
 
             startWeek = endWeek
-            endWeek = startWeek + datetime.timedelta(days=7)
+            endWeek = startWeek + datetime.timedelta(days=1)
 
             anomalyCount.append(anomalyCountWeek)
 
@@ -192,7 +192,7 @@ def main():
     # anomPriorEvent = anomaly_eventCorr(amEvents_malware, anomalyDf, trainStart_date, trainEnd_date)
 
     # anomPriorEvent = anomaly_eventCorr(amEvents_malware, anomalyDf, trainStart_date, trainEnd_date)
-    pickle.dump(outputDf, open('../../data/DW_data/anomalies_events_corr_v1.pickle', 'wb'))
+    pickle.dump(outputDf, open('../../data/DW_data/anomalies_events_corr_daily.pickle', 'wb'))
     # anomPriorEvent = pd.read_pickle('../../data/DW_data/anomalies_events_corr.pickle')
     # for feat in anomPriorEvent:
     #     print(feat)

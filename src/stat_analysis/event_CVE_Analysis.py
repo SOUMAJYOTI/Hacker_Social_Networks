@@ -173,7 +173,7 @@ def select_attack_days(eventsDf):
 
     for idx, row in eventsDf.iterrows():
         if row['number_attacks'] >= 5:
-            print(row)
+            print(row['start_dates'])
 
 def main():
     cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr_em.pickle')

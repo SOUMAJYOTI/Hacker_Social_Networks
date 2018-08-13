@@ -117,18 +117,19 @@ def feature_scaling(inputData):
 
 def main():
     # Just setting the features list among all the groups
-    featList = ['date', 'numUsers', 'numVulnerabilities', 'numThreads', 'expert_NonInteractions']
+    # featList = ['date', 'numUsers', 'numVulnerabilities', 'numThreads', 'expert_NonInteractions', 'pagerank', 'betweenness', 'outdegree', 'pagerank_cve', 'betweenness_cve', 'outdegree_cve',
+    #             ]
 
-    # featList = ['date',  'shortestPaths',
-    #             'communityCount', 'CondExperts', 'expertsThreads']
+    featList = ['date',  'shortestPaths',
+                'communityCount', 'CondExperts', 'expertsThreads']
 
-    # feat_sna = ['date', 'pagerank', 'betweenness', 'outdegree', 'pagerank_cve', 'betweenness_cve', 'outdegree_cve']
+    # featList = ['date', 'pagerank', 'betweenness', 'outdegree', 'pagerank_cve', 'betweenness_cve', 'outdegree_cve']
 
     ''' SET THE TRAINING AND TEST TIME PERIODS - THIS IS MANUAL '''
     trainStart_date = datetime.datetime.strptime('2016-04-01', '%Y-%m-%d')
     trainEnd_date = datetime.datetime.strptime('2016-10-01', '%Y-%m-%d')
 
-    testStart_date = datetime.datetime.strptime('2017-06-01', '%Y-%m-%d')
+    testStart_date = datetime.datetime.strptime('2017-05-01', '%Y-%m-%d')
     testEnd_date = datetime.datetime.strptime('2017-09-01', '%Y-%m-%d')
 
     amEvents = pd.read_csv('../../../data/Armstrong_data/amEvents_11_17.csv')
@@ -158,7 +159,7 @@ def main():
 
 
     ''' PARAMETER INITIALIZATION '''
-    k = 0.0  # l2 ridge regression coefficient
+    k = 0.3  # l2 ridge regression coefficient
     l = 0.3  # l1 lasso coefficient
     g = 0.1  # group lasso coefficient
 
@@ -212,7 +213,7 @@ def main():
             recList.append(rec)
             f1List.append(f1_score)
 
-            print(f1List)
+            print(precList, recList, f1List)
 
         # scoreDict['precision'] = precList
         # scoreDict['recall'] = recList

@@ -116,6 +116,7 @@ def main():
     featList = ['expert_NonInteractions', 'communityCount', 'shortestPaths', 'CondExperts',
                 'numUsers', 'numVulnerabilities', 'numThreads', 'expertsThreads']
 
+    featList = ['betweenness', 'outdegree', 'pagerank_cve', 'pagerank', 'betweenness_cve', 'outdegree_cve']
     # Weekly occurrence of cve attacks - the CVEs are attached
     cve_eventsDf = pd.read_pickle('../../data/DW_data/CPE_events_corr_me.pickle')
 
@@ -134,14 +135,14 @@ def main():
         metricsDict[feat] = {}
         print('Computing for feature: ', feat)
 
-        feat_predictDf = pickle.load(open('../../data/results/05_05/supervised/malicious_email/LR_L2/'
+        feat_predictDf = pickle.load(open('../../data/results/05_23/SNA/malicious_email/'
                                           + str(feat) + '_predictDict.pickle', 'rb'))
 
-        anom_predictDf = pickle.load(open('../../data/results/01_25/anomaly/malicious_email/thresh_anom_1/weekly_best/'
-                                      + str(feat) + '_predictDict.pickle', 'rb'))
+        # anom_predictDf = pickle.load(open('../../data/results/01_25/anomaly/malicious_email/thresh_anom_1/weekly_best/'
+        #                               + str(feat) + '_predictDict.pickle', 'rb'))
 
-        print(feat_predictDf)
-        exit()
+        # print(feat_predictDf)
+        # exit()
 
         ''' For supervised prediction '''
         for dgt in delta_gap_time:
@@ -163,7 +164,7 @@ def main():
     #     metricsDict[feat]['tprList'] = tprList
     #     metricsDict[feat]['fprList'] = fprList
     #
-    # pickle.dump(metricsDict, open('../../data/results/01_25/anomaly/malicious_email/metricsWeekly_best.pickle', 'wb') )
+    pickle.dump(metricsDict, open('../../data/results/05_23/SNA/malicious_email/metricsWeekly_best.pickle', 'wb') )
 
 if __name__ == "__main__":
     main()

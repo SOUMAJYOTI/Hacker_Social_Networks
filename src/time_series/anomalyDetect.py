@@ -235,7 +235,7 @@ def computeAnomalyCount(subspace_df):
         ''' First,  the residual vectors'''
         if 'res' in feat:
             mean_feat = subspace_df[feat].mean()
-            thresh = 1.5*mean_feat
+            thresh = 1.5*mean_feat #  THIS IS THE THRESHOLD - FIXED
 
             anomaly_flag = []
             for idx, row in subspace_df[feat].iteritems():

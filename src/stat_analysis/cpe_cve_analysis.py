@@ -265,7 +265,7 @@ def selectVulnerabilities(df, cve):
     plt.yticks(size=20)
     plt.show()
 
-        # .to_csv('../../data/DW_data/' + str(cve) + '.csv')
+    # df_group.to_csv('../../data/DW_data/' + str(cve) + '.csv')
     # print(df[df['vulnerabilityid'] == cve])
 
 
@@ -284,7 +284,7 @@ def main():
 
     vuln_df.to_pickle('../../data/DW_data/VulnInfo_11_17.pickle')
 
-    # selectVulnerabilities(vuln_df, 'cve-2016-4117')
+    selectVulnerabilities(vuln_df, 'cve-2017-12368')
 
 
     # cpe_weekly_df = cpeCountsByWeek(vuln_df, cve_cpe_map, start_date, end_date )
@@ -301,6 +301,8 @@ def main():
     # analyzeResiduals(subspace)
 
     # select_attack_days(cve_eventsDf)
+
+
 
 if __name__ == "__main__":
     main()
